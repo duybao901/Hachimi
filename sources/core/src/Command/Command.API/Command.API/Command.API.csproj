@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
+        <PackageReference Include="MicroElements.Swashbuckle.FluentValidation" Version="6.1.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.22">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="9.0.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Controllers\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Command.Persistence\Command.Persistence.csproj" />
+        <ProjectReference Include="..\..\Command.Presentation\Command.Presentation.csproj" />
+    </ItemGroup>
+
+</Project>
