@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Reflection;
 
 namespace Command.API.DependencyInjection.Options;
 
@@ -23,7 +24,19 @@ public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
             {
                 Title = AppDomain.CurrentDomain.FriendlyName,
                 Version = description.ApiVersion.ToString(),
-                Description = $"API {description.ApiVersion}"
+                Description = $"API {description.ApiVersion}",
+                Contact  = new OpenApiContact
+                {
+                    Name = "Hachimi",
+                    Email = "hachimi@gmail.com",
+                    Url = new Uri("https://hachimi.com")
+                },
+                License = new OpenApiLicense 
+                {
+                    Name = "MIT License",
+                    Url = new Uri("https://opensource.org/licenses/MIT")
+                }
+
             });
         }
 
@@ -35,5 +48,11 @@ public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
         });
 
         options.CustomSchemaIds(type => type.ToString().Replace("+", "."));
+
+        
+        var xmlFiles = $"{Presentation.AssemblyReference.Assembly.GetName().Name}.xml"; // -> Command.Presentation.xml
+        var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFiles);
+
+        options.IncludeXmlComments(xmlPath);
     }
 }

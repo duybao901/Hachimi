@@ -8,8 +8,7 @@ namespace Command.Presentation.Abstractions;
 // custom ver (api/testversion{myVersion:apiVersion}/[controller])=> http://localhost:5051/api/testversion1/Product
 
 [ApiController]
-//[Route("api/v{myVersion:apiVersion}/[controller]")]
-[Route("api/[controller]")]
+[Route("api/v{myVersion:apiVersion}/[controller]")]
 public abstract class ApiController : ControllerBase
 {
     protected readonly ISender Sender;

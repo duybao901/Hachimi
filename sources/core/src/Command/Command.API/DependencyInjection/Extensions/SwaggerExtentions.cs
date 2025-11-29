@@ -22,12 +22,18 @@ public static class SwaggerExtensions
             foreach (var version in app.DescribeApiVersions().Select(version => version.GroupName))
                 options.SwaggerEndpoint($"/swagger/{version}/swagger.json", version);
 
+            // Override UI default
+            options.IndexStream = () => File.OpenRead("wwwroot/swagger/ui/index.html");
+
+            // Inject custom CSS
+            options.InjectStylesheet("/swagger/ui/custom.css");
+
             options.DisplayRequestDuration();
             options.EnableTryItOutByDefault();
-            options.DocExpansion(DocExpansion.None);
+            options.DocExpansion(DocExpansion.Full);
         });
 
-        app.MapGet("/", () => Results.Redirect("/swagger/index.html"))
-            .WithTags(string.Empty);
+        //app.MapGet("/", () => Results.Redirect("/swagger/index.html"))
+        //    .WithTags(string.Empty);
     }
 }

@@ -15,10 +15,17 @@ public class PostController : ApiController
     {
     }
 
+    /// <summary>
+    /// Get All Posts
+    /// </summary>
+    /// <remarks>
+    ///     Sample request:
+    ///     GET /api/v1/Post
+    /// </remarks>
     [HttpGet]
     [ProducesResponseType(typeof(Result<IEnumerable<Response.PostResponse>>), StatusCodes.Status200OK)]
 
-    public async Task<IActionResult> GetAllPostsV1(CancellationToken cancellationToken)
+    public IActionResult Get(CancellationToken cancellationToken)
     {
         //var query = new Application.Queries.Post.GetAllPostsQuery();
         //var result = await Sender.Send(query, cancellationToken);

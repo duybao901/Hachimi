@@ -18,7 +18,7 @@ public class PostController : ApiController
     [HttpGet]
     [ProducesResponseType(typeof(Result<IEnumerable<Response.PostResponse>>), StatusCodes.Status200OK)]
 
-    public async Task<IActionResult> GetAllPostsV2(CancellationToken cancellationToken)
+    public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
         //var query = new Application.Queries.Post.GetAllPostsQuery();
         //var result = await Sender.Send(query, cancellationToken);
