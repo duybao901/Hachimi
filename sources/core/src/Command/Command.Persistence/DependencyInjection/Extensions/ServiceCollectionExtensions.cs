@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Command.Persistence.Interceptors;
 
 namespace Command.Persistence.DependencyInjection.Extensions;
 public static class ServiceCollectionExtensions
@@ -16,8 +17,8 @@ public static class ServiceCollectionExtensions
     {
         services.AddDbContextPool<DbContext, ApplicationDbContext>((IServiceProvider provider, DbContextOptionsBuilder builder) =>
         {
-            //var convertDomainEventsToOutboxMessageInterceptor = provider.GetRequiredService<ConvertDomainEventsToOutboxMessageInterceptor>();
-            //var updateAuditableEntitiesInterceptor = provider.GetRequiredService<UpdateAuditableEntitiesInterceptor>();
+            var convertDomainEventsToOutboxMessageInterceptor = provider.GetRequiredService<ConvertDomainEventsToOutboxMessageInterceptor>();
+            var updateAuditableEntitiesInterceptor = provider.GetRequiredService<UpdateAuditableEntitiesInterceptor>();
 
             var configuration = provider.GetRequiredService<IConfiguration>();
             var options = provider.GetRequiredService<IOptionsMonitor<SqlServerRetryOptions>>();
@@ -37,8 +38,8 @@ public static class ServiceCollectionExtensions
                                     maxRetryCount: options.CurrentValue.MaxRetryCount,
                                     maxRetryDelay: options.CurrentValue.MaxRetryDelay,
                                     errorNumbersToAdd: options.CurrentValue.ErrorNumbersToAdd))
-                            .MigrationsAssembly(typeof(ApplicationDbContext).Assembly.GetName().Name));
-            //.AddInterceptors(convertDomainEventsToOutboxMessageInterceptor, updateAuditableEntitiesInterceptor);
+                            .MigrationsAssembly(typeof(ApplicationDbContext).Assembly.GetName().Name))
+            .AddInterceptors(convertDomainEventsToOutboxMessageInterceptor, updateAuditableEntitiesInterceptor);
             #endregion ================= SQL-SERVER-STRATEGY-1 =================
 
             #region ============== SQL-SERVER-STRATEGY-2 ==============
@@ -87,5 +88,11 @@ public static class ServiceCollectionExtensions
     {
         services.AddTransient(typeof(IRepositoryBase<,>), typeof(RepositoryBase<,>));
         services.AddTransient<IUnitOfWork, EFUnitOfWork>();
+    }
+
+    public static void AddInterceptorsConfigurationPersistence(this IServiceCollection services)
+    {
+        services.AddSingleton<ConvertDomainEventsToOutboxMessageInterceptor>();
+        services.AddSingleton<UpdateAuditableEntitiesInterceptor>();
     }
 }

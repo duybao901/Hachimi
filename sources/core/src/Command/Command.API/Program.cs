@@ -1,6 +1,7 @@
 using Command.API.DependencyInjection.Extensions;
 using Command.API.Middleware;
 using Command.Application.DependencyInjection.Extensions;
+using Command.Infrastructure.DependencyInjection.Extensions;
 using Command.Persistence.DependencyInjection.Extensions;
 using Command.Persistence.DependencyInjection.Options;
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
@@ -20,10 +21,15 @@ builder.Host.UseSerilog();
 builder.Services.ConfigureSqlServerRetryOptionsPersistence(builder.Configuration.GetSection(nameof(SqlServerRetryOptions)));
 builder.Services.AddSqlServerPersistence();
 builder.Services.AddRepositoryBaseConfigurationPersistence();
+builder.Services.AddInterceptorsConfigurationPersistence();
 
 // Inject Application Services
 builder.Services.AddConfigurationMediatRApplication();
 builder.Services.AddConfigurationAutoMapperApplication();
+
+// Inject Infrastructure Services
+//builder.Services.AddMasstransitRabbitMQInfrastructure(builder.Configuration);
+//builder.Services.AddQuartzInfrastructure();
 
 // Middleware 
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();

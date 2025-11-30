@@ -1,16 +1,16 @@
-﻿//using DistributedSystem.Persistence.Outbox;
-//using Microsoft.EntityFrameworkCore.Metadata.Builders;
-//using Microsoft.EntityFrameworkCore;
-//using DistributedSystem.Persistence.Constants;
+﻿using Command.Persistence.Constants;
+using Command.Persistence.Outbox;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-//namespace Command.Persistence.Configurations;
+namespace Command.Persistence.Configurations;
 
-//internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<OutboxMessage>
-//{
-//    public void Configure(EntityTypeBuilder<OutboxMessage> builder)
-//    {
-//        builder.ToTable(TableNames.OutboxMessages);
+internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<OutboxMessage>
+{
+    public void Configure(EntityTypeBuilder<OutboxMessage> builder)
+    {
+        builder.ToTable(TableNames.OutboxMessages);
 
-//        builder.HasKey(OutboxMessages => OutboxMessages.Id);
-//    }
-//}
+        builder.HasKey(OutboxMessages => OutboxMessages.Id);
+    }
+}

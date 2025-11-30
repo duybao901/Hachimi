@@ -11,9 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interceptors\" />
     <Folder Include="Migrations\" />
-    <Folder Include="Outbox\" />
   </ItemGroup>
 
   <ItemGroup>

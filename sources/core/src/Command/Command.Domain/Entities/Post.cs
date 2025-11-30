@@ -21,12 +21,10 @@ public class Post : AggregateRoot<Guid>, IAuditTableEntity
 
     public static Post CreatePost(Guid id, string title, string content)
     {
-        var post = new Post(id, title, content)
-        {
-            CreatedOnUtc = DateTimeOffset.UtcNow
-        };
+        var post = new Post(id, title, content);
 
         // You can add domain events or other initialization logic here if needed
+        post.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostCreatedEvent(Guid.NewGuid(), id, title, content));
 
         return post;
     }
@@ -38,17 +36,16 @@ public class Post : AggregateRoot<Guid>, IAuditTableEntity
         Content = content;
 
         // this -> tham chiếu đến đối tượng hiện tại (Product.Update)
-        //RaiseDomainEvent(new Contract.Services.V1.Product.DomainEvent.ProductUpdatedEvent(Guid.NewGuid(),
-        //    Id,
-        //    name,
-        //    price,
-        //    description));
+        RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostUpdatedEvent(Guid.NewGuid(),
+            Id,
+            Title,
+            Content));
     }
 
     public void Delete()
     {
         // check business rule here before delete product
         // this -> tham chiếu đến đối tượng hiện tại (Product.Delete)
-        //RaiseDomainEvent(new Contract.Services.V1.Product.DomainEvent.ProductDeletedEvent(Guid.NewGuid(), Id));
+        RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostDeletedEvent(Guid.NewGuid(), Id));
     }
 }
