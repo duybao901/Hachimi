@@ -23,14 +23,14 @@ public static class SwaggerExtensions
                 options.SwaggerEndpoint($"/swagger/{version}/swagger.json", version);
 
             // Override UI default
-            options.IndexStream = () => File.OpenRead("wwwroot/swagger/ui/index.html");
+            //options.IndexStream = () => File.OpenRead("wwwroot/swagger/ui/index.html");
 
             // Inject custom CSS
-            options.InjectStylesheet("/swagger/ui/custom.css");
+            //options.InjectStylesheet("/swagger/ui/custom.css");
 
             options.DisplayRequestDuration();
             options.EnableTryItOutByDefault();
-            options.DocExpansion(DocExpansion.Full);
+            options.DocExpansion(DocExpansion.None);
         });
 
         //app.MapGet("/", () => Results.Redirect("/swagger/index.html"))

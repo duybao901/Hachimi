@@ -13,7 +13,6 @@
   <ItemGroup>
     <Folder Include="Interceptors\" />
     <Folder Include="Migrations\" />
-    <Folder Include="Repositories\" />
     <Folder Include="Outbox\" />
   </ItemGroup>
 

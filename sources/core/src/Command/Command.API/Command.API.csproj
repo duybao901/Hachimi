@@ -14,11 +14,14 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Serilog" Version="4.3.0" />
+        <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4" />
         <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="9.0.4" />
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Command.Application\Command.Application.csproj" />
         <ProjectReference Include="..\Command.Persistence\Command.Persistence.csproj" />
         <ProjectReference Include="..\Command.Presentation\Command.Presentation.csproj" />
     </ItemGroup>

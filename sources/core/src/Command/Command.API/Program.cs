@@ -1,13 +1,32 @@
 using Command.API.DependencyInjection.Extensions;
+using Command.API.Middleware;
+using Command.Application.DependencyInjection.Extensions;
 using Command.Persistence.DependencyInjection.Extensions;
 using Command.Persistence.DependencyInjection.Options;
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Custom Services Registration
+// Log
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
+
+builder.Logging.ClearProviders().AddSerilog();
+builder.Host.UseSerilog();
+
+// Inject Persistence Services
 builder.Services.ConfigureSqlServerRetryOptionsPersistence(builder.Configuration.GetSection(nameof(SqlServerRetryOptions)));
 builder.Services.AddSqlServerPersistence();
+builder.Services.AddRepositoryBaseConfigurationPersistence();
+
+// Inject Application Services
+builder.Services.AddConfigurationMediatRApplication();
+builder.Services.AddConfigurationAutoMapperApplication();
+
+// Middleware 
+builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
 // Swagger + Versioning
 builder.Services
@@ -31,6 +50,8 @@ builder.Services.AddControllers(options =>
 }).AddApplicationPart(Command.Presentation.AssemblyReference.Assembly);
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

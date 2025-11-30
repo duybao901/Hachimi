@@ -35,6 +35,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution 
 		Directory.Build.Props = Directory.Build.Props
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Command.Application", "src\Command\Command.Application\Command.Application.csproj", "{E6F02644-1C8D-4F94-B504-50322B4AFC9C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,10 @@ Global
 		{E005E69D-2EEA-4525-931A-4EE5A8132E2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E005E69D-2EEA-4525-931A-4EE5A8132E2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E005E69D-2EEA-4525-931A-4EE5A8132E2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6F02644-1C8D-4F94-B504-50322B4AFC9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6F02644-1C8D-4F94-B504-50322B4AFC9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6F02644-1C8D-4F94-B504-50322B4AFC9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6F02644-1C8D-4F94-B504-50322B4AFC9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,5 +87,6 @@ Global
 		{75F9887A-5878-44EE-95F4-1176D2B47CBF} = {3BCB9C54-CBA1-42A4-8C57-03C817B4482A}
 		{8B4D2118-3892-492A-8002-CE220994ACE1} = {C8DF2ED2-FF22-4F3F-866A-190C06BDAF0E}
 		{E005E69D-2EEA-4525-931A-4EE5A8132E2E} = {8B4D2118-3892-492A-8002-CE220994ACE1}
+		{E6F02644-1C8D-4F94-B504-50322B4AFC9C} = {3BCB9C54-CBA1-42A4-8C57-03C817B4482A}
 	EndGlobalSection
 EndGlobal

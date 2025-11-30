@@ -1,5 +1,8 @@
-﻿using Command.Domain.Entities.Identity;
+﻿using Command.Domain.Abstractions.Repositories;
+using Command.Domain.Abstractions;
+using Command.Domain.Entities.Identity;
 using Command.Persistence.DependencyInjection.Options;
+using Command.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -78,4 +81,11 @@ public static class ServiceCollectionExtensions
              .Bind(section)
              .ValidateDataAnnotations()
              .ValidateOnStart(); // validate options as soon as the application starts
+
+
+    public static void AddRepositoryBaseConfigurationPersistence(this IServiceCollection services)
+    {
+        services.AddTransient(typeof(IRepositoryBase<,>), typeof(RepositoryBase<,>));
+        services.AddTransient<IUnitOfWork, EFUnitOfWork>();
+    }
 }
