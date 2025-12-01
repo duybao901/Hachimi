@@ -12,7 +12,7 @@ public class PostException
     public class ProductNameWrongFormat : BadRequestException
     {
         public ProductNameWrongFormat(string name)
-            : base($"The product name '{name}' must contant 'product' in name.")
+            : base($"The post name '{name}' must contant 'product' in name.")
         {
         }
     }

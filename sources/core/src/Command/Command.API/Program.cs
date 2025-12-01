@@ -5,6 +5,7 @@ using Command.Infrastructure.DependencyInjection.Extensions;
 using Command.Persistence.DependencyInjection.Extensions;
 using Command.Persistence.DependencyInjection.Options;
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,8 +29,8 @@ builder.Services.AddConfigurationMediatRApplication();
 builder.Services.AddConfigurationAutoMapperApplication();
 
 // Inject Infrastructure Services
-//builder.Services.AddMasstransitRabbitMQInfrastructure(builder.Configuration);
-//builder.Services.AddQuartzInfrastructure();
+builder.Services.AddMasstransitRabbitMQInfrastructure(builder.Configuration);
+builder.Services.AddQuartzInfrastructure();
 
 // Middleware 
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
@@ -52,8 +53,9 @@ builder.Services
 // Api
 builder.Services.AddControllers(options =>
 {
-
-}).AddApplicationPart(Command.Presentation.AssemblyReference.Assembly);
+    options.Conventions.Add(new RouteTokenTransformerConvention(new LowercaseControllerTransformer()));
+})
+    .AddApplicationPart(Command.Presentation.AssemblyReference.Assembly);
 
 var app = builder.Build();
 

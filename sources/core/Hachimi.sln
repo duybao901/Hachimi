@@ -32,7 +32,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{BB6FCB0F-EB7F-4D12-A5DB-A776B10A094A}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		.gitignore = .gitignore
 		Directory.Build.Props = Directory.Build.Props
+		Docker-compose.Infrastructure.dev.yaml = Docker-compose.Infrastructure.dev.yaml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Command.Application", "src\Command\Command.Application\Command.Application.csproj", "{E6F02644-1C8D-4F94-B504-50322B4AFC9C}"

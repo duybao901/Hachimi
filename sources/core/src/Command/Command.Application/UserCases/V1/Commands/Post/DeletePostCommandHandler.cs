@@ -18,8 +18,9 @@ public sealed class DeletePostCommandHandler : ICommandHandler<Contract.Services
         var post = await _postRepositoryBase.FindByIdAsync(request.Id, cancellationToken)
             ?? throw new PostException.PostNotFoundException(request.Id);
 
+        post.Delete();
         _postRepositoryBase.Remove(post);
 
-        return Result.Success("Create post success");
+        return Result.Success("delete post success");
     }
 }

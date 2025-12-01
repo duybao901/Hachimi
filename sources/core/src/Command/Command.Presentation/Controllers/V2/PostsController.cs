@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace Command.Presentation.Controllers.V2;
 
 [ApiVersion(2)]
-public class PostController : ApiController
+public class PostsController : ApiController
 {
-    public PostController(ISender sender) : base(sender)
+    public PostsController(ISender sender) : base(sender)
     {
     }
 

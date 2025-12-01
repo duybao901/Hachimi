@@ -10,9 +10,9 @@ using CommandV1 = Contract.Services.V1.Posts.Command;
 namespace Command.Presentation.Controllers.V1;
 
 [ApiVersion(1)]
-public class PostController : ApiController
+public class PostsController : ApiController
 {
-    public PostController(ISender sender) : base(sender)
+    public PostsController(ISender sender) : base(sender)
     {
     }
 

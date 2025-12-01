@@ -23,7 +23,6 @@ public class Post : AggregateRoot<Guid>, IAuditTableEntity
     {
         var post = new Post(id, title, content);
 
-        // You can add domain events or other initialization logic here if needed
         post.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostCreatedEvent(Guid.NewGuid(), id, title, content));
 
         return post;
@@ -31,11 +30,9 @@ public class Post : AggregateRoot<Guid>, IAuditTableEntity
 
     public void Update(string title, string content)
     {
-        // check business rule here before update product
         Title = title;
         Content = content;
 
-        // this -> tham chiếu đến đối tượng hiện tại (Product.Update)
         RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostUpdatedEvent(Guid.NewGuid(),
             Id,
             Title,
@@ -44,8 +41,6 @@ public class Post : AggregateRoot<Guid>, IAuditTableEntity
 
     public void Delete()
     {
-        // check business rule here before delete product
-        // this -> tham chiếu đến đối tượng hiện tại (Product.Delete)
         RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostDeletedEvent(Guid.NewGuid(), Id));
     }
 }
