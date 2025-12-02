@@ -34,7 +34,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution 
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		Directory.Build.Props = Directory.Build.Props
-		Docker-compose.Infrastructure.dev.yaml = Docker-compose.Infrastructure.dev.yaml
+		docker-compose.Infrastructure.Dev.yaml = docker-compose.Infrastructure.Dev.yaml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Command.Application", "src\Command\Command.Application\Command.Application.csproj", "{E6F02644-1C8D-4F94-B504-50322B4AFC9C}"
@@ -52,6 +52,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Query.Presentation", "src\Query\Query.Presentation\Query.Presentation.csproj", "{2B7A651D-942F-46C4-9B73-A68830F883C0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway", "src\ReverseProxy\ApiGateway\ApiGateway.csproj", "{864CDF8C-97F8-4A5B-861C-14E89066705D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationAPI", "src\Authorization\AuthorizationAPI\AuthorizationAPI.csproj", "{ABA1E613-2077-4AAC-8F2D-2ECA0560FB8F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -115,6 +117,10 @@ Global
 		{864CDF8C-97F8-4A5B-861C-14E89066705D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{864CDF8C-97F8-4A5B-861C-14E89066705D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{864CDF8C-97F8-4A5B-861C-14E89066705D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABA1E613-2077-4AAC-8F2D-2ECA0560FB8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABA1E613-2077-4AAC-8F2D-2ECA0560FB8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABA1E613-2077-4AAC-8F2D-2ECA0560FB8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABA1E613-2077-4AAC-8F2D-2ECA0560FB8F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -139,5 +145,6 @@ Global
 		{5638B747-C3EF-43F9-BD41-80F3A7AF2180} = {0A4710C9-8451-4F67-9F5E-C7FABA7C272F}
 		{2B7A651D-942F-46C4-9B73-A68830F883C0} = {0A4710C9-8451-4F67-9F5E-C7FABA7C272F}
 		{864CDF8C-97F8-4A5B-861C-14E89066705D} = {566C3A50-935E-4D05-999A-188603D16ACE}
+		{ABA1E613-2077-4AAC-8F2D-2ECA0560FB8F} = {B20FC9A8-48EF-4F06-A969-0CF11166AD07}
 	EndGlobalSection
 EndGlobal

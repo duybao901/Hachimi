@@ -1,14 +1,14 @@
-﻿using System.Text;
-using ApiGateway.Attributes;
-using ApiGateway.DepencencyInjection.Options;
+﻿using AuthorizationApi.Attributes;
+using AuthorizationApi.DependencyInjection.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
-namespace ApiGateway.DepencencyInjection.Extensions;
+namespace AuthorizationApi.DependencyInjection.Extensions;
 
 public static class JwtExtensions
 {
-    public static void AddJwtAuthenticationApiGateway(this IServiceCollection services, IConfiguration configuration)
+    public static void AddJwtAuthenticationAPI(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddAuthentication(options =>
         {
@@ -17,7 +17,7 @@ public static class JwtExtensions
             options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(o =>
         {
-            var jwtOption = new JwtOption();
+            JwtOption jwtOption = new JwtOption();
             configuration.GetSection(nameof(JwtOption)).Bind(jwtOption);
 
             /**
@@ -29,7 +29,7 @@ public static class JwtExtensions
                     // ...
                 }
              */
-            //o.SaveToken = true; // Save token into AuthenticationProperties
+            o.SaveToken = true; // Save token into AuthenticationProperties
 
             var Key = Encoding.UTF8.GetBytes(jwtOption.SecretKey);
             o.TokenValidationParameters = new TokenValidationParameters
@@ -60,14 +60,6 @@ public static class JwtExtensions
             o.EventsType = typeof(CustomJwtBearerEvents);
         });
 
-        services.AddScoped<CustomJwtBearerEvents>();
-
-        services.AddAuthorization(options =>
-        {
-            options.AddPolicy("authPolicy", policy =>
-            {
-                policy.RequireAuthenticatedUser();
-            });
-        });
+        services.AddAuthorization();
     }
 }
