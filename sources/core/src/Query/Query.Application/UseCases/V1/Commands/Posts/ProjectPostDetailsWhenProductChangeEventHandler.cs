@@ -4,7 +4,7 @@ using Contract.Services.V1.Posts;
 using Query.Domain.Abstractions.Repositories;
 using Query.Domain.Collections;
 
-namespace Query.Application.UseCases.V1.Commands;
+namespace Query.Application.UseCases.V1.Commands.Posts;
 
 internal class ProjectPostDetailsWhenProductChangeEventHandler :
     ICommandHandler<DomainEvent.PostCreatedEvent>,

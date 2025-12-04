@@ -11,6 +11,9 @@ public class ServiceProfile : Profile
         // CreateMap<Source, Destination>();
         CreateMap<PostProjection, Response.PostResponse>().ReverseMap();
 
-        CreateMap<PageResult<PostProjection>, PageResult<Response.PostResponse>>().ReverseMap();
+        CreateMap<PostProjection, Response.PostResponse>()
+            .ForCtorParam("Id", opt => opt.MapFrom(src => src.DocumentId))
+            .ForCtorParam("Title", opt => opt.MapFrom(src => src.Title))
+            .ForCtorParam("Content", opt => opt.MapFrom(src => src.Content));
     }
 }

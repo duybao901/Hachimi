@@ -27,6 +27,7 @@ builder.Services.AddMediatRInfrastructure();
 
 // Inject Application services
 builder.Services.AddMediatRApplication();
+builder.Services.AddConfigurationAutoMapper();
 
 // Swagger + Versioning
 builder.Services

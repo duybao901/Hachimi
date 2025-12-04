@@ -26,7 +26,7 @@ public class MongoRepository<TDocument> : IMongoRepository<TDocument>
             .FirstOrDefault())?.Name;
     }
 
-    public virtual IQueryable<TDocument> AsQueryable(Expression<Func<TDocument, bool>> filterExpression)
+    public virtual IQueryable<TDocument> AsQueryable(Expression<Func<TDocument, bool>> filterExpression = null)
     {
         if (filterExpression is not null)
         {
