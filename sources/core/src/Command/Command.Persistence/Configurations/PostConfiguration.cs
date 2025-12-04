@@ -1,5 +1,5 @@
 ﻿using Command.Domain.Entities;
-using Command.Persistence.Constants;
+using Command.Persistence.Contants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

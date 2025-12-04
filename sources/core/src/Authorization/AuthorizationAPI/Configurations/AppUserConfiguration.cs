@@ -1,9 +1,9 @@
-﻿using Command.Domain.Entities.Identity;
-using Command.Persistence.Constants;
+﻿using AuthorizationAPI.Contants;
+using AuthorizationAPI.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Command.Persistence.Configurations;
+namespace AuthorizationAPI.Configurations;
 
 internal sealed class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
 {

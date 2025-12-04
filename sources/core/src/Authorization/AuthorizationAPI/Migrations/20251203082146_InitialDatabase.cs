@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Command.Persistence.Migrations;
+namespace AuthorizationAPI.Migrations;
 
 /// <inheritdoc />
 public partial class InitialDatabase : Migration
@@ -90,22 +90,6 @@ public partial class InitialDatabase : Migration
             constraints: table =>
             {
                 table.PrimaryKey("PK_Functions", x => x.Id);
-            });
-
-        migrationBuilder.CreateTable(
-            name: "Post",
-            columns: table => new
-            {
-                Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                CreatedOnUtc = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                ModifiedOnUtc = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                IsDelete = table.Column<bool>(type: "bit", nullable: false)
-            },
-            constraints: table =>
-            {
-                table.PrimaryKey("PK_Post", x => x.Id);
             });
 
         migrationBuilder.CreateTable(
@@ -325,9 +309,6 @@ public partial class InitialDatabase : Migration
 
         migrationBuilder.DropTable(
             name: "Permissions");
-
-        migrationBuilder.DropTable(
-            name: "Post");
 
         migrationBuilder.DropTable(
             name: "AppUsers");

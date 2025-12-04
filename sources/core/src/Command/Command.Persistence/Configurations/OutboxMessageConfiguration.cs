@@ -1,4 +1,4 @@
-﻿using Command.Persistence.Constants;
+﻿using Command.Persistence.Contants;
 using Command.Persistence.Outbox;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

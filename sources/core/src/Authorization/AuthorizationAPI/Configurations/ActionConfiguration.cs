@@ -1,9 +1,10 @@
-﻿using Command.Persistence.Constants;
+﻿using AuthorizationAPI.Contants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Action = Command.Domain.Entities.Identity.Action;
+using Action = AuthorizationAPI.Identity.Action;
 
-namespace Command.Persistence.Configurations;
+
+namespace AuthorizationAPI.Configurations;
 
 internal class ActionConfiguration : IEntityTypeConfiguration<Action>
 {

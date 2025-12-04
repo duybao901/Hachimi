@@ -1,14 +1,12 @@
-﻿using Command.Domain.Abstractions.Repositories;
-using Command.Domain.Abstractions;
-using Command.Domain.Entities.Identity;
+﻿using Command.Domain.Abstractions;
+using Command.Domain.Abstractions.Repositories;
 using Command.Persistence.DependencyInjection.Options;
+using Command.Persistence.Interceptors;
 using Command.Persistence.Repositories;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Command.Persistence.Interceptors;
 
 namespace Command.Persistence.DependencyInjection.Extensions;
 public static class ServiceCollectionExtensions
@@ -55,24 +53,6 @@ public static class ServiceCollectionExtensions
             //            .MigrationsAssembly(typeof(ApplicationDbContext).Assembly.GetName().Name));
 
             #endregion ============== SQL-SERVER-STRATEGY-2 ==============
-        });
-
-        services.AddIdentityCore<AppUser>()
-            .AddRoles<AppRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>();
-
-        services.Configure<IdentityOptions>(options =>
-        {
-            options.Lockout.AllowedForNewUsers = true; // Default true
-            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(2); // Default 5
-            options.Lockout.MaxFailedAccessAttempts = 3; // Default 5
-            options.Password.RequireDigit = false;
-            options.Password.RequireLowercase = false;
-            options.Password.RequireNonAlphanumeric = false;
-            options.Password.RequireUppercase = false;
-            options.Password.RequiredLength = 6;
-            options.Password.RequiredUniqueChars = 1;
-            options.Lockout.AllowedForNewUsers = true;
         });
     }
 

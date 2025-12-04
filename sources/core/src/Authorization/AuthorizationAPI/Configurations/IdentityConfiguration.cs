@@ -1,9 +1,9 @@
-﻿using Command.Persistence.Constants;
+﻿using AuthorizationAPI.Contants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Command.Persistence.Configurations;
+namespace AuthorizationAPI.Configurations;
 
 internal sealed class AppUserRoleConfiguration : IEntityTypeConfiguration<IdentityUserRole<Guid>>
 {

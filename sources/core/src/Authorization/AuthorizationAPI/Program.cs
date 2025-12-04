@@ -6,7 +6,13 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Log
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
+
+builder.Logging.ClearProviders().AddSerilog();
+builder.Host.UseSerilog();
 
 // Add Swagger
 builder.Services
@@ -27,6 +33,7 @@ builder.Services
 builder.Services.AddControllers().AddApplicationPart(AuthorizationApi.AssemblyReference.Assembly);
 
 // Service DI
+builder.Services.AddSqlServerAuthorizationApi();
 builder.Services.AddMediatRAuthorizationApi();
 builder.Services.AddRedisAuthorizationApi(builder.Configuration);
 builder.Services.AddServicesAuthorizationApi();
