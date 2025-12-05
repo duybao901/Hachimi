@@ -6,9 +6,9 @@ using Contract.Abstractions.Shared;
 namespace Command.Application.UserCases.V1.Commands.Post;
 public sealed class DeletePostCommandHandler : ICommandHandler<Contract.Services.V1.Posts.Command.DeletePostCommand>
 {
-    private readonly IRepositoryBase<Domain.Entities.Post, Guid> _postRepositoryBase;
+    private readonly IRepositoryBase<Domain.Entities.Posts, Guid> _postRepositoryBase;
 
-    public DeletePostCommandHandler(IRepositoryBase<Domain.Entities.Post, Guid> postRepositoryBase)
+    public DeletePostCommandHandler(IRepositoryBase<Domain.Entities.Posts, Guid> postRepositoryBase)
     {
         _postRepositoryBase = postRepositoryBase;
     }

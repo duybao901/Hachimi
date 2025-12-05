@@ -9,8 +9,8 @@ public class ServiceProfile : Profile
     public ServiceProfile()
     {
         // CreateMap<Source, Destination>();
-        CreateMap<Post, Response.PostResponse>().ReverseMap();
+        CreateMap<Posts, Response.PostResponse>().ReverseMap();
 
-        CreateMap<PageResult<Post>, PageResult<Response.PostResponse>>().ReverseMap();
+        CreateMap<PageResult<Posts>, PageResult<Response.PostResponse>>().ReverseMap();
     }
 }

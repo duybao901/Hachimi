@@ -7,4 +7,6 @@ public static class TableNames
 
     // *********** Singular Nouns ***********
     internal const string Post = nameof(Post);
+    internal const string PostTags = nameof(PostTags);
+    internal const string Tags = nameof(Tags);
 }

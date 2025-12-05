@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Command.Persistence.Configurations;
 
-internal class PostConfiguration : IEntityTypeConfiguration<Post>
+internal class PostConfiguration : IEntityTypeConfiguration<Posts>
 {
-    public void Configure(EntityTypeBuilder<Post> builder)
+    public void Configure(EntityTypeBuilder<Posts> builder)
     {
         builder.ToTable(TableNames.Post);
 

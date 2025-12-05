@@ -6,9 +6,9 @@ using Contract.Abstractions.Shared;
 namespace Command.Application.UserCases.V1.Commands.Post;
 public sealed class UpdatePostCommandHandler : ICommandHandler<Contract.Services.V1.Posts.Command.UpdatePostCommand>
 {
-    private readonly IRepositoryBase<Domain.Entities.Post, Guid> _postRepositoryBase;
+    private readonly IRepositoryBase<Domain.Entities.Posts, Guid> _postRepositoryBase;
 
-    public UpdatePostCommandHandler(IRepositoryBase<Domain.Entities.Post, Guid> postRepositoryBase)
+    public UpdatePostCommandHandler(IRepositoryBase<Domain.Entities.Posts, Guid> postRepositoryBase)
     {
         _postRepositoryBase = postRepositoryBase;
     }

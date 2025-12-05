@@ -13,11 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Query.Domain\Query.Domain.csproj" />
+    <Folder Include="DependencyInjection\Options\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DependencyInjection\Options\" />
+    <ProjectReference Include="..\Query.Domain\Query.Domain.csproj" />
   </ItemGroup>
 
 </Project>

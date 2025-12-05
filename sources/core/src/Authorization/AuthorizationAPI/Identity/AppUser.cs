@@ -3,25 +3,12 @@
 namespace AuthorizationAPI.Identity;
 public class AppUser : IdentityUser<Guid>
 {
-    public string FirstName { get; set; } = null!;
-
-    public string LastName { get; set; } = null!;
-
-    public string FullName => $"{FirstName} {LastName}";
-
-    public DateTime DateOfBirth { get; set; }
-
-    public string Address { get; set; } = null!;
-
-    public bool? IsDirector { get; set; }
-
-    public bool? IsHeadOfDepartment { get; set; }
-
-    public Guid ManagerId { get; set; }
-
-    public Guid UserId { get; set; }
-
-    public int IsReceipient { get; set; }
+    public string Name { get; set; }
+    public string UserName { get; set; }
+    public string Password { get; set; }
+    public string Email { get; set; }
+    public string Bio { get; set; }
+    public string AvatarUrl { get; set; }
 
     public virtual ICollection<IdentityUserClaim<Guid>> UserClaims { get; set; }
     public virtual ICollection<IdentityUserLogin<Guid>> UserLogins { get; set; }

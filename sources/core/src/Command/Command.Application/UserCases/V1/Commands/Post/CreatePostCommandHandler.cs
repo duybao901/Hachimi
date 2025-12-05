@@ -1,20 +1,43 @@
 ﻿using Command.Domain.Abstractions.Repositories;
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
+using Contract.Services.V1.Posts.ViewModels;
+using Microsoft.EntityFrameworkCore;
+using System.Drawing;
 
 namespace Command.Application.UserCases.V1.Commands.Post;
 public sealed class CreatePostCommandHandler : ICommandHandler<Contract.Services.V1.Posts.Command.CreatePostCommand>
 {
-    private readonly IRepositoryBase<Domain.Entities.Post, Guid> _postRepositoryBase;
+    private readonly IRepositoryBase<Domain.Entities.Posts, Guid> _postRepositoryBase;
 
-    public CreatePostCommandHandler(IRepositoryBase<Domain.Entities.Post, Guid> postRepositoryBase)
+    private readonly IRepositoryBase<Tags, Guid> _tagRepositoryBase;
+
+
+    public CreatePostCommandHandler(IRepositoryBase<Domain.Entities.Posts, Guid> postRepositoryBase, IRepositoryBase<Tags, Guid> tagRepositoryBase)
     {
         _postRepositoryBase = postRepositoryBase;
+        _tagRepositoryBase = tagRepositoryBase;
     }
 
     public async Task<Result> Handle(Contract.Services.V1.Posts.Command.CreatePostCommand request, CancellationToken cancellationToken)
     {
-        var post = Domain.Entities.Post.CreatePost(Guid.NewGuid(), request.Title, request.Content);
+
+        var tags = await _tagRepositoryBase.FindAll(tag => request.TagIds.Contains(tag.Id)).ToListAsync(cancellationToken);
+
+
+        var tagViewModel = new List<PostTagViewModel>();
+        foreach (var tag in tags)
+        {
+            tagViewModel.Add(new PostTagViewModel
+            {
+                Id = tag.Id,
+                Name = tag.Name,
+                Slug = tag.Slug,
+                Color = tag.Color,
+            });
+        }
+
+        var post = Domain.Entities.Posts.CreatePost(Guid.NewGuid(), request.Title, request.Content, request.AuthorId, tagViewModel);
         _postRepositoryBase.Add(post);
 
         return Result.Success("Create post success");

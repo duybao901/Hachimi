@@ -16,51 +16,51 @@ public class PostsController : ApiController
     {
     }
 
-    /// <summary>
-    /// Get All Posts
-    /// </summary>
-    /// <remarks>
-    ///     Sample request:
-    ///     GET /api/v1/Post
-    /// </remarks>
-    [HttpGet]
-    [ProducesResponseType(typeof(Result<IEnumerable<Response.PostResponse>>), StatusCodes.Status200OK)]
+    ///// <summary>
+    ///// Get All Posts
+    ///// </summary>
+    ///// <remarks>
+    /////     Sample request:
+    /////     GET /api/v1/Post
+    ///// </remarks>
+    //[HttpGet]
+    //[ProducesResponseType(typeof(Result<IEnumerable<Response.PostResponse>>), StatusCodes.Status200OK)]
 
-    public async Task<IActionResult> GetAllPosts()
-    {
-        var query = new Query.GetAllPostsQuery();
-        var result = await Sender.Send(query);
+    //public async Task<IActionResult> GetAllPosts()
+    //{
+    //    var query = new Query.GetAllPostsQuery();
+    //    var result = await Sender.Send(query);
 
-        if (result.IsFailure)
-        {
-            HandlerFailure(result);
-        }
+    //    if (result.IsFailure)
+    //    {
+    //        HandlerFailure(result);
+    //    }
 
-        return Ok(result);
-    }
+    //    return Ok(result);
+    //}
 
-    /// <summary>
-    /// Get Post by Id
-    /// </summary>
-    /// <remarks>
-    ///     Sample request:
-    ///     GET /api/v1/Post/{postId}
-    /// </remarks>
-    [HttpGet("{postId}")]
-    [ProducesResponseType(typeof(Result<IEnumerable<Response.PostResponse>>), StatusCodes.Status200OK)]
+    ///// <summary>
+    ///// Get Post by Id
+    ///// </summary>
+    ///// <remarks>
+    /////     Sample request:
+    /////     GET /api/v1/Post/{postId}
+    ///// </remarks>
+    //[HttpGet("{postId}")]
+    //[ProducesResponseType(typeof(Result<IEnumerable<Response.PostResponse>>), StatusCodes.Status200OK)]
 
-    public async Task<IActionResult> GetPostById(Guid postId)
-    {
-        var query = new Query.GetPostByIdQuery(postId);
-        var result = await Sender.Send(query);
+    //public async Task<IActionResult> GetPostById(Guid postId)
+    //{
+    //    var query = new Query.GetPostByIdQuery(postId);
+    //    var result = await Sender.Send(query);
 
-        if (result.IsFailure)
-        {
-            HandlerFailure(result);
-        }
+    //    if (result.IsFailure)
+    //    {
+    //        HandlerFailure(result);
+    //    }
 
-        return Ok(result);
-    }
+    //    return Ok(result);
+    //}
 
     /// <summary>
     /// Create a post

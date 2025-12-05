@@ -13,5 +13,9 @@ public class ApplicationDbContext : DbContext
      => builder.ApplyConfigurationsFromAssembly(AssemblyReference.Assembly);
 
     // Entities
-    public DbSet<Post> Posts { get; set; }
+    public DbSet<Posts> Posts { get; set; }
+    public DbSet<Tags> Tags { get; set; }
+
+    public DbSet<PostTags> PostTags { get; set; }
+
 }

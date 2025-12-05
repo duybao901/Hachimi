@@ -27,7 +27,7 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             Content = request.Content,
         };
 
-        await _postRepository.InsertOneAsync(product);
+         await _postRepository.InsertOneAsync(product);
 
         return Result.Success();
     }

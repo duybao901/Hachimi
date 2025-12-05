@@ -8,10 +8,10 @@ using Contract.Services.V1.Posts;
 namespace Command.Application.UserCases.V1.Queries.Post;
 public class GetPostByIdQueryHandler : IQueryHandler<Query.GetPostByIdQuery, Response.PostResponse>
 {
-    private readonly IRepositoryBase<Domain.Entities.Post, Guid> _postRepositoryBase;
+    private readonly IRepositoryBase<Domain.Entities.Posts, Guid> _postRepositoryBase;
     private readonly IMapper _mapper;
 
-    public GetPostByIdQueryHandler(IRepositoryBase<Domain.Entities.Post, Guid> postRepositoryBase, IMapper mapper)
+    public GetPostByIdQueryHandler(IRepositoryBase<Domain.Entities.Posts, Guid> postRepositoryBase, IMapper mapper)
     {
         _postRepositoryBase = postRepositoryBase;
         _mapper = mapper;

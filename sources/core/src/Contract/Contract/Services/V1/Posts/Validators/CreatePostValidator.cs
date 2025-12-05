@@ -10,5 +10,8 @@ public class CreatePostValidator : AbstractValidator<Command.CreatePostCommand>
             .NotEmpty();
 
         RuleFor(p => p.Content).NotEmpty();
+
+        RuleFor(p => p.AuthorId).NotEmpty();
+        RuleFor(p => p.TagIds).NotEmpty();
     }
 }
