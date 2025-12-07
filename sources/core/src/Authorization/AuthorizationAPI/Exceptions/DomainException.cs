@@ -1,4 +1,6 @@
-﻿namespace AuthorizationApi.Exceptions;
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace AuthorizationApi.Exceptions;
 
 public abstract class DomainException : Exception
 {

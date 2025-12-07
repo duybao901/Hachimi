@@ -18,13 +18,13 @@ public class GetLoginQueryHandler : IQueryHandler<Contract.Services.V1.Identity.
 
     public async Task<Result<Response.Authenticated>> Handle(Contract.Services.V1.Identity.Query.Login request, CancellationToken cancellationToken)
     {
-        // Check User
+        // Check user
 
         // Generate JWT Token
         var claims = new List<Claim>
         {
-            new Claim("UserName", request.UserName),
-            new Claim(ClaimTypes.Role, "Senior .NET")
+            new Claim(ClaimTypes.Email, request.Email),
+            new Claim(ClaimTypes.Role, "Author")
         };
 
         var accessToken = _jwtTokenService.GenerateAccessToken(claims);
@@ -38,7 +38,7 @@ public class GetLoginQueryHandler : IQueryHandler<Contract.Services.V1.Identity.
         };
 
         // Key is unique, ex: email
-        await _cacheService.SetAsync(request.UserName, response);
+        await _cacheService.SetAsync(request.Email, response);
 
         return Result.Success(response);
     }

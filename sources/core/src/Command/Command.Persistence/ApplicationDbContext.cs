@@ -15,7 +15,6 @@ public class ApplicationDbContext : DbContext
     // Entities
     public DbSet<Posts> Posts { get; set; }
     public DbSet<Tags> Tags { get; set; }
-
     public DbSet<PostTags> PostTags { get; set; }
 
 }

@@ -61,13 +61,21 @@ public class ExceptionHandlingMiddleware : IMiddleware
             _ => "Server Error"
         };
 
-    private static IReadOnlyCollection<ValidationError> GetErrors(Exception exception)
+    private static List<ValidationError> GetErrors(Exception exception)
     {
-        IReadOnlyCollection<ValidationError> errors = null;
+        var errors = new List<ValidationError>();
 
         if (exception is ValidationException validationException)
         {
             errors = validationException.Errors;
+        }
+
+        if (exception is IdentityException.UserCreationFailedException identityException)
+        {
+            foreach (var error in identityException.Errors)
+            {
+                errors.Add(new ValidationError(error.Code, error.Description));
+            }
         }
 
         return errors;

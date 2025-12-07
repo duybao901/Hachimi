@@ -1,7 +1,10 @@
 using AuthorizationApi.Attributes;
 using AuthorizationApi.DependencyInjection.Extensions;
 using AuthorizationApi.Middleware;
+using AuthorizationAPI;
+using AuthorizationAPI.Identity.SeedData;
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,6 +40,7 @@ builder.Services.AddSqlServerAuthorizationApi();
 builder.Services.AddMediatRAuthorizationApi();
 builder.Services.AddRedisAuthorizationApi(builder.Configuration);
 builder.Services.AddServicesAuthorizationApi();
+builder.Services.AddRepositoryBaseConfiguration();
 
 builder.Services.AddJwtAuthenticationAPI(builder.Configuration);
 builder.Services.AddScoped<CustomJwtBearerEvents>();
@@ -63,6 +67,11 @@ app.MapControllers();
 
 try
 {
+    using (var scope = app.Services.CreateScope())
+    {
+        await SeedRoleAsync.SeedRolesAsync(scope.ServiceProvider);
+    }
+
     await app.RunAsync();
     Log.Information("Stopped cleanly");
 }

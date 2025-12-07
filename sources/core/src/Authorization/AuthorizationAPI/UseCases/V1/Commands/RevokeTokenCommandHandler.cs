@@ -21,7 +21,7 @@ public class RevokeTokenCommandHandler : ICommandHandler<Contract.Services.V1.Id
     {
         var AccessToken = request.AccessToken;
         var principal = _jwtTokenService.GetPrincipalFromExpiredToken(AccessToken);
-        var userNameKey = principal.FindFirstValue("UserName").ToString();
+        var userNameKey = principal.FindFirstValue("Email").ToString();
 
         var authenticated = await _cacheService.GetAsync<Response.Authenticated>(userNameKey) ?? throw new Exception("Can not get value from Redis");
 

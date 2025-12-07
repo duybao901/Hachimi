@@ -32,6 +32,19 @@ public class AuthenController : ApiController
         return Results.Ok(result);
     }
 
+    [HttpPost("register", Name = "register")]
+    [AllowAnonymous]
+    public async Task<IResult> Register([FromBody] CommandV1.RegisterUser request)
+    {
+        Result result = await Sender.Send(request);
+        if (result.IsFailure)
+        {
+            return HandlerFailure(result);
+        }
+
+        return Results.Ok(result);
+    }
+
     [HttpPost("refresh-token", Name = "Refresh Token")]
     [Authorize]
     public async Task<IResult> RefreshToken([FromBody] Query.Token token)

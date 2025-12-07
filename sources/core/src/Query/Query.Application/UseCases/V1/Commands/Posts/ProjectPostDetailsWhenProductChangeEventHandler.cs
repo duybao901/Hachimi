@@ -1,4 +1,5 @@
-﻿using Contract.Abstractions.Message;
+﻿using AutoMapper;
+using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 using Contract.Services.V1.Posts;
 using Query.Domain.Abstractions.Repositories;
@@ -12,22 +13,48 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
     ICommandHandler<DomainEvent.PostDeletedEvent>
 {
     private readonly IMongoRepository<PostProjection> _postRepository;
+    private readonly IMongoRepository<TagProjection> _tagRepository;
+    private readonly IMapper _mapper;
 
-    public ProjectPostDetailsWhenProductChangeEventHandler(IMongoRepository<PostProjection> postRepository)
+    public ProjectPostDetailsWhenProductChangeEventHandler(
+        IMongoRepository<PostProjection> postRepository, 
+        IMongoRepository<TagProjection> tagRepository, 
+        IMapper mapper)
     {
         _postRepository = postRepository;
+        _tagRepository = tagRepository;
+        _mapper = mapper;
     }
 
     public async Task<Result> Handle(DomainEvent.PostCreatedEvent request, CancellationToken cancellationToken)
     {
-        var product = new PostProjection
+        var post = new PostProjection
         {
             DocumentId = request.Id,
             Title = request.Title,
             Content = request.Content,
+            AuthorId = request.AuthorId,
+            TagIds = request.Tags.ConvertAll(t => t.Id),
         };
 
-         await _postRepository.InsertOneAsync(product);
+        // Insert Tags if not exist
+        foreach (var tag in request.Tags)
+        {
+            var existingTag = await _tagRepository.FindOneAsync(t => t.DocumentId == tag.Id);
+            if (existingTag == null)
+            {
+                var tagProjection = new TagProjection
+                {
+                    DocumentId = tag.Id,
+                    Name = tag.Name,
+                    Slug = tag.Slug,
+                    Color = tag.Color,
+                };
+                await _tagRepository.InsertOneAsync(tagProjection);
+            }
+        }
+
+        await _postRepository.InsertOneAsync(post);
 
         return Result.Success();
     }

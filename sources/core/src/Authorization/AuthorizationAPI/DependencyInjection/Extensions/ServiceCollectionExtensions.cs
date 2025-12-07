@@ -2,9 +2,13 @@
 using AuthorizationApi.Behaviors;
 using AuthorizationApi.Caching;
 using AuthorizationAPI;
+using AuthorizationAPI.Abstractions;
+using AuthorizationAPI.Abstractions.Repositories;
 using AuthorizationAPI.Authentication;
+using AuthorizationAPI.Behaviors;
 using AuthorizationAPI.DependencyInjection.Options;
 using AuthorizationAPI.Identity;
+using AuthorizationAPI.Repositories;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -19,6 +23,9 @@ public static class ServiceCollectionExtensions
     {
         services.AddDbContextPool<DbContext, ApplicationDbContext>((IServiceProvider provider, DbContextOptionsBuilder builder) =>
         {
+            //var converDomainEventsToOutboxInterceptor = provider.GetRequiredService<ConvertDomainEventsToOutboxMessageInterceptor>();
+            //var UpdateAuditEntitiesInterceptor = provider.GetRequiredService<UpdateAuditableEntitiesInterceptor>();
+
             var configuration = provider.GetRequiredService<IConfiguration>();
             var options = provider.GetRequiredService<IOptionsMonitor<SqlServerRetryOptions>>();
 
@@ -38,6 +45,9 @@ public static class ServiceCollectionExtensions
                                     maxRetryDelay: options.CurrentValue.MaxRetryDelay,
                                     errorNumbersToAdd: options.CurrentValue.ErrorNumbersToAdd))
                             .MigrationsAssembly(typeof(ApplicationDbContext).Assembly.GetName().Name));
+            //.AddInterceptors(
+            //    converDomainEventsToOutboxInterceptor,
+            //    UpdateAuditEntitiesInterceptor);
             #endregion ================= SQL-SERVER-STRATEGY-1 =================
 
             #region ============== SQL-SERVER-STRATEGY-2 ==============
@@ -55,28 +65,36 @@ public static class ServiceCollectionExtensions
             #endregion ============== SQL-SERVER-STRATEGY-2 ==============
         });
 
-        services.AddIdentityCore<AppUser>()
-            .AddRoles<AppRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>();
-
-        services.Configure<IdentityOptions>(options =>
+        services.AddIdentityCore<AppUser>(options =>
         {
-            options.Lockout.AllowedForNewUsers = true; // Default true
-            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(2); // Default 5
-            options.Lockout.MaxFailedAccessAttempts = 3; // Default 5
+            options.User.RequireUniqueEmail = false;
+            options.User.AllowedUserNameCharacters =
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
+
+            // Password settings (using in FluentValidation)
             options.Password.RequireDigit = false;
             options.Password.RequireLowercase = false;
             options.Password.RequireNonAlphanumeric = false;
             options.Password.RequireUppercase = false;
             options.Password.RequiredLength = 6;
-            options.Password.RequiredUniqueChars = 1;
+            options.Password.RequiredUniqueChars = 0;
+
+            // Lockout settings
             options.Lockout.AllowedForNewUsers = true;
-        });
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(2);
+            options.Lockout.MaxFailedAccessAttempts = 3;
+        })
+        .AddRoles<AppRole>()                              // RoleManager support
+        .AddSignInManager<SignInManager<AppUser>>()       // Login support (optional)
+        .AddEntityFrameworkStores<ApplicationDbContext>() // EF Core persistence
+        .AddDefaultTokenProviders();                      // Reset password, email confirm, security stamp
+
     }
 
     public static void AddMediatRAuthorizationApi(this IServiceCollection services)
         => services.AddMediatR(config =>
              config.RegisterServicesFromAssembly(AssemblyReference.Assembly))
+            .AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionPipelineBehavior<,>))
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>))
             .AddValidatorsFromAssembly(Contract.AssemblyReference.Assembly, includeInternalTypes: true);
     public static void AddRedisAuthorizationApi(this IServiceCollection services, IConfiguration configuration)
@@ -92,5 +110,13 @@ public static class ServiceCollectionExtensions
     {
         services.AddTransient<IJwtTokenService, JwtTokenService>();
         services.AddTransient<ICacheService, CacheService>();
+    }
+
+    public static void AddRepositoryBaseConfiguration(this IServiceCollection services)
+    {
+        services.AddTransient(typeof(IRepositoryBase<,>), typeof(RepositoryBase<,>));
+        services.AddTransient<IUnitOfWork, EFUnitOfWork>();
+        // Do NOT use TransactionScope when using SQL retry strategies
+        // EF Core cannot retry operations safely inside TransactionScope.
     }
 }

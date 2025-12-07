@@ -1,9 +1,9 @@
 ﻿using Command.Domain.Abstractions.Repositories;
+using Command.Domain.Exceptions;
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 using Contract.Services.V1.Posts.ViewModels;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing;
 
 namespace Command.Application.UserCases.V1.Commands.Post;
 public sealed class CreatePostCommandHandler : ICommandHandler<Contract.Services.V1.Posts.Command.CreatePostCommand>
@@ -11,7 +11,6 @@ public sealed class CreatePostCommandHandler : ICommandHandler<Contract.Services
     private readonly IRepositoryBase<Domain.Entities.Posts, Guid> _postRepositoryBase;
 
     private readonly IRepositoryBase<Tags, Guid> _tagRepositoryBase;
-
 
     public CreatePostCommandHandler(IRepositoryBase<Domain.Entities.Posts, Guid> postRepositoryBase, IRepositoryBase<Tags, Guid> tagRepositoryBase)
     {
@@ -21,9 +20,11 @@ public sealed class CreatePostCommandHandler : ICommandHandler<Contract.Services
 
     public async Task<Result> Handle(Contract.Services.V1.Posts.Command.CreatePostCommand request, CancellationToken cancellationToken)
     {
+        if (request.TagIds.Count() < 4) { 
+            throw new PostException.MinimumTagsRequiredException(4);
+        }
 
-        var tags = await _tagRepositoryBase.FindAll(tag => request.TagIds.Contains(tag.Id)).ToListAsync(cancellationToken);
-
+        var tags = await _tagRepositoryBase.FindAll(tag => request.TagIds.Contains(tag.Id)).ToListAsync(cancellationToken);      
 
         var tagViewModel = new List<PostTagViewModel>();
         foreach (var tag in tags)

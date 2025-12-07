@@ -1,4 +1,6 @@
-﻿using Query.Domain.Abstractions;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+using Query.Domain.Abstractions;
 using Query.Domain.Constants;
 
 namespace Query.Domain.Collections;
@@ -6,6 +8,7 @@ namespace Query.Domain.Collections;
 [CollectionName(CollectionNames.Post)]
 public class PostProjection : Document
 {
+
     public string Title { get; set; }
     public string Content { get; set; }
     public string Slug { get; set; }
@@ -14,24 +17,10 @@ public class PostProjection : Document
     public int ViewCount { get; set; }
     public int ReadingTimeMinutes { get; set; }
 
-    // Embed Author
-    public AuthorViewModel Author { get; set; }
+    [BsonRepresentation(BsonType.String)]
+    public Guid AuthorId { get; set; }
 
-    // Embed list tags
-    public List<TagViewModel> Tags { get; set; } = new();
-}
-
-public class AuthorViewModel
-{
-    public Guid Id { get; set; }
-    public string DisplayName { get; set; }
-    public string AvatarUrl { get; set; }
-}
-
-public class TagViewModel
-{
-    public Guid Id { get; set; }
-    public string Name { get; set; }
-    public string Slug { get; set; }
-    public string Color { get; set; }
+    // List of Tag
+    [BsonRepresentation(BsonType.String)]
+    public List<Guid> TagIds { get; set; } = new();
 }

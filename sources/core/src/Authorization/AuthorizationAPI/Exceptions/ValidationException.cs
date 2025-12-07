@@ -2,13 +2,13 @@
 
 public class ValidationException : DomainException
 {
-    public ValidationException(IReadOnlyCollection<ValidationError> errors)
+    public ValidationException(List<ValidationError> errors)
         : base("Validation Failure", "One or more validation errors occurred")
     {
         Errors = errors;
     }
 
-    public IReadOnlyCollection<ValidationError> Errors { get;  }
+    public List<ValidationError> Errors { get;  }
 }
 
 public record ValidationError(string Code, string Message);
