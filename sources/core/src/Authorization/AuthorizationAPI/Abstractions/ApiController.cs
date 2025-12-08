@@ -21,7 +21,7 @@ public abstract class ApiController : ControllerBase
            IValidationResult validationResult =>
                Results.BadRequest(
                    CreateProblemDetails(
-                       "Valication Error",
+                       "Validation Error",
                        StatusCodes.Status400BadRequest,
                        result.Error,
                        validationResult.Errors)),

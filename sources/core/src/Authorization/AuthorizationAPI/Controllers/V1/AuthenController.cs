@@ -10,7 +10,6 @@ using CommandV1 = Contract.Services.V1.Identity.Command;
 
 namespace AuthorizationAPI.Controllers.V1;
 
-//[ApiVersionNeutral] // ->để nói rằng controller này không tham gia versioning
 [ApiVersion(1)]
 public class AuthenController : ApiController
 {

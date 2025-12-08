@@ -42,7 +42,7 @@ public class RegisterCommandHandler : ICommandHandler<Command.RegisterUser>
 
         if(request.Password != request.ConfirmPassword)
         {
-            throw new IdentityException.PasswordsDoNotMatchException();
+            throw new IdentityException.confirmPassWordDoNotMatchException();
         }
 
         var createUserResult = await _userManager.CreateAsync(newUser, request.Password);
@@ -54,31 +54,31 @@ public class RegisterCommandHandler : ICommandHandler<Command.RegisterUser>
 
 
         // Raise domain event UserRegisteredEvent
-        var roles = await _userManager.GetRolesAsync(newUser);
+        //var roles = await _userManager.GetRolesAsync(newUser);
 
-        var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Email, newUser.Email),
-        };
+        //var claims = new List<Claim>
+        //{
+        //    new Claim(ClaimTypes.Email, newUser.Email),
+        //};
 
-        foreach (var role in roles)
-        {
-            claims.Add(new Claim(ClaimTypes.Role, role));
-        }
+        //foreach (var role in roles)
+        //{
+        //    claims.Add(new Claim(ClaimTypes.Role, role));
+        //}
 
-        var accessToken = _jwtTokenService.GenerateAccessToken(claims);
-        var refrestToken = _jwtTokenService.GenerateRefreshToken();
+        //var accessToken = _jwtTokenService.GenerateAccessToken(claims);
+        //var refrestToken = _jwtTokenService.GenerateRefreshToken();
 
-        var response = new Response.Authenticated()
-        {
-            AccessToken = accessToken,
-            RefreshToken = refrestToken,
-            RefreshTokenExpiryTime = DateTime.Now.AddMinutes(5)
-        };
+        //var response = new Response.Authenticated()
+        //{
+        //    AccessToken = accessToken,
+        //    RefreshToken = refrestToken,
+        //    RefreshTokenExpiryTime = DateTime.Now.AddMinutes(5)
+        //};
 
-        // Key is unique, ex: email
-        await _cacheService.SetAsync(request.Email, response);
+        //// Key is unique, ex: email
+        //await _cacheService.SetAsync(request.Email, response);
 
-        return Result.Success(response);
+        return Result.Success("Register susscess!");
     }
 }

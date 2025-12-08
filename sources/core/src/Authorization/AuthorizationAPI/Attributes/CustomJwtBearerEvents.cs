@@ -3,6 +3,7 @@ using Contract.Services.V1.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Serilog;
+using System.Security.Claims;
 
 namespace AuthorizationApi.Attributes;
 
@@ -25,7 +26,7 @@ public class CustomJwtBearerEvents : JwtBearerEvents
         {
             var requestToken = accessToken.EncodedToken;
 
-            var userNameKey = accessToken.Claims.FirstOrDefault(p => p.Type == "UserName")?.Value;
+            var userNameKey = accessToken.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Email)?.Value;
             var authenticated = await _cacheService.GetAsync<Response.Authenticated>(userNameKey);
 
             if (authenticated is null || authenticated.AccessToken != requestToken)

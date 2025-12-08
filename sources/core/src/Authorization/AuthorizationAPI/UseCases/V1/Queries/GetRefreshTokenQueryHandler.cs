@@ -26,7 +26,7 @@ public class GetRefreshTokenQueryHandler : IQueryHandler<Contract.Services.V1.Id
         // Giải mã Access Token cũ, lấy danh tính (ClaimsPrincipal) của người dùng
         // Lưu ý: Dù Access Token đã hết hạn nhưng nó vẫn có thể được giải mã để lấy thông tin.
         var principal = _jwtTokenService.GetPrincipalFromExpiredToken(Accesstoken);
-        var userNameKey = principal.FindFirstValue("Email").ToString();
+        var userNameKey = principal.FindFirstValue(ClaimTypes.Email).ToString();
 
         var authenticated = await _cacheService.GetAsync<Response.Authenticated>(userNameKey);
         /*

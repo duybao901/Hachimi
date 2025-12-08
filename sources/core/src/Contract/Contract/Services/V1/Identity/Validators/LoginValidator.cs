@@ -5,7 +5,9 @@ public class LoginValidator : AbstractValidator<Query.Login>
 {
     public LoginValidator()
     {
-        RuleFor(p => p.Email).NotEmpty().EmailAddress();
-        RuleFor(p => p.Password).NotEmpty();
+        RuleFor(x => x.Email)
+            .NotEmpty().WithMessage("Email is required")
+            .EmailAddress().WithMessage("A valid email is required");
+        RuleFor(p => p.Password).NotEmpty().WithMessage("Email is required");
     }
 }

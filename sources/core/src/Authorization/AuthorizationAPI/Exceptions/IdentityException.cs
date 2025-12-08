@@ -19,6 +19,14 @@ public static class IdentityException
         }
     }
 
+    public class UserNotExistsException : BadRequestException
+    {
+        public UserNotExistsException(string email)
+            : base($"A user with the email {email} not exists.")
+        {
+        }
+    }
+
     public class UserCreationFailedException : Exception
     {
         public IReadOnlyList<IdentityError> Errors { get; }
@@ -30,10 +38,18 @@ public static class IdentityException
         }
     }
 
-    public class PasswordsDoNotMatchException : BadRequestException
+    public class confirmPassWordDoNotMatchException : BadRequestException
     {
-        public PasswordsDoNotMatchException()
-            : base("The provided passwords do not match.")
+        public confirmPassWordDoNotMatchException()
+            : base("Confirm password do not match")
+        {
+        }
+    }
+
+    public class WrongPassWordException : BadRequestException
+    {
+        public WrongPassWordException()
+            : base("The password is incorrect")
         {
         }
     }
