@@ -16,4 +16,6 @@ internal static class TableNames
     internal const string AppRoleClaims = nameof(AppRoleClaims); // IdentityRoleClaim
     internal const string AppUserLogins = nameof(AppUserLogins); // IdentityRoleClaim
     internal const string AppUserTokens = nameof(AppUserTokens); // IdentityUserToken
+
+    internal const string UserProfiles = nameof(UserProfiles);
 }

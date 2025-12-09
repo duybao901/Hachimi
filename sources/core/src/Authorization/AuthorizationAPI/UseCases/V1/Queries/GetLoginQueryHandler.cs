@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using AuthorizationApi.Abstractions;
 using AuthorizationApi.Exceptions;
-using AuthorizationAPI.Identity;
+using AuthorizationAPI.Entities.Identity;
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 using Contract.Services.V1.Identity;

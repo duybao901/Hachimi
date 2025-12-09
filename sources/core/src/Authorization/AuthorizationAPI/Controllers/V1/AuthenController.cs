@@ -33,7 +33,7 @@ public class AuthenController : ApiController
 
     [HttpPost("register", Name = "register")]
     [AllowAnonymous]
-    public async Task<IResult> Register([FromBody] CommandV1.RegisterUser request)
+    public async Task<IResult> Register([FromBody] CommandV1.RegisterUserCommand request)
     {
         Result result = await Sender.Send(request);
         if (result.IsFailure)

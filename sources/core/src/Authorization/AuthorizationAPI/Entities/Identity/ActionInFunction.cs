@@ -1,4 +1,4 @@
-﻿namespace AuthorizationAPI.Identity;
+﻿namespace AuthorizationAPI.Entities.Identity;
 public class ActionInFunction
 {
     public string ActionId { get; set; }

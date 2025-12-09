@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 
 namespace Contract.Services.V1.Identity.Validators;
-public class RegisterValidator : AbstractValidator<Command.RegisterUser>
+public class RegisterValidator : AbstractValidator<Command.RegisterUserCommand>
 {
     public RegisterValidator()
     {

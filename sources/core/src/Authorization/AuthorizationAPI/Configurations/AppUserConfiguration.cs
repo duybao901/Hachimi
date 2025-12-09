@@ -1,5 +1,5 @@
 ﻿using AuthorizationAPI.Contants;
-using AuthorizationAPI.Identity;
+using AuthorizationAPI.Entities.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,9 +13,6 @@ internal sealed class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
 
         builder.HasKey(x => x.Id);
         builder.HasIndex(x => x.Email).IsUnique();
-        builder.HasIndex(x => x.UserName).IsUnique();
-        builder.Property(x => x.Email).IsRequired().HasMaxLength(256);
-        builder.Property(x => x.UserName).IsRequired().HasMaxLength(256);
 
         // Each User can have many UserClaims
         builder.HasMany(AppUsers => AppUsers.UserClaims)

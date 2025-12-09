@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AuthorizationAPI.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
 
-namespace AuthorizationAPI.Identity.SeedData;
-public static class SeedRoleAsync {
+namespace AuthorizationAPI.SeedData;
+public static class SeedRoleAsync
+{
     public static async Task SeedRolesAsync(IServiceProvider services)
     {
         var roleManager = services.GetRequiredService<RoleManager<AppRole>>();

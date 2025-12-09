@@ -1,13 +1,8 @@
-﻿using Contract.Services.V1.Identity;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
-namespace AuthorizationAPI.Identity;
+namespace AuthorizationAPI.Entities.Identity;
 public class AppUser : IdentityUser<Guid>
-{
-    public string Name { get; set; }
-    public string? Bio { get; set; }
-    public string? AvatarUrl { get; set; }
-
+{   
     public virtual ICollection<IdentityUserClaim<Guid>> UserClaims { get; set; }
     public virtual ICollection<IdentityUserLogin<Guid>> UserLogins { get; set; }
     public virtual ICollection<IdentityUserToken<Guid>> UserTokens { get; set; }

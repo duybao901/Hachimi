@@ -3,7 +3,7 @@
 namespace Contract.Services.V1.Identity;
 public static class Command
 {
-    public record class RegisterUser(
+    public record class RegisterUserCommand(
         string Name,
         string Email,
         string Password,

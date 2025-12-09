@@ -1,5 +1,5 @@
 ﻿using AuthorizationAPI.Contants;
-using AuthorizationAPI.Identity;
+using AuthorizationAPI.Entities.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -1,7 +1,7 @@
 ﻿using AuthorizationAPI.Contants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Action = AuthorizationAPI.Identity.Action;
+using Action = AuthorizationAPI.Entities.Identity.Action;
 
 
 namespace AuthorizationAPI.Configurations;

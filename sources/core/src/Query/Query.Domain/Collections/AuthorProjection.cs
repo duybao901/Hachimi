@@ -1,6 +1,8 @@
 ﻿using Query.Domain.Abstractions;
+using Query.Domain.Constants;
 
 namespace Query.Domain.Collections;
+[CollectionName(CollectionNames.Author)]
 public class AuthorProjection : Document
 {
     public string Name { get; set; }

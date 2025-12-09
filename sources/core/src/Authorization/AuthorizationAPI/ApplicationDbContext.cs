@@ -1,8 +1,10 @@
 ﻿using AuthorizationApi;
-using AuthorizationAPI.Identity;
+using AuthorizationAPI.Entities;
+using AuthorizationAPI.Entities.Identity;
+using AuthorizationAPI.Outbox;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Action = AuthorizationAPI.Identity.Action;
+using Action = AuthorizationAPI.Entities.Identity.Action;
 
 namespace AuthorizationAPI;
 public class ApplicationDbContext : IdentityDbContext<AppUser, AppRole, Guid>
@@ -25,4 +27,8 @@ public class ApplicationDbContext : IdentityDbContext<AppUser, AppRole, Guid>
     public DbSet<ActionInFunction> ActionInFunctions { get; set; }
 
     public DbSet<Permission> Permissions { get; set; }
+
+    public DbSet<UserProfile> UserProfiles { get; set; }
+
+    public DbSet<OutboxMessage> OutboxMessages { get; set; }
 }
