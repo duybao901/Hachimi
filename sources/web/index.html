@@ -4,26 +4,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Hachimi FE</title>
-
-    <script>
-      (function() {
-        try {
-          const stored = localStorage.getItem('theme'); // "light" | "dark" | null
-          if (stored === 'dark') {
-            document.documentElement.classList.add('dark');
-          } else if (stored === 'light') {
-            document.documentElement.classList.remove('dark');
-          } else {
-            // no preference saved -> respect system preference
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (prefersDark) document.documentElement.classList.add('dark');
-          }
-        } catch (e) {
-          // ignore errors (e.g., privacy mode blocking localStorage)
-        }
-      })();
-    </script>
-
     <link rel="stylesheet" href="/src/styles/index.css" />
   </head>
   <body>
