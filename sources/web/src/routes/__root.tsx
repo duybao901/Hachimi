@@ -8,11 +8,9 @@ export const Route = createRootRoute({
 function RootLayout() {
   return (
     <>
-      <div className="w-full">
-        <main className="max-w-3xl mx-auto mt-6 px-4">
-          <Outlet />
-        </main>
-      </div>
+      <main className="">
+        <Outlet />
+      </main>
       <TanStackRouterDevtools></TanStackRouterDevtools>
     </>
   )
