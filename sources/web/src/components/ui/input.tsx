@@ -6,11 +6,23 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   return (
     <input
       type={type}
-      data-slot="input"
       className={cn(
-        "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-        "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+        // Base dev.to style
+        "w-full rounded border border-gray-300 bg-white px-2 py-2 text-sm",
+        "placeholder:text-gray-400",
+        "focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary",
+        "transition-all",
+
+        // Hover like dev.to
+        "hover:border-gray-400",
+
+        // Disabled state
+        "disabled:opacity-60 disabled:cursor-not-allowed",
+
+        // Dark mode
+        "dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100 dark:placeholder:text-gray-500",
+        "dark:focus:ring-blue-400 dark:focus:border-blue-400",
+
         className
       )}
       {...props}
