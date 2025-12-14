@@ -1,35 +1,12 @@
 -- User
-SELECT TOP (1000) [Id]
-      ,[Name]
-      ,[UserName]
-      ,[NormalizedUserName]
-      ,[Email]
-      ,[NormalizedEmail]
-      ,[EmailConfirmed]
-      ,[PasswordHash]
-      ,[SecurityStamp]
-      ,[ConcurrencyStamp]
-      ,[PhoneNumber]
-      ,[PhoneNumberConfirmed]
-      ,[TwoFactorEnabled]
-      ,[LockoutEnd]
-      ,[LockoutEnabled]
-      ,[AccessFailedCount]
-      ,[AvatarUrl]
-      ,[Bio]
-  FROM [HachimiDatabase].[dbo].[AppUsers]
+SELECT * FROM [HachimiDatabase].[dbo].[AppUsers]
+SELECT * FROM [HachimiDatabase].[dbo].[AppUserRoles]
+SELECT * FROM [HachimiDatabase].[dbo].[AppRoles]
+SELECT * FROM [HachimiDatabase].[dbo].UserProfiles
 
-SELECT TOP (1000) [UserId]
-      ,[RoleId]
-  FROM [HachimiDatabase].[dbo].[AppUserRoles]
+-- Clear all users
+DELETE FROM [HachimiDatabase].[dbo].[AppUserRoles]
+DELETE FROM [HachimiDatabase].[dbo].AppUsers
+DELETE FROM UserProfiles
 
-  DELETE FROM [HachimiDatabase].[dbo].[AppUserRoles]
-  DELETE FROM [HachimiDatabase].[dbo].AppUsers
 
-  SELECT TOP (1000) [Id]
-      ,[Description]
-      ,[RoleCode]
-      ,[Name]
-      ,[NormalizedName]
-      ,[ConcurrencyStamp]
-  FROM [HachimiDatabase].[dbo].[AppRoles]

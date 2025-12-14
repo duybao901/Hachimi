@@ -45,6 +45,23 @@ public static class JwtExtensions
             };
 
 
+            //o.Events = new JwtBearerEvents
+            //{
+            //    OnChallenge = context =>
+            //    {
+            //        if (context.Error == "invalid_token" &&
+            //            context.ErrorDescription?.Contains("expired", StringComparison.OrdinalIgnoreCase) == true)
+            //        {
+            //            context.Response.Headers.Add("IS-TOKEN-EXPIRED", "true");
+            //        }
+
+            //        // prevent JwtBearer override response  
+            //        context.HandleResponse();
+            //        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            //        return Task.CompletedTask;
+            //    }
+            //};
+
             o.Events = new JwtBearerEvents
             {
                 OnAuthenticationFailed = context =>

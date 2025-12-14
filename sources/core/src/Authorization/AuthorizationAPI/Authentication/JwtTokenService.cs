@@ -1,6 +1,8 @@
 ﻿using AuthorizationApi.Abstractions;
 using AuthorizationApi.DependencyInjection.Options;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -36,12 +38,16 @@ public class JwtTokenService : IJwtTokenService
 
     public string GenerateRefreshToken()
     {
-        var randomNumber = new byte[32];
-        using (var rng = RandomNumberGenerator.Create())
-        {
-            rng.GetBytes(randomNumber);
-            return Convert.ToBase64String(randomNumber);
-        }
+        var bytes = new byte[32]; // 256-bit
+        RandomNumberGenerator.Fill(bytes);
+        return WebEncoders.Base64UrlEncode(bytes); // URL & cookie safe
+    }
+
+    public string HashToken(string token)
+    {
+        using var sha = SHA256.Create();
+        var bytes = sha.ComputeHash(Encoding.UTF8.GetBytes(token));
+        return Convert.ToHexString(bytes);
     }
 
     public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)

@@ -8,9 +8,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{175B157D-2298-45E2-9D11-99F6AF9540EC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Command", "Command", "{3BCB9C54-CBA1-42A4-8C57-03C817B4482A}"
-	ProjectSection(SolutionItems) = preProject
-		src\Authorization\AuthorizationAPI\appsettings.json = src\Authorization\AuthorizationAPI\appsettings.json
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Query", "Query", "{0A4710C9-8451-4F67-9F5E-C7FABA7C272F}"
 EndProject

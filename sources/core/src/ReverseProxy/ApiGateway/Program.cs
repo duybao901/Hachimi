@@ -11,7 +11,11 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("http://localhost:5173")
               .AllowAnyHeader()
               .AllowAnyMethod()
-              .AllowCredentials();
+              .AllowCredentials()
+              .WithExposedHeaders(
+                  "IS-TOKEN-EXPIRED",
+                  "IS-TOKEN-REVOKED"
+              );
     });
 });
 

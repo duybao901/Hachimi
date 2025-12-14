@@ -18,26 +18,49 @@ public class CustomJwtBearerEvents : JwtBearerEvents
          _logger = logger;
     }
 
-    public override async Task TokenValidated(TokenValidatedContext context)
+
+    // Check REVOKED-TOKEN -> move to AuthorizationAPI refresh token api
+    //public override async Task TokenValidated(TokenValidatedContext context)
+    //{
+    //    if (context.SecurityToken is not JsonWebToken jwt)
+    //    {
+    //        context.Fail("Invalid token format");
+    //        return;
+    //    }
+
+    //    var email = jwt.Claims
+    //        .FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+    //    if (string.IsNullOrEmpty(email))
+    //    {
+    //        context.Fail("Missing email claim");
+    //        return;
+    //    }
+
+    //    var session = await _cacheService
+    //        .GetAsync<Response.Authenticated>(email);
+
+    //    if (session is null || session.AccessToken != jwt.EncodedToken)
+    //    {
+    //        context.Response.Headers["IS-TOKEN-REVOKED"] = "true";
+    //        context.Fail("Token revoked");
+    //    }
+    //}
+
+    // Check TOKEN-EXPIRED
+    public override Task Challenge(JwtBearerChallengeContext context)
     {
-        // JsonWebToken accessToken = context.SecurityToken as JsonWebToken;
-        // ✅ Kiểm tra và ép kiểu trong 1 bước: Down-cast the property to JsonWebToken
-        if (context.SecurityToken is JsonWebToken accessToken)
+        if (context.Error == "invalid_token" &&
+            context.ErrorDescription?.Contains("expired", StringComparison.OrdinalIgnoreCase) == true)
         {
-            var requestToken = accessToken.EncodedToken;
-
-            var userNameKey = accessToken.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Email)?.Value;
-            var authenticated = await _cacheService.GetAsync<Response.Authenticated>(userNameKey);
-
-            if (authenticated is null || authenticated.AccessToken != requestToken)
-            {
-                context.Response.Headers.Add("IS-TOKEN-REVOKED", "true");
-                context.Fail("Authentication fail. Token has been revoked!");
-            }
+            _logger.LogInformation("Token expired.");
+            context.Response.Headers["IS-TOKEN-EXPIRED"] = "true";
         }
-        else
-        {
-            context.Fail("Authentication fail.");
-        }
+
+        // Importance: Overide JwtBearer default response
+        context.HandleResponse();
+
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        return Task.CompletedTask;
     }
 }

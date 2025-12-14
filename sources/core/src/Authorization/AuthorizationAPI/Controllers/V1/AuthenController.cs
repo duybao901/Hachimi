@@ -19,20 +19,18 @@ public class AuthenController : ApiController
     }
 
     [HttpPost("login", Name = "Login")]
-    [AllowAnonymous]
     public async Task<IResult> Login([FromBody] Query.Login login)
     {
         Result result = await Sender.Send(login);
         if (result.IsFailure)
         {
-            return HandlerFailure(result);
+            return HandlerFailure(result);  
         }
 
         return Results.Ok(result);
     }
 
     [HttpPost("register", Name = "register")]
-    [AllowAnonymous]
     public async Task<IResult> Register([FromBody] CommandV1.RegisterUserCommand request)
     {
         Result result = await Sender.Send(request);
@@ -45,12 +43,11 @@ public class AuthenController : ApiController
     }
 
     [HttpPost("refresh-token", Name = "Refresh Token")]
-    [Authorize]
-    public async Task<IResult> RefreshToken([FromBody] Query.Token token)
-    {
-        var AccessToken = await HttpContext.GetTokenAsync("access_token");
+    public async Task<IResult> RefreshToken()
+        {
+        var refreshToken = Request.Cookies["refreshToken"];
 
-        var result = await Sender.Send(new Query.Token(AccessToken, token.RefreshToken));
+        var result = await Sender.Send(new Query.Refresh(refreshToken));
 
         if (result.IsFailure)
         {
@@ -61,7 +58,6 @@ public class AuthenController : ApiController
     }
 
     [HttpPost("revoke-token", Name = "Revoke Token")]
-    [Authorize]
     public async Task<IResult> RevokeToken()
     {
         var AccessToken = await HttpContext.GetTokenAsync("access_token");

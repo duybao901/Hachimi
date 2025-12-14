@@ -3,8 +3,8 @@
 namespace Contract.Services.V1.Identity;
 public static class Query
 {
-    public record Login(string Email, string Password) : IQuery<Response.Authenticated>;
+    public record Login(string Email, string Password) : IQuery<Response.LoginTokenResponse>;
 
-    public record Token(string? AccessToken, string? RefreshToken) : IQuery<Response.Authenticated>;
+    public record Refresh(string RefreshToken) : IQuery<Response.RefreshTokenResponse>;
 }
 

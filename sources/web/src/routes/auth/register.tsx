@@ -12,8 +12,6 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
 import { useState } from 'react'
 import { Spinner } from '@/components/ui/spinner'
@@ -51,20 +49,21 @@ function Register() {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true);
-      // await axios.post("http://localhost:5000/auth-api/v1/authen/register", data)
-      // toast.success("Register successfully! Please check your email to verify your account.");
+      await axios.post("http://localhost:5000/auth-api/v1/authen/register", data)
+      toast.success("Register successfully! Please check your email to verify your account.");
       setIsLoading(false);
       navigate({ to: '/auth/login' });
     } catch (error: any) {
       setIsLoading(false);
-      toast.error(error.response.data?.Detail);
+      if(error.response){
+        toast.error(error.response?.data?.Detail || error.message || "Server error");
+      }
     }
   }
 
-
   return (
     <div className='w-full flex items-center justify-center gap-10 p-10'>
-      <div>
+      <div className='w-[640px] p-12'>
         <div className='mb-6 text-center'>
           <h1 className='text-3xl font-bold mb-2'>
             Join the DEV Community
@@ -159,7 +158,7 @@ function Register() {
               By signing in, you are agreeing to our <Link to="/auth/login" className='text-primary'>privacy policy, terms of use</Link> and <Link to="/auth/login" className='text-primary'>code of conduct</Link>.
             </p>
 
-            <hr className='w-full h-[1px] bg-gray-200 mt-6 mb-6'></hr>
+            <hr className='w-full h-px bg-gray-200 mt-6 mb-6'></hr>
 
             <p className='text-sm text-center'>
               Already have an account? <Link to="/auth/login" className="text-primary hover:underline hover:underline-offset-4">Log in.</Link>

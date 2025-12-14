@@ -9,6 +9,18 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
 // Log
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
@@ -51,7 +63,12 @@ builder.Services.AddScoped<CustomJwtBearerEvents>();
 // Middleware
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
+// **
 var app = builder.Build();
+
+// Use CORS
+//app.UseRouting();
+//app.UseCors("AllowFrontend");
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
