@@ -53,14 +53,8 @@ public class GetLoginQueryHandler : IQueryHandler<Contract.Services.V1.Identity.
         }
 
         var accessToken = _jwtTokenService.GenerateAccessToken(claims);
-        var refrestToken = _jwtTokenService.GenerateRefreshToken();
-        var hashRefreshToken = _jwtTokenService.HashToken(refrestToken);
-
-        var response = new Response.LoginTokenResponse()
-        {
-            AccessToken = accessToken,
-            RefreshTokenExpiryTime = DateTime.Now.AddDays(7)
-        };
+        var refreshToken = _jwtTokenService.GenerateRefreshToken();
+        var hashRefreshToken = _jwtTokenService.HashToken(refreshToken);
 
         var cookieOptions = new CookieOptions
         {
@@ -71,18 +65,29 @@ public class GetLoginQueryHandler : IQueryHandler<Contract.Services.V1.Identity.
             Path = "/"                      // QUAN TRỌNG
         };
 
-        _httpContextAccessor.HttpContext.Response.Cookies.Append("refreshToken", refrestToken, cookieOptions);
+        _httpContextAccessor.HttpContext.Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
 
         // Key is unique, ex: email
         var authenticated = new Response.Authenticated()
         {
             AccessToken = accessToken,
-            RefreshToken = refrestToken,
+            RefreshToken = refreshToken,
             RefreshTokenExpiryTime = DateTime.Now.AddDays(7)
         };
 
         // key is refreshToken
         await _cacheService.SetAsync(hashRefreshToken, authenticated, cancellationToken).ConfigureAwait(true);
+
+        var response = new Response.LoginTokenResponse()
+        {
+            AccessToken = accessToken,
+            RefreshTokenExpiryTime = DateTime.Now.AddDays(7),
+            CurrentUser = new Response.CurrentUser()
+            {
+                Id = userExists.Id,
+                Email = userExists.Email,
+            }
+        };
 
         return Result.Success(response);
     }

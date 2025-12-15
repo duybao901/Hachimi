@@ -2,7 +2,6 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import axios from "axios"
 
 import {
   Field,
@@ -17,8 +16,7 @@ import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
 import { useState } from "react"
 import { Spinner } from "@/components/ui/spinner"
-import { getCurrentUser, loadSessionOnInit, login } from "@/services/auth.service"
-import { authApiV1 } from "@/api/auth.api"
+import { login } from "@/services/auth.service"
 
 const formSchema = z.object({
   email: z.string(),
@@ -41,41 +39,14 @@ function Login() {
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const refreshToken = async () => {
-    try {
-      const res = await authApiV1.post("/refresh-token");
-      toast.success("Refresh token successfully!")
-      // navigate({ to: '/' });
-    } catch (error: any) {
-      if (error.response) {
-        toast.error(error.response?.data?.Detail)
-      } else {
-        toast.error(error.message || "Server error")
-      }
-    }
-  }
-
-  const testToken = async () => {
-    try {
-      await getCurrentUser()
-      toast.success("Test token successfully!")
-      // navigate({ to: '/' });
-    } catch (error: any) {
-      if (error.response) {
-        toast.error(error.response?.data?.Detail)
-      } else {
-        toast.error(error.message || "Server error")
-      }
-    }
-  }
-
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true)
       await login(data.email, data.password)
       toast.success("Login successfully!")
       setIsLoading(false)
-      // navigate({ to: '/' });
+      localStorage.setItem("isFirstLogin", "true")
+      navigate({ to: '/' });
     } catch (error: any) {
       setIsLoading(false)
       if (error.response) {
@@ -178,10 +149,6 @@ function Login() {
           </Link>
         </p>
       </div>
-
-      <Button onClick={refreshToken}>Refresh Token</Button>
-
-      <Button onClick={testToken}>Test Token</Button>
     </div>
   )
 }

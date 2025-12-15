@@ -1,11 +1,10 @@
-﻿using System.Security.Claims;
-using AuthorizationApi.Abstractions;
+﻿using AuthorizationApi.Abstractions;
 using AuthorizationApi.Exceptions;
-using Azure.Core;
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 using Contract.Services.V1.Identity;
-using StackExchange.Redis;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace AuthorizationApi.UseCases.V1.Queries;
 
@@ -14,12 +13,14 @@ public class GetRefreshTokenQueryHandler : IQueryHandler<Contract.Services.V1.Id
     private readonly IJwtTokenService _jwtTokenService;
     private readonly ICacheService _cacheService;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly UserManager<AuthorizationAPI.Entities.Identity.AppUser> _userManager;
 
-    public GetRefreshTokenQueryHandler(IJwtTokenService jwtTokenService, ICacheService cacheService, IHttpContextAccessor httpContextAccessor)
+    public GetRefreshTokenQueryHandler(IJwtTokenService jwtTokenService, ICacheService cacheService, IHttpContextAccessor httpContextAccessor, UserManager<AuthorizationAPI.Entities.Identity.AppUser> userManager)
     {
         _jwtTokenService = jwtTokenService;
         _cacheService = cacheService;
         _httpContextAccessor = httpContextAccessor;
+        _userManager = userManager;
     }
 
     public async Task<Result<Response.RefreshTokenResponse>> Handle(Contract.Services.V1.Identity.Query.Refresh request, CancellationToken cancellationToken)
@@ -30,7 +31,7 @@ public class GetRefreshTokenQueryHandler : IQueryHandler<Contract.Services.V1.Id
         {
             throw new IdentityException.TokenException("Request Token Invalid");
         }
-       
+
         var authenticated = await _cacheService.GetAsync<Response.Authenticated>(hashRefreshToken);
         /*
             1. Tìm trong bộ nhớ cache (_cacheService.GetAsync) xem có thông tin xác thực của người dùng không.
@@ -71,10 +72,23 @@ public class GetRefreshTokenQueryHandler : IQueryHandler<Contract.Services.V1.Id
         };
         await _cacheService.SetAsync(hashNewRefreshToken, newAuthenticated, cancellationToken).ConfigureAwait(true);
 
+        var email = principal.FindFirstValue(ClaimTypes.Email).ToString();
+        var userExists = await _userManager.FindByEmailAsync(email);
+
+        if (userExists == null)
+        {
+            throw new IdentityException.UserNotExistsException(email);
+        }
+
         var refreshTokenResponse = new Response.RefreshTokenResponse
         {
             AccessToken = newAccessToken,
             RefreshTokenExpiryTime = DateTime.Now.AddDays(7),
+            CurrentUser = new Response.CurrentUser()
+            {
+                Id = userExists.Id,
+                Email = userExists.Email,
+            }
         };
 
         return Result.Success(refreshTokenResponse);

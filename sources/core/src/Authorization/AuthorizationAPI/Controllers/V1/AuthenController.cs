@@ -44,7 +44,7 @@ public class AuthenController : ApiController
 
     [HttpPost("refresh-token", Name = "Refresh Token")]
     public async Task<IResult> RefreshToken()
-        {
+    {
         var refreshToken = Request.Cookies["refreshToken"];
 
         var result = await Sender.Send(new Query.Refresh(refreshToken));
@@ -72,10 +72,26 @@ public class AuthenController : ApiController
         return Results.Ok(result);
     }
 
+    [HttpPost("logout", Name = "Logout user")]
+    public async Task<IResult> Logout()
+    {
+        var refreshToken = Request.Cookies["refreshToken"];
+
+        var result = await Sender.Send(new CommandV1.Logout(refreshToken));
+
+        if (result.IsFailure)
+        {
+            return HandlerFailure(result);
+        }
+
+        return Results.Ok(result);
+    }
+
     [HttpGet(Name = "Test authenticated")]
     [Authorize]
     public IResult TestAuthen()
     {
         return Results.Ok("You are authenticated");
     }
+
 }

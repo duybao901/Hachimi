@@ -53,7 +53,7 @@ public class RegisterCommandHandler : ICommandHandler<Command.RegisterUserComman
 
         await _userManager.AddToRoleAsync(newUser, "Author");
 
-        var userProfile = UserProfile.Create(newUser.Id, request.Name, newUser.NormalizedUserName, request.Email);
+        var userProfile = UserProfile.Create(newUser.Id, request.Name, newUser.UserName, request.Email);
         _userProfileRepositoryBase.Add(userProfile);
 
         return Result.Success("Register susscess!");

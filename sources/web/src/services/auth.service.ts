@@ -6,23 +6,21 @@ export async function login(email: string, password: string) {
   const res = await authApiV1.post("/login", { email, password });
 
   useAuthStore.getState().setAccessToken(res.data.value.accessToken);
-
-  // const profile = await queryApi.get("/me");
-  // useAuthStore.getState().setUser(profile.data);
+  useAuthStore.getState().setCurrentUser(res.data.value.currentUser);
 }
 
 export async function logout() {
   await authApiV1.post("/logout");
   useAuthStore.getState().logout();
+  localStorage.setItem("isFirstLogin", "false")
 }
 
 export async function loadSessionOnInit() {
   try {
     const res = await authApiV1.post("/refresh-token");
-    useAuthStore.getState().setAccessToken(res.data.accessToken);
-
-    // const profile = await queryApi.get("/me");
-    // useAuthStore.getState().setUser(profile.data);
+    localStorage.setItem("isFirstLogin", "true")
+    useAuthStore.getState().setAccessToken(res.data.value.accessToken);
+    useAuthStore.getState().setCurrentUser(res.data.value.currentUser);
   } catch {
     useAuthStore.getState().logout();
   }

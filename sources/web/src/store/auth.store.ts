@@ -4,27 +4,26 @@ import { devtools } from "zustand/middleware"
 export interface CurrentUser {
   id: string
   email: string
-  userName: string
 }
 
 type AuthState = {
-  user: CurrentUser | null
+  currentUser: CurrentUser | null
   accessToken: string | null
 }
 
 type AuthActions = {
   setAccessToken: (token: string | null) => void
-  setUser: (user: CurrentUser | null) => void
+  setCurrentUser: (user: CurrentUser | null) => void
   logout: () => void
 }
 
 export const useAuthStore = create<AuthState & AuthActions>()(
   devtools((set) => ({
-    user: null,
+    currentUser: null,
     accessToken: null,
 
     setAccessToken: (token) => set({ accessToken: token }),
-    setUser: (user) => set({ user }),
-    logout: () => set({ user: null, accessToken: null }),
+    setCurrentUser: (currentUser) => set({ currentUser }),
+    logout: () => set({ currentUser: null, accessToken: null }),
   }))
 )

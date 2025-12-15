@@ -34,8 +34,8 @@ public static class JwtExtensions
             var Key = Encoding.UTF8.GetBytes(jwtOption.SecretKey);
             o.TokenValidationParameters = new TokenValidationParameters
             {
-                ValidateIssuer = true, // on production make it true
-                ValidateAudience = true, // on production make it true
+                ValidateIssuer = false, // on production make it true
+                ValidateAudience = false, // on production make it true
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = jwtOption.Issuer,
