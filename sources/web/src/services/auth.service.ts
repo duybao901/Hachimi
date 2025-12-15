@@ -12,17 +12,20 @@ export async function login(email: string, password: string) {
 export async function logout() {
   await authApiV1.post("/logout");
   useAuthStore.getState().logout();
-  localStorage.setItem("isFirstLogin", "false")
 }
 
 export async function loadSessionOnInit() {
+
+  const {setAccessToken, setCurrentUser, setAuthLoaded, logout} = useAuthStore.getState();
+
   try {
     const res = await authApiV1.post("/refresh-token");
-    localStorage.setItem("isFirstLogin", "true")
-    useAuthStore.getState().setAccessToken(res.data.value.accessToken);
-    useAuthStore.getState().setCurrentUser(res.data.value.currentUser);
+    setAccessToken(res.data.value.accessToken);
+    setCurrentUser(res.data.value.currentUser);
   } catch {
-    useAuthStore.getState().logout();
+    logout();
+  } finally {
+    setAuthLoaded(true);
   }
 }
 

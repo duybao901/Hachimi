@@ -17,6 +17,7 @@ import { toast } from "sonner"
 import { useState } from "react"
 import { Spinner } from "@/components/ui/spinner"
 import { login } from "@/services/auth.service"
+import { guestGuard } from "@/guards/guestGuard"
 
 const formSchema = z.object({
   email: z.string(),
@@ -154,6 +155,10 @@ function Login() {
 }
 
 export const Route = createFileRoute("/auth/login")({
+  beforeLoad: () => {
+    console.log("before load...")
+    guestGuard();
+  },
   component: Login,
 })
 

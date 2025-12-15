@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { useState } from 'react'
 import { Spinner } from '@/components/ui/spinner'
+import { guestGuard } from '@/guards/guestGuard'
 
 const formSchema = z.object({
   name: z
@@ -55,7 +56,7 @@ function Register() {
       navigate({ to: '/auth/login' });
     } catch (error: any) {
       setIsLoading(false);
-      if(error.response){
+      if (error.response) {
         toast.error(error.response?.data?.Detail || error.message || "Server error");
       }
     }
@@ -171,6 +172,9 @@ function Register() {
 }
 
 export const Route = createFileRoute('/auth/register')({
+  beforeLoad: () => {
+    guestGuard();
+  },
   component: Register,
 })
 

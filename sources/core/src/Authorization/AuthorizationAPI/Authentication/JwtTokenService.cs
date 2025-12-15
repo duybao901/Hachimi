@@ -1,8 +1,8 @@
 ﻿using AuthorizationApi.Abstractions;
 using AuthorizationApi.DependencyInjection.Options;
+using AuthorizationApi.Exceptions;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json.Linq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -45,6 +45,10 @@ public class JwtTokenService : IJwtTokenService
 
     public string HashToken(string token)
     {
+        if (token == null)
+        {
+            throw new IdentityException.TokenException("Request Token Invalid");
+        }
         using var sha = SHA256.Create();
         var bytes = sha.ComputeHash(Encoding.UTF8.GetBytes(token));
         return Convert.ToHexString(bytes);

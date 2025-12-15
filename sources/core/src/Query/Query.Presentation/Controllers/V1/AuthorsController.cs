@@ -12,33 +12,33 @@ public class AuthorsController : ApiController
     {
     }
 
-    [HttpPost('me')]
-    [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
-    public async Task<IResult> GetCurrentUser()
-    {
-        var query = new QueryV1.GetAllPostsQuery();
-        Result result = await Sender.Send(query);
+    //[HttpPost('me')]
+    //[ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
+    //public async Task<IResult> GetCurrentUser()
+    //{
+    //    var query = new QueryV1.GetAllPostsQuery();
+    //    Result result = await Sender.Send(query);
 
-        if (result.IsFailure)
-        {
-            return HandlerFailure(result);
-        }
+    //    if (result.IsFailure)
+    //    {
+    //        return HandlerFailure(result);
+    //    }
 
-        return Results.Ok(result);
-    }
+    //    return Results.Ok(result);
+    //}
 
-    [HttpPost('info')]
-    [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
-    public async Task<IResult> GetCurrentUser()
-    {
-        var query = new QueryV1.GetAllPostsQuery();
-        Result result = await Sender.Send(query);
+    //[HttpPost('info')]
+    //[ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
+    //public async Task<IResult> GetCurrentUser()
+    //{
+    //    var query = new QueryV1.GetAllPostsQuery();
+    //    Result result = await Sender.Send(query);
 
-        if (result.IsFailure)
-        {
-            return HandlerFailure(result);
-        }
+    //    if (result.IsFailure)
+    //    {
+    //        return HandlerFailure(result);
+    //    }
 
-        return Results.Ok(result);
-    }
+    //    return Results.Ok(result);
+    //}
 }
