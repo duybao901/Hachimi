@@ -16,6 +16,7 @@ import { toast } from 'sonner'
 import { useState } from 'react'
 import { Spinner } from '@/components/ui/spinner'
 import { guestGuard } from '@/guards/guestGuard'
+import Logo from '@/assets/horse_logo.png'
 
 const formSchema = z.object({
   name: z
@@ -66,6 +67,9 @@ function Register() {
     <div className='w-full flex items-center justify-center gap-10 p-10'>
       <div className='w-[640px] p-12'>
         <div className='mb-6 text-center'>
+           <div className="flex justify-center mb-4">
+            <Link to='/' className="flex w-10 h-10"><img src={Logo} className="w-10 h-10"></img></Link>
+          </div>
           <h1 className='text-3xl font-bold mb-2'>
             Join the DEV Community
           </h1>
@@ -171,7 +175,7 @@ function Register() {
   )
 }
 
-export const Route = createFileRoute('/auth/register')({
+export const Route = createFileRoute("/auth/register")({
   beforeLoad: () => {
     guestGuard();
   },

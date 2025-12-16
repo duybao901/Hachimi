@@ -18,6 +18,7 @@ import { useState } from "react"
 import { Spinner } from "@/components/ui/spinner"
 import { login } from "@/services/auth.service"
 import { guestGuard } from "@/guards/guestGuard"
+import Logo from '@/assets/horse_logo.png'
 
 const formSchema = z.object({
   email: z.string(),
@@ -44,9 +45,13 @@ function Login() {
     try {
       setIsLoading(true)
       await login(data.email, data.password)
-      toast.success("Login successfully!")
+      toast("Login successfully!", {
+        action: {
+          label: "close",
+          onClick: () => {},
+        }
+      })
       setIsLoading(false)
-      localStorage.setItem("isFirstLogin", "true")
       navigate({ to: '/' });
     } catch (error: any) {
       setIsLoading(false)
@@ -62,6 +67,9 @@ function Login() {
     <div className="w-full flex items-center justify-center gap-10 p-10">
       <div className="w-[640px] p-12">
         <div className="mb-6 text-center">
+          <div className="flex justify-center mb-4">
+            <Link to='/' className="flex w-10 h-10"><img src={Logo} className="w-10 h-10"></img></Link>
+          </div>
           <h1 className="text-3xl font-bold mb-2">Join the DEV Community</h1>
           <p>DEV Community is a community of 3,620,351 amazing developers</p>
         </div>
@@ -154,9 +162,8 @@ function Login() {
   )
 }
 
-export const Route = createFileRoute("/auth/login")({
+export const Route = createFileRoute("/auth/login")({  
   beforeLoad: () => {
-    console.log("before load...")
     guestGuard();
   },
   component: Login,
