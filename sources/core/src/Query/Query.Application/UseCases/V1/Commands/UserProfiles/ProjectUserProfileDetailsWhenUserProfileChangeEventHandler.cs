@@ -24,6 +24,7 @@ public class ProjectUserProfileDetailsWhenUserProfileChangeEventHandler :
             Name = request?.Name,
             UserName = request.UserName,
             Email = request.Email,
+            AvatarUrl = request.AvatarUrl,
         };
 
         await _authorRepository.InsertOneAsync(newAuthor);

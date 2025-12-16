@@ -33,9 +33,9 @@ export function createApi(baseURL: string) {
           return Promise.reject(err)
         }
 
-        // if (headers["is-token-expired"] === "true") {
-        //   return handleRefreshToken(api, err)
-        // }
+        if (headers["is-token-expired"] === "true") {
+          return handleRefreshToken(api, err)
+        }
       }
 
       return Promise.reject(err)

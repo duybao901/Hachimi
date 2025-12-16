@@ -44,7 +44,7 @@ public static class ServiceCollectionExtensions
             builder
             .EnableDetailedErrors(true)
             .EnableSensitiveDataLogging(true)
-            .UseLazyLoadingProxies(true) // => If UseLazyLoadingProxies, all of the navigation fields should be VIRTUAL
+            .UseLazyLoadingProxies(false) // => If UseLazyLoadingProxies, all of the navigation fields should be VIRTUAL
             .UseSqlServer(
                 connectionString: configuration.GetConnectionString("connectionStrings"),
                 sqlServerOptionsAction: optionsBuilder

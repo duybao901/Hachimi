@@ -38,7 +38,7 @@ public class RegisterCommandHandler : ICommandHandler<Command.RegisterUserComman
         var newUser = new AppUser
         {
             UserName = UsernameGenerator.GenerateUsername(request.Name),
-            Email = request.Email,
+            Email = request.Email,           
         };
 
         if (request.Password != request.ConfirmPassword)

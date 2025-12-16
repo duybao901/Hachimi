@@ -12,9 +12,9 @@ public class AuthorsController : ApiController
     {
     }
 
-    //[HttpPost('me')]
+    //[HttpGet("${authorId}")]
     //[ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
-    //public async Task<IResult> GetCurrentUser()
+    //public async Task<IResult> GetCurrentUser(Guid authorId)
     //{
     //    var query = new QueryV1.GetAllPostsQuery();
     //    Result result = await Sender.Send(query);
@@ -27,7 +27,7 @@ public class AuthorsController : ApiController
     //    return Results.Ok(result);
     //}
 
-    //[HttpPost('info')]
+    //[HttpPost("info")]
     //[ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
     //public async Task<IResult> GetCurrentUser()
     //{

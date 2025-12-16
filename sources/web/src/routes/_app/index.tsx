@@ -5,5 +5,7 @@ export const Route = createFileRoute('/_app/')({
 })
 
 function RouteComponent() {
-  return <div>asdasd</div>
+  return <div className='w-6xl flex items-center justify-between px-4'>
+    
+  </div>
 }

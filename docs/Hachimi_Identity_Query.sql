@@ -7,6 +7,6 @@ SELECT * FROM [HachimiDatabase].[dbo].UserProfiles
 -- Clear all users
 DELETE FROM [HachimiDatabase].[dbo].[AppUserRoles]
 DELETE FROM [HachimiDatabase].[dbo].AppUsers
-DELETE FROM UserProfiles
+DELETE FROM [HachimiDatabase].[dbo].UserProfiles
 
 

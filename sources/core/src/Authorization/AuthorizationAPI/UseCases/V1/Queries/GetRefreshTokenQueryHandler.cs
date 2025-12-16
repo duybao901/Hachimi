@@ -1,5 +1,8 @@
 ﻿using AuthorizationApi.Abstractions;
 using AuthorizationApi.Exceptions;
+using AuthorizationAPI.Abstractions.Repositories;
+using AuthorizationAPI.Entities;
+using AuthorizationAPI.Exceptions;
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 using Contract.Services.V1.Identity;
@@ -14,13 +17,17 @@ public class GetRefreshTokenQueryHandler : IQueryHandler<Contract.Services.V1.Id
     private readonly ICacheService _cacheService;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly UserManager<AuthorizationAPI.Entities.Identity.AppUser> _userManager;
+    private readonly IRepositoryBase<UserProfile, Guid> _userProfileRepositoryBase;
 
-    public GetRefreshTokenQueryHandler(IJwtTokenService jwtTokenService, ICacheService cacheService, IHttpContextAccessor httpContextAccessor, UserManager<AuthorizationAPI.Entities.Identity.AppUser> userManager)
+    public GetRefreshTokenQueryHandler(IJwtTokenService jwtTokenService, ICacheService cacheService, IHttpContextAccessor httpContextAccessor, 
+        UserManager<AuthorizationAPI.Entities.Identity.AppUser> userManager, 
+        IRepositoryBase<UserProfile, Guid> userProfileRepositoryBase)
     {
         _jwtTokenService = jwtTokenService;
         _cacheService = cacheService;
         _httpContextAccessor = httpContextAccessor;
         _userManager = userManager;
+        _userProfileRepositoryBase = userProfileRepositoryBase;
     }
 
     public async Task<Result<Response.RefreshTokenResponse>> Handle(Contract.Services.V1.Identity.Query.Refresh request, CancellationToken cancellationToken)
@@ -73,11 +80,17 @@ public class GetRefreshTokenQueryHandler : IQueryHandler<Contract.Services.V1.Id
         await _cacheService.SetAsync(hashNewRefreshToken, newAuthenticated, cancellationToken).ConfigureAwait(true);
 
         var email = principal.FindFirstValue(ClaimTypes.Email).ToString();
-        var userExists = await _userManager.FindByEmailAsync(email);
+        var user = await _userManager.FindByEmailAsync(email);
 
-        if (userExists == null)
+        if (user == null)
         {
             throw new IdentityException.UserNotExistsException(email);
+        }
+
+        var userProfile = await _userProfileRepositoryBase.FindSingleAsync(u => u.UserId == user.Id);
+        if (userProfile == null)
+        {
+            throw new UserProfileException.UserProfileNotFoundWithUserIdException(user.Id);
         }
 
         var refreshTokenResponse = new Response.RefreshTokenResponse
@@ -86,8 +99,11 @@ public class GetRefreshTokenQueryHandler : IQueryHandler<Contract.Services.V1.Id
             RefreshTokenExpiryTime = DateTime.Now.AddDays(7),
             CurrentUser = new Response.CurrentUser()
             {
-                Id = userExists.Id,
-                Email = userExists.Email,
+                Id = user.Id,
+                Email = user.Email,
+                Name = userProfile.Name,
+                UserName = userProfile.UserName,
+                AvatarUrl = userProfile.AvatarUrl
             }
         };
 

@@ -9,7 +9,7 @@ function RootLayout() {
 
   return (
     <>
-      <main className="">
+      <main>
         <Outlet />
       </main>
       <TanStackRouterDevtools></TanStackRouterDevtools>

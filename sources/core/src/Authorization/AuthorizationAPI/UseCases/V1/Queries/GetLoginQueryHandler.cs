@@ -1,7 +1,10 @@
 ﻿using System.Security.Claims;
 using AuthorizationApi.Abstractions;
 using AuthorizationApi.Exceptions;
+using AuthorizationAPI.Abstractions.Repositories;
+using AuthorizationAPI.Entities;
 using AuthorizationAPI.Entities.Identity;
+using AuthorizationAPI.Exceptions;
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 using Contract.Services.V1.Identity;
@@ -14,37 +17,44 @@ public class GetLoginQueryHandler : IQueryHandler<Contract.Services.V1.Identity.
     private readonly ICacheService _cacheService;
     private readonly UserManager<AppUser> _userManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IRepositoryBase<UserProfile, Guid> _userProfileRepositoryBase;
 
-    public GetLoginQueryHandler(IJwtTokenService jwtTokenService, UserManager<AppUser> userManager, ICacheService cacheService, IHttpContextAccessor httpContextAccessor)
+    public GetLoginQueryHandler(
+        IJwtTokenService jwtTokenService, 
+        UserManager<AppUser> userManager, 
+        ICacheService cacheService, 
+        IHttpContextAccessor httpContextAccessor, 
+        IRepositoryBase<UserProfile, Guid> userProfileRepositoryBase)
     {
         _jwtTokenService = jwtTokenService;
         _cacheService = cacheService;
         _userManager = userManager;
         _httpContextAccessor = httpContextAccessor;
+        _userProfileRepositoryBase = userProfileRepositoryBase;
     }
 
     public async Task<Result<Response.LoginTokenResponse>> Handle(Contract.Services.V1.Identity.Query.Login request, CancellationToken cancellationToken)
     {
         // Check user
-        var userExists = await _userManager.FindByEmailAsync(request.Email);
+        var user = await _userManager.FindByEmailAsync(request.Email);
 
-        if (userExists == null) { 
+        if (user == null) { 
             throw new IdentityException.UserNotExistsException(request.Email);
         }
 
         // Check password
-        var passwordValid = await _userManager.CheckPasswordAsync(userExists, request.Password);
+        var passwordValid = await _userManager.CheckPasswordAsync(user, request.Password);
         if (!passwordValid)
         {
             throw new IdentityException.WrongPassWordException();
         }
 
         // Generate JWT Token
-        var roles = await _userManager.GetRolesAsync(userExists);
+        var roles = await _userManager.GetRolesAsync(user);
 
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Email, userExists.Email),
+            new Claim(ClaimTypes.Email, user.Email),
         };
 
         foreach (var role in roles)
@@ -76,7 +86,13 @@ public class GetLoginQueryHandler : IQueryHandler<Contract.Services.V1.Identity.
         };
 
         // key is refreshToken
-        await _cacheService.SetAsync(hashRefreshToken, authenticated, cancellationToken).ConfigureAwait(true);
+        await _cacheService.SetAsync(hashRefreshToken, authenticated, cancellationToken);
+
+        var userProfile = await _userProfileRepositoryBase.FindSingleAsync(u => u.UserId == user.Id);
+        if (userProfile == null)
+        {
+            throw new UserProfileException.UserProfileNotFoundWithUserIdException(user.Id);
+        }
 
         var response = new Response.LoginTokenResponse()
         {
@@ -84,8 +100,11 @@ public class GetLoginQueryHandler : IQueryHandler<Contract.Services.V1.Identity.
             RefreshTokenExpiryTime = DateTime.Now.AddDays(7),
             CurrentUser = new Response.CurrentUser()
             {
-                Id = userExists.Id,
-                Email = userExists.Email,
+                Id = user.Id,
+                Email = user.Email,
+                Name = userProfile.Name,
+                UserName = userProfile.UserName,
+                AvatarUrl = userProfile.AvatarUrl
             }
         };
 

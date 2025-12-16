@@ -18,7 +18,7 @@ import { useState } from "react"
 import { Spinner } from "@/components/ui/spinner"
 import { login } from "@/services/auth.service"
 import { guestGuard } from "@/guards/guestGuard"
-import Logo from '@/assets/horse_logo.png'
+import Logo from "@/assets/horse_logo.png"
 
 const formSchema = z.object({
   email: z.string(),
@@ -45,14 +45,8 @@ function Login() {
     try {
       setIsLoading(true)
       await login(data.email, data.password)
-      toast("Login successfully!", {
-        action: {
-          label: "close",
-          onClick: () => {},
-        }
-      })
       setIsLoading(false)
-      navigate({ to: '/' });
+      navigate({ to: "/" })
     } catch (error: any) {
       setIsLoading(false)
       if (error.response) {
@@ -68,7 +62,9 @@ function Login() {
       <div className="w-[640px] p-12">
         <div className="mb-6 text-center">
           <div className="flex justify-center mb-4">
-            <Link to='/' className="flex w-10 h-10"><img src={Logo} className="w-10 h-10"></img></Link>
+            <Link to="/" className="flex w-10 h-10">
+              <img src={Logo} className="w-10 h-10"></img>
+            </Link>
           </div>
           <h1 className="text-3xl font-bold mb-2">Join the DEV Community</h1>
           <p>DEV Community is a community of 3,620,351 amazing developers</p>
@@ -129,7 +125,13 @@ function Login() {
               </Link>
             </div>
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? <Spinner></Spinner> : "Log in"}
+              {isLoading ? (
+                <p className="flex items-center">
+                  <Spinner className="mr-2"></Spinner> Log in...
+                </p>
+              ) : (
+                "Log in"
+              )}
             </Button>
           </FieldGroup>
         </form>
@@ -162,9 +164,9 @@ function Login() {
   )
 }
 
-export const Route = createFileRoute("/auth/login")({  
+export const Route = createFileRoute("/auth/login")({
   beforeLoad: () => {
-    guestGuard();
+    guestGuard()
   },
   component: Login,
 })

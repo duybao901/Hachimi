@@ -12,7 +12,7 @@ createRoot(document.getElementById('root')!).render(
   <QueryClientProvider client={queryClient}>
     <ThemeProvider defaultTheme="light" storageKey="hachimi-ui-theme">
       <RouterProvider router={router} />
-      <Toaster position="top-right" richColors />
+      <Toaster position="bottom-right" richColors />
     </ThemeProvider>
     <ReactQueryDevtools initialIsOpen={false} />
   </QueryClientProvider>

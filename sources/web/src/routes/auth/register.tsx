@@ -52,7 +52,7 @@ function Register() {
     try {
       setIsLoading(true);
       await axios.post("http://localhost:5000/auth-api/v1/authen/register", data)
-      toast.success("Register successfully! Please check your email to verify your account.");
+      // toast.success("Register successfully! Please check your email to verify your account.");
       setIsLoading(false);
       navigate({ to: '/auth/login' });
     } catch (error: any) {
