@@ -43,44 +43,75 @@ function Header() {
           {currentUser ? (
             <div className="flex items-center justify-end gap-4">
               <Button variant="outline">Create Post</Button>
-              <Link to='/notifications'>
-                <Button variant='secondary'><BellIcon className="w-5 h-5"></BellIcon></Button>
+              <Link to="/notifications">
+                <Button variant="secondary" className="bg-white">
+                  <BellIcon className="w-5 h-5"></BellIcon>
+                </Button>
               </Link>
               <div>
                 <DropdownMenu open={open} onOpenChange={setOpen}>
                   <DropdownMenuTrigger>
-                    <div className={
-                      `w-10 h-10 rounded-full overflow-hidden cursor-pointer p-1 flex items-center justify-center transition-colors 
-                      ${open ? "bg-primary/10" : "hover:bg-primary/10"}`
-                    }>
-                      <img className="w-full h-full rounded-full" src={currentUser.avatarUrl}></img>
+                    <div
+                      className={`w-10 h-10 rounded-full overflow-hidden cursor-pointer p-1 flex items-center justify-center transition-colors 
+                      ${open ? "bg-primary/10" : "hover:bg-primary/10"}`}
+                    >
+                      <img
+                        className="w-full h-full rounded-full"
+                        src={currentUser.avatarUrl}
+                      ></img>
                     </div>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent>
+                  <DropdownMenuContent className="p-2">
                     <DropdownMenuLabel className="p-0">
-                      <Link to='/' className="group px-4 py-1 h-auto w-auto flex flex-col items-start justify-start gap-0 hover:bg-primary/10 rounded-xs">
-                        <div className="text-base text-gray-700 group-hover:text-primary">{currentUser.name}</div>
-                        <span className="text-sm text-gray-500 font-light group-hover:text-primary">@{currentUser.userName}</span>
+                      <Link
+                        to="/"
+                        className="group px-4 py-1 h-auto w-auto flex flex-col items-start justify-start gap-0 hover:bg-primary/10 rounded-md"
+                      >
+                        <div className="text-base text-gray-700 group-hover:text-primary">
+                          {currentUser.name}
+                        </div>
+                        <span className="text-sm text-gray-500 font-light group-hover:text-primary">
+                          @{currentUser.userName}
+                        </span>
                       </Link>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem className="px-4 py-2 h-auto w-full flex flex-col items-start justify-start gap-0 hover:bg-primary/10 rounded-xs hover:text-primary">
-                      <Link to='/' className="text-base font-light">
-                        Dashboard
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="px-4 py-2 h-auto w-full flex flex-col items-start justify-start gap-0 hover:bg-primary/10 rounded-xs hover:text-primary">
-                      <Link to='/' className="text-base font-light">
-                        Create Post
-                      </Link></DropdownMenuItem>
-                    <DropdownMenuItem className="px-4 py-2 h-auto w-full flex flex-col items-start justify-start gap-0 hover:bg-primary/10 rounded-xs hover:text-primary">
-                      <Link to='/' className="text-base font-light">
-                        Reading list
-                      </Link></DropdownMenuItem>
-                    <DropdownMenuItem className="px-4 py-2 h-auto w-full flex flex-col items-start justify-start gap-0 hover:bg-primary/10 rounded-xs hover:text-primary">
-                      <Link to='/' className="text-base font-light">
-                        Settings
-                      </Link></DropdownMenuItem>
+                    <Link
+                      onClick={() => setOpen(false)}
+                      to="/"
+                      className="text-[15px] font-light px-4 py-2 h-auto w-full flex flex-col items-start justify-start gap-0 hover:bg-primary/10 rounded-md hover:text-primary hover:underline"
+                    >
+                      Dashboard
+                    </Link>
+                    <Link
+                      onClick={() => setOpen(false)}
+                      to="/"
+                      className="text-[15px] font-light px-4 py-2 h-auto w-full flex flex-col items-start justify-start gap-0 hover:bg-primary/10 rounded-md hover:text-primary hover:underline"
+                    >
+                      Create Post
+                    </Link>
+                    <Link
+                      onClick={() => setOpen(false)}
+                      to="/"
+                      className="text-[15px] font-light px-4 py-2 h-auto w-full flex flex-col items-start justify-start gap-0 hover:bg-primary/10 rounded-md hover:text-primary hover:underline"
+                    >
+                      Reading list
+                    </Link>
+                    <Link
+                      onClick={() => setOpen(false)}
+                      to="/"
+                      className="text-[15px] font-light px-4 py-2 h-auto w-full flex flex-col items-start justify-start gap-0 hover:bg-primary/10 rounded-md hover:text-primary hover:underline"
+                    >
+                      Settings
+                    </Link>
+                    <DropdownMenuSeparator />
+                    <Link
+                      onClick={() => setOpen(false)}
+                      to="/confirmSignout"
+                      className="text-[15px] font-light px-4 py-2 h-auto w-full flex flex-col items-start justify-start gap-0 hover:bg-primary/10 rounded-md hover:text-primary hover:underline"
+                    >
+                      Sign out
+                    </Link>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
