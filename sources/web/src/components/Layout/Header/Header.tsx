@@ -1,11 +1,21 @@
 import { Button } from "@/components/ui/button"
 import { useAuthStore } from "@/store/auth.store"
 import { Link } from "@tanstack/react-router"
-import { Search as SearchIcon } from "lucide-react"
+import { Bell as BellIcon, Search as SearchIcon } from "lucide-react"
 import Logo from "@/assets/horse_logo.png"
 import { Input } from "@/components/ui/input"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { useState } from "react"
 
 function Header() {
+  const [open, setOpen] = useState<boolean>(false)
   const { currentUser } = useAuthStore()
 
   return (
@@ -31,10 +41,49 @@ function Header() {
         </div>
         <nav className="basis-1/3 ml-4">
           {currentUser ? (
-            <div className="flex items-center justify-end">
-              <Link to="/confirmSignout">
-                <Button variant="outline">Sign out</Button>
+            <div className="flex items-center justify-end gap-4">
+              <Button variant="outline">Create Post</Button>
+              <Link to='/notifications'>
+                <Button variant='secondary'><BellIcon className="w-5 h-5"></BellIcon></Button>
               </Link>
+              <div>
+                <DropdownMenu open={open} onOpenChange={setOpen}>
+                  <DropdownMenuTrigger>
+                    <div className={
+                      `w-10 h-10 rounded-full overflow-hidden cursor-pointer p-1 flex items-center justify-center transition-colors 
+                      ${open ? "bg-primary/10" : "hover:bg-primary/10"}`
+                    }>
+                      <img className="w-full h-full rounded-full" src={currentUser.avatarUrl}></img>
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuLabel className="p-0">
+                      <Link to='/' className="group px-4 py-1 h-auto w-auto flex flex-col items-start justify-start gap-0 hover:bg-primary/10 rounded-xs">
+                        <div className="text-base text-gray-700 group-hover:text-primary">{currentUser.name}</div>
+                        <span className="text-sm text-gray-500 font-light group-hover:text-primary">@{currentUser.userName}</span>
+                      </Link>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="px-4 py-2 h-auto w-full flex flex-col items-start justify-start gap-0 hover:bg-primary/10 rounded-xs hover:text-primary">
+                      <Link to='/' className="text-base font-light">
+                        Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="px-4 py-2 h-auto w-full flex flex-col items-start justify-start gap-0 hover:bg-primary/10 rounded-xs hover:text-primary">
+                      <Link to='/' className="text-base font-light">
+                        Create Post
+                      </Link></DropdownMenuItem>
+                    <DropdownMenuItem className="px-4 py-2 h-auto w-full flex flex-col items-start justify-start gap-0 hover:bg-primary/10 rounded-xs hover:text-primary">
+                      <Link to='/' className="text-base font-light">
+                        Reading list
+                      </Link></DropdownMenuItem>
+                    <DropdownMenuItem className="px-4 py-2 h-auto w-full flex flex-col items-start justify-start gap-0 hover:bg-primary/10 rounded-xs hover:text-primary">
+                      <Link to='/' className="text-base font-light">
+                        Settings
+                      </Link></DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
           ) : (
             <div className="flex items-center justify-end">

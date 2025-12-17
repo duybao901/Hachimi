@@ -3,7 +3,10 @@ import { devtools } from "zustand/middleware"
 
 export interface CurrentUser {
   id: string
-  email: string
+  email: string,
+  name: string,
+  userName:string,
+  avatarUrl: string
 }
 
 type AuthState = {
