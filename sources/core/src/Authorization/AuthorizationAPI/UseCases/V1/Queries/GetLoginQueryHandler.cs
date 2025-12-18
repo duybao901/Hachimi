@@ -72,7 +72,7 @@ public class GetLoginQueryHandler : IQueryHandler<Contract.Services.V1.Identity.
             Secure = false,                 // HTTP
             SameSite = SameSiteMode.Lax,    // same-origin
             Expires = DateTime.UtcNow.AddDays(7),
-            Path = "/"                      // QUAN TRỌNG
+            Path = "/"                     
         };
 
         _httpContextAccessor.HttpContext.Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);

@@ -15,6 +15,7 @@ import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AppConfirmSignoutRouteImport } from './routes/_app/confirmSignout'
+import { Route as AppPostsIndexRouteImport } from './routes/_app/posts/index'
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
@@ -45,6 +46,11 @@ const AppConfirmSignoutRoute = AppConfirmSignoutRouteImport.update({
   path: '/confirmSignout',
   getParentRoute: () => AppRoute,
 } as any)
+const AppPostsIndexRoute = AppPostsIndexRouteImport.update({
+  id: '/posts/',
+  path: '/posts/',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/404': typeof R404Route
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/': typeof AppIndexRoute
+  '/posts': typeof AppPostsIndexRoute
 }
 export interface FileRoutesByTo {
   '/404': typeof R404Route
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/': typeof AppIndexRoute
+  '/posts': typeof AppPostsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -68,12 +76,25 @@ export interface FileRoutesById {
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/_app/': typeof AppIndexRoute
+  '/_app/posts/': typeof AppPostsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/404' | '/confirmSignout' | '/auth/login' | '/auth/register' | '/'
+  fullPaths:
+    | '/404'
+    | '/confirmSignout'
+    | '/auth/login'
+    | '/auth/register'
+    | '/'
+    | '/posts'
   fileRoutesByTo: FileRoutesByTo
-  to: '/404' | '/confirmSignout' | '/auth/login' | '/auth/register' | '/'
+  to:
+    | '/404'
+    | '/confirmSignout'
+    | '/auth/login'
+    | '/auth/register'
+    | '/'
+    | '/posts'
   id:
     | '__root__'
     | '/404'
@@ -82,6 +103,7 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/register'
     | '/_app/'
+    | '/_app/posts/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -135,17 +157,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppConfirmSignoutRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/posts/': {
+      id: '/_app/posts/'
+      path: '/posts'
+      fullPath: '/posts'
+      preLoaderRoute: typeof AppPostsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
   AppConfirmSignoutRoute: typeof AppConfirmSignoutRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppPostsIndexRoute: typeof AppPostsIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppConfirmSignoutRoute: AppConfirmSignoutRoute,
   AppIndexRoute: AppIndexRoute,
+  AppPostsIndexRoute: AppPostsIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

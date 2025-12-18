@@ -31,6 +31,9 @@ public class ProcessOutboxMessagesJob : IJob
             .Take(20)
             .ToListAsync(context.CancellationToken);
 
+        if (messages.Count == 0)
+            return;
+
         foreach (OutboxMessage outboxMessage in messages)
         {
             IDomainEvent? domainEvent = JsonConvert.DeserializeObject<IDomainEvent>(outboxMessage.Content, new JsonSerializerSettings
