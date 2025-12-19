@@ -15,6 +15,7 @@ import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AppConfirmSignoutRouteImport } from './routes/_app/confirmSignout'
+import { Route as authRegisterRouteImport } from './routes/(auth)/register'
 import { Route as AppPostsIndexRouteImport } from './routes/_app/posts/index'
 
 const AppRoute = AppRouteImport.update({
@@ -46,6 +47,11 @@ const AppConfirmSignoutRoute = AppConfirmSignoutRouteImport.update({
   path: '/confirmSignout',
   getParentRoute: () => AppRoute,
 } as any)
+const authRegisterRoute = authRegisterRouteImport.update({
+  id: '/(auth)/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppPostsIndexRoute = AppPostsIndexRouteImport.update({
   id: '/posts/',
   path: '/posts/',
@@ -54,6 +60,7 @@ const AppPostsIndexRoute = AppPostsIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/404': typeof R404Route
+  '/register': typeof authRegisterRoute
   '/confirmSignout': typeof AppConfirmSignoutRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/404': typeof R404Route
+  '/register': typeof authRegisterRoute
   '/confirmSignout': typeof AppConfirmSignoutRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
@@ -72,6 +80,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/404': typeof R404Route
   '/_app': typeof AppRouteWithChildren
+  '/(auth)/register': typeof authRegisterRoute
   '/_app/confirmSignout': typeof AppConfirmSignoutRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
@@ -82,6 +91,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/404'
+    | '/register'
     | '/confirmSignout'
     | '/auth/login'
     | '/auth/register'
@@ -90,6 +100,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/404'
+    | '/register'
     | '/confirmSignout'
     | '/auth/login'
     | '/auth/register'
@@ -99,6 +110,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/404'
     | '/_app'
+    | '/(auth)/register'
     | '/_app/confirmSignout'
     | '/auth/login'
     | '/auth/register'
@@ -109,6 +121,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   R404Route: typeof R404Route
   AppRoute: typeof AppRouteWithChildren
+  authRegisterRoute: typeof authRegisterRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
 }
@@ -157,6 +170,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppConfirmSignoutRouteImport
       parentRoute: typeof AppRoute
     }
+    '/(auth)/register': {
+      id: '/(auth)/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof authRegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app/posts/': {
       id: '/_app/posts/'
       path: '/posts'
@@ -184,6 +204,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   R404Route: R404Route,
   AppRoute: AppRouteWithChildren,
+  authRegisterRoute: authRegisterRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
 }

@@ -19,71 +19,71 @@ import MenuLike from "@/assets/menu_like.png"
 function SideBarLeft() {
     return (
         <div className="w-full">
-            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-2">
+            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-1">
                 <img className="w-6 h-6 mr-2" src={MenuHouse}></img>
-                <span className="text-[15px] font-light">Home</span>
+                <span className="text-[15px] font-light text-(--link-color)">Home</span>
             </Link>
-            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-2">
+            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-1">
                 <img className="w-6 h-6 mr-2" src={MenuPrograming}></img>
-                <span className="text-[15px] font-light">DEV++</span>
+                <span className="text-[15px] font-light text-(--link-color)">DEV++</span>
             </Link>
-            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-2">
+            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-1">
                 <img className="w-6 h-6 mr-2" src={MenuFileStorage}></img>
-                <span className="text-[15px] font-light">Reading List</span>
+                <span className="text-[15px] font-light text-(--link-color)">Reading List</span>
             </Link>
-            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-2">
+            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-1">
                 <img className="w-6 h-6 mr-2" src={MenuMicrophone}></img>
-                <span className="text-[15px] font-light">Podcasts</span>
+                <span className="text-[15px] font-light text-(--link-color)">Podcasts</span>
             </Link>
-            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-2">
+            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-1">
                 <img className="w-6 h-6 mr-2" src={MenuVideoCamera}></img>
-                <span className="text-[15px] font-light">Videos</span>
+                <span className="text-[15px] font-light text-(--link-color)">Videos</span>
             </Link>
-            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-2">
+            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-1">
                 <img className="w-6 h-6 mr-2" src={MenuGraduation}></img>
-                <span className="text-[15px] font-light">DEV Education Tracks</span>
+                <span className="text-[15px] font-light text-(--link-color)">DEV Education Tracks</span>
             </Link>
-            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-2">
+            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-1">
                 <img className="w-6 h-6 mr-2" src={MenuVideoAward}></img>
-                <span className="text-[15px] font-light">DEV Challenges</span>
+                <span className="text-[15px] font-light text-(--link-color)">DEV Challenges</span>
             </Link>
-             <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-2">
+             <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-1">
                 <img className="w-6 h-6 mr-2" src={MenuLightbuld}></img>
-                <span className="text-[15px] font-light">DEV Help</span>
+                <span className="text-[15px] font-light text-(--link-color)">DEV Help</span>
             </Link>
-            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-2">
+            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-1">
                 <img className="w-6 h-6 mr-2" src={MenuHeart}></img>
-                <span className="text-[15px] font-light">Advertise on DEV</span>
+                <span className="text-[15px] font-light text-(--link-color)">Advertise on DEV</span>
             </Link>
-            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-2">
+            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-1">
                 <img className="w-6 h-6 mr-2" src={MenuSpark}></img>
-                <span className="text-[15px] font-light">DEV Showcase</span>
+                <span className="text-[15px] font-light text-(--link-color)">DEV Showcase</span>
             </Link>
-            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-2">
+            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-1">
                 <img className="w-6 h-6 mr-2" src={MenuFaceSmile}></img>
-                <span className="text-[15px] font-light">About</span>
+                <span className="text-[15px] font-light text-(--link-color)">About</span>
             </Link>
-            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-2">
+            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-1">
                 <img className="w-6 h-6 mr-2" src={MenuContact}></img>
-                <span className="text-[15px] font-light">Contact</span>
+                <span className="text-[15px] font-light text-(--link-color)">Contact</span>
             </Link>
-            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-2">
+            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-1">
                 <img className="w-6 h-6 mr-2" src={MenuTulips}></img>
-                <span className="text-[15px] font-light">Forem shop</span>
+                <span className="text-[15px] font-light text-(--link-color)">Forem shop</span>
             </Link>
  
-            <h3 className="px-2 mt-4 mb-2 text-base font-bold text-[#242424]">Other</h3>
-            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-2">
+            <h3 className="px-2 mt-4 mb-1 text-base font-bold text-[#242424]">Other</h3>
+            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-1">
                 <img className="w-6 h-6 mr-2" src={MenuTree}></img>
-                <span className="text-[15px] font-light">Code of Conduct</span>
+                <span className="text-[15px] font-light text-(--link-color)">Code of Conduct</span>
             </Link>
-            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-2">
+            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-1">
                 <img className="w-6 h-6 mr-2" src={MenuFlowerPot}></img>
-                <span className="text-[15px] font-light">Privacy Policy</span>
+                <span className="text-[15px] font-light text-(--link-color)">Privacy Policy</span>
             </Link>
-            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-2">
+            <Link to='/' className="w-full flex items-center px-2 py-2 gap-0 rounded-md hover:bg-primary/10 hover:underline hover:text-primary mb-1">
                 <img className="w-6 h-6 mr-2" src={MenuLike}></img>
-                <span className="text-[15px] font-light">Terms of Use</span>
+                <span className="text-[15px] font-light text-(--link-color)">Terms of Use</span>
             </Link>
         </div>
     )
