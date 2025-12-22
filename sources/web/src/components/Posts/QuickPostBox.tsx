@@ -34,9 +34,9 @@ function QuickPostBox() {
       if (expanded) {
         textareaRef.current.style.height = "40px"
         requestAnimationFrame(() => {
-          if(textareaRef.current){
+          if (textareaRef.current) {
             textareaRef.current.style.height = "120px"
-          } 
+          }
         })
       }
     }
@@ -48,9 +48,9 @@ function QuickPostBox() {
       className="p-2 bg-white rounded-sm border border-gray-200"
       onClick={() => setExpanded(true)}
     >
-      <Textarea
+      <Textarea        
         ref={textareaRef}
-        className="resize-none overflow-hidden -mb-1.5 placeholder:text-base font-light transition-all duration-200"
+        className="h-10 resize-none overflow-hidden -mb-1.5 placeholder:text-base font-light"
         placeholder="What's on your mind?"
       />
 

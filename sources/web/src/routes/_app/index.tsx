@@ -1,4 +1,3 @@
-import QuickPostBox from '@/components/QuickPostBox'
 import SideBarLeft from '@/components/Layout/SideBarLeft/SideBarLeft'
 import SideBarRight from '@/components/Layout/SideBarRight/SideBarRight'
 import { createFileRoute, useLocation } from '@tanstack/react-router'
@@ -12,6 +11,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Ellipsis as EllipsisIcon } from 'lucide-react';
+import QuickPostBox from '@/components/Posts/QuickPostBox'
+import PostLists from '@/components/Posts/PostLists'
 
 export const Route = createFileRoute('/_app/')({
   component: RouteComponent,
@@ -32,6 +33,8 @@ function RouteComponent() {
 
     <div className='grow'>
       <QuickPostBox></QuickPostBox>
+
+      {/* Dropdown menu for sorting options */}
       <div className='mt-2 mb-2 flex justify-between items-center'>
         <div className="flex justify-between items-center gap-2">
           <Button
@@ -61,31 +64,34 @@ function RouteComponent() {
               <DropdownMenuLabel>Relevant</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                className='bg-transparent hover:bg-transparent focus:bg-transparent cursor-pointer text-(--base-90) hover:text-primary'>
+                className='bg-transparent hover:bg-transparent focus:bg-transparent cursor-pointer text-(--base-90) data-highlighted:text-primary data-highlighted:bg-transparent'>
                 Top this week
               </DropdownMenuItem>
               <DropdownMenuItem
-                className='bg-transparent hover:bg-transparent focus:bg-transparent cursor-pointer text-(--base-90) hover:text-primary'>
+                className='bg-transparent hover:bg-transparent focus:bg-transparent cursor-pointer text-(--base-90) data-highlighted:text-primary data-highlighted:bg-transparent'>
                 Top this month
               </DropdownMenuItem>
               <DropdownMenuItem
-                className='bg-transparent hover:bg-transparent focus:bg-transparent cursor-pointer text-(--base-90) hover:text-primary'>
+                className='bg-transparent hover:bg-transparent focus:bg-transparent cursor-pointer text-(--base-90) data-highlighted:text-primary data-highlighted:bg-transparent'>
                 Top this year
               </DropdownMenuItem>
               <DropdownMenuItem
-                className='bg-transparent hover:bg-transparent focus:bg-transparent cursor-pointer text-(--base-90) hover:text-primary'>
+                className='bg-transparent hover:bg-transparent focus:bg-transparent cursor-pointer text-(--base-90) data-highlighted:text-primary data-highlighted:bg-transparent'>
                 Top of all time
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                className='bg-transparent hover:bg-transparent focus:bg-transparent cursor-pointer text-(--base-90) hover:text-primary'>
+                className='bg-transparent hover:bg-transparent focus:bg-transparent cursor-pointer text-(--base-90) data-highlighted:text-primary data-highlighted:bg-transparent'>
                 Lastest
               </DropdownMenuItem>
             </DropdownMenuContent>
-
           </DropdownMenu>
         </div>
       </div>
+
+      {/* Posts list */}
+      <PostLists></PostLists>
+
     </div>
 
     <div className='w-60 shrink-0'>
