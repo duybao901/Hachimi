@@ -3,6 +3,7 @@ import type { Author } from "./author";
 export interface Tag {
     id: string;
     name: string;
+    color?: string;
 }
 
 export interface Post {
@@ -18,6 +19,7 @@ export interface Post {
     CoverImageUrl?: string;
     IsPublished: boolean;
     tags?: Tag[]
+    isFirstPost?: boolean;
 }
 
 // public string Title { get; set; }

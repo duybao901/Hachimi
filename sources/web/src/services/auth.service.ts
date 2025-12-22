@@ -1,6 +1,5 @@
 import { authApiV1 } from "../api/auth.api";
 import { useAuthStore } from "../store/auth.store";
-import { queryApi } from "../api/query.api";
 
 export async function login(email: string, password: string) {
   const res = await authApiV1.post("/login", { email, password });

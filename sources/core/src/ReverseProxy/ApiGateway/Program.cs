@@ -30,7 +30,8 @@ var app = builder.Build();
 app.UseRouting();
 app.UseCors("AllowFrontend");
 
-//app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapReverseProxy();
 

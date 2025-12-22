@@ -59,10 +59,7 @@ if (app.Environment.IsDevelopment())
     app.ConfigureSwaggerApi();
 }
 
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
+//app.UseHttpsRedirection();
 app.MapControllers();
 
 app.Run();
