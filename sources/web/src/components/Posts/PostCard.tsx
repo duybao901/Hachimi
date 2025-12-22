@@ -1,5 +1,11 @@
 import type { Post } from "@/types/post"
+import { hexToRgb } from "@/utils/hexToRgb"
 import { Link } from "@tanstack/react-router"
+import { Button } from "../ui/button"
+import {
+  Bookmark as BookmarkIcon,
+  MessageCircle as MessageCircleIcon,
+} from "lucide-react"
 
 type PostCardProps = {
   post: Post
@@ -8,22 +14,22 @@ type PostCardProps = {
 function PostCard({ post }: PostCardProps) {
   return (
     <div className="bg-white rounded-sm border border-gray-200 mb-2 overflow-hidden">
-      <div className="">
+      <div className="w-full">
         {post.isFirstPost && (
-          <Link to={'/'}>
+          <Link to={"/"}>
             <div
               className="w-full h-[250px] bg-cover bg-center"
               style={{ backgroundImage: `url(${post.CoverImageUrl})` }}
             ></div>
           </Link>
         )}
-        <div className="flex gap-2 p-4 ">
+        <div className="flex gap-2 p-4">
           <img
             className="h-8 w-8 rounded-full"
             src={post.author.avatarUrl}
             alt={post.author.name}
           ></img>
-          <div>
+          <div className="grow">
             <div className="h-8 flex flex-col justify-between">
               <Link
                 to={"/"}
@@ -40,14 +46,41 @@ function PostCard({ post }: PostCardProps) {
               <Link to={"/"} className="text-2xl font-extrabold mb mt-2 block">
                 {post.title}
               </Link>
-              <div>
+              <div className="mt-2">
                 {post.tags?.map((tag) => {
                   return (
-                    <div className="bg-gray-100 text-(--link-color) text-xs px-2 py-1 rounded-sm mr-2 inline-block">
-                      #{tag.name}
+                    <div
+                      className="text-(--link-color) text-[13px] px-2 py-1 rounded-sm mr-2 inline-block"
+                      style={{
+                        background: `rgba(${hexToRgb(tag.color!)}, 0.1)`,
+                      }}
+                      key={tag.id}
+                    >
+                      <span style={{ color: `${tag.color}` }}>#</span>
+                      {tag.name}
                     </div>
                   )
                 })}
+              </div>
+              <div className="mt-2 w-full flex justify-between items-center">
+                <div className="flex justify-between items-center ">
+                  <Link to={"/"} className="mr-2">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span className="ml-2text-[13px]">25 Reactions</span>
+                  </Link>
+                  <div className="flex justify-between items-center">
+                    <MessageCircleIcon  className="w-5" />
+                    <span className="text-[13px]">7 Comments</span>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center">
+                  <p className="text-xs text-(--link-color-secondary) mr-2">2 min read</p>
+                  <Button variant="ghost" className="font-light">
+                    <BookmarkIcon className="w-5"/>
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

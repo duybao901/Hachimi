@@ -16,8 +16,8 @@ function PostLists() {
       content: "This is the content of the first post.",
       IsPublished: true,
       tags: [
-        { id: "t1", name: "discuss" },
-        { id: "t2", name: "webdev" },
+        { id: "t1", name: "discuss", color: "#2396F3" },
+        { id: "t2", name: "webdev", color: "#3396A3" },
       ],
       CoverImageUrl:
         "https://res.cloudinary.com/dxnfxl89q/image/upload/v1765901290/Hachimi/facebook_1678938669867_7041979178780517777_tjvdnr.jpg",
@@ -36,8 +36,8 @@ function PostLists() {
       content: "This is the content of the second post.",
       IsPublished: true,
       tags: [
-        { id: "t1", name: "discuss" },
-        { id: "t2", name: "webdev" },
+        { id: "t1", name: "discuss", color: "#2396F3" },
+        { id: "t2", name: "webdev", color: "#3396A3" },
       ],
     },
   ]
