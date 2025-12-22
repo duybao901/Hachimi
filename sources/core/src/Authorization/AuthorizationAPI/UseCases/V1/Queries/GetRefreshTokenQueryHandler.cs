@@ -40,11 +40,7 @@ public class GetRefreshTokenQueryHandler : IQueryHandler<Contract.Services.V1.Id
         }
 
         var authenticated = await _cacheService.GetAsync<Response.Authenticated>(hashRefreshToken);
-        /*
-            1. Tìm trong bộ nhớ cache (_cacheService.GetAsync) xem có thông tin xác thực của người dùng không.
-            2. So sánh Refresh Token từ request với token trong cache: Nếu không khớp, token có thể bị giả mạo.
-            3. Kiểm tra thời gian hết hạn của Refresh Token: Nếu hết hạn, yêu cầu bị từ chối và người dùng phải đăng nhập lại
-         */
+
         if (authenticated is null || authenticated.RefreshToken != refreshToken || authenticated.RefreshTokenExpiryTime <= DateTime.Now)
         {
             throw new IdentityException.TokenException("Request Token Invalid");
