@@ -62,23 +62,25 @@ function PostCard({ post }: PostCardProps) {
                   )
                 })}
               </div>
-              <div className="mt-2 w-full flex justify-between items-center">
-                <div className="flex justify-between items-center ">
-                  <Link to={"/"} className="mr-2">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span className="ml-2text-[13px]">25 Reactions</span>
+              <div className="mt-2 w-full flex justify-between items-center -ml-2">
+                <div className="flex justify-between items-center">
+                  <Link to={"/"} className="mr-2 flex items-center px-2 py-1 rounded-sm hover:bg-gray-100">
+                    <div className="flex">
+                      <span className="-mr-2 rounded-full border-2 border-white bg-gray-100 p-1"><img src="https://assets.dev.to/assets/fire-f60e7a582391810302117f987b22a8ef04a2fe0df7e3258a5f49332df1cec71e.svg" width="18" height="18" alt="Fire" /></span>
+                      <span className="-mr-2 rounded-full border-2 border-white bg-gray-100 p-1"><img src="https://assets.dev.to/assets/fire-f60e7a582391810302117f987b22a8ef04a2fe0df7e3258a5f49332df1cec71e.svg" width="18" height="18" alt="Fire" /></span>
+                      <span className="-mr-2 rounded-full border-2 border-white bg-gray-100 p-1"><img src="https://assets.dev.to/assets/fire-f60e7a582391810302117f987b22a8ef04a2fe0df7e3258a5f49332df1cec71e.svg" width="18" height="18" alt="Fire" /></span>
+                    </div>
+                    <span className="ml-4 text-[13px] text-(--link-color) mt-1 ">25 Reactions</span>
                   </Link>
-                  <div className="flex justify-between items-center">
-                    <MessageCircleIcon  className="w-5" />
-                    <span className="text-[13px]">7 Comments</span>
-                  </div>
+                  <Link to={'/'} className="flex justify-between items-center px-2 py-1 rounded-sm hover:bg-gray-100">
+                    <MessageCircleIcon className="w-4 mr-1" />
+                    <span className="text-[13px] text-(--link-color) mt-1 ">7 Comments</span>
+                  </Link>
                 </div>
                 <div className="flex justify-between items-center">
                   <p className="text-xs text-(--link-color-secondary) mr-2">2 min read</p>
                   <Button variant="ghost" className="font-light">
-                    <BookmarkIcon className="w-5"/>
+                    <BookmarkIcon className="w-5" />
                   </Button>
                 </div>
               </div>
