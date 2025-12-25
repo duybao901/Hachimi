@@ -23,7 +23,16 @@ public sealed class GetProductByIdQueryHandler : IQueryHandler<Contract.Services
         var post = await _postRepository.FindOneAsync(p => p.DocumentId == request.PostId)
             ?? throw new PostException.ProductNotFoundException(request.PostId);
 
-        var result = new Response.PostResponse(post.DocumentId, post.Title, post.Content);
+        var result = new Response.PostResponse(
+            post.DocumentId, 
+            post.Title,
+            post.Content, 
+            post.Slug,
+            new Contract.Services.V1.Posts.ViewModels.PostAuthorViewModel()
+            {
+                Name = post.Author.Name,
+                Email = post.Author.Email,
+            });
 
         return Result.Success(result);
     }

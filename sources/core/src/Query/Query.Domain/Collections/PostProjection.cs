@@ -1,6 +1,4 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
-using Query.Domain.Abstractions;
+﻿using Query.Domain.Abstractions;
 using Query.Domain.Constants;
 
 namespace Query.Domain.Collections;
@@ -17,10 +15,6 @@ public class PostProjection : Document
     public int ViewCount { get; set; }
     public int ReadingTimeMinutes { get; set; }
 
-    [BsonRepresentation(BsonType.String)]
-    public Guid AuthorId { get; set; }
-
-    // List of Tag
-    [BsonRepresentation(BsonType.String)]
-    public List<Guid> TagIds { get; set; } = new();
+    public required AuthorProjection Author { get; set; }
+    public required List<TagProjection> Tags { get; set; } = new();
 }

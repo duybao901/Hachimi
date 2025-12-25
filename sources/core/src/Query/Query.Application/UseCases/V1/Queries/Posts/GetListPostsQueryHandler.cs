@@ -4,24 +4,27 @@ using Contract.Abstractions.Shared;
 using Contract.Enumerations;
 using Contract.Extensions;
 using Contract.Services.V1.Posts;
+using Contract.Services.V1.Posts.ViewModels;
 using MongoDB.Driver.Linq;
 using Query.Domain.Abstractions.Repositories;
 using Query.Domain.Collections;
 using System.Linq.Expressions;
 
 namespace Query.Application.UseCases.V1.Queries.Posts;
-public class GetListPostsQueryHandler : IQueryHandler<Contract.Services.V1.Posts.Query.GetListPostsQuery, PageResult<Response.PostResponse>>
+public class GetListPostsQueryHandler : IQueryHandler<Contract.Services.V1.Posts.Query.GetListPostsQuery, PageResult<Response.PostListResponse>>
 {
     private readonly IMongoRepository<PostProjection> _postRepository;
+    private readonly IMongoRepository<AuthorProjection> _authorRepository;
     private readonly IMapper _mapper;
 
-    public GetListPostsQueryHandler(IMongoRepository<PostProjection> postRepository, IMapper mapper)
+    public GetListPostsQueryHandler(IMongoRepository<PostProjection> postRepository, IMongoRepository<AuthorProjection> authorRepository, IMapper mapper)
     {
         _postRepository = postRepository;
+        _authorRepository = authorRepository;
         _mapper = mapper;
     }
 
-    public async Task<Result<PageResult<Response.PostResponse>>> Handle(Contract.Services.V1.Posts.Query.GetListPostsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PageResult<Response.PostListResponse>>> Handle(Contract.Services.V1.Posts.Query.GetListPostsQuery request, CancellationToken cancellationToken)
     {
 
         SortOrder sort = SortOrderExtension.ConvertStringToSortOrder(request.SortOrder);
@@ -38,9 +41,9 @@ public class GetListPostsQueryHandler : IQueryHandler<Contract.Services.V1.Posts
         }
 
         // Sort
-        queryable = request.SortColumnAndOrder.Any()
+        queryable = sortColumnAndOrderDict.Any()
             ? SortOrderExtension.ApplyMultiColumnSorting(queryable, sortColumnAndOrderDict)
-            : request.SortOrder == SortOrder.Ascending ? queryable.OrderBy(GetSortColumnProterty(request)) :
+            : sort == SortOrder.Ascending ? queryable.OrderBy(GetSortColumnProterty(request)) :
                 queryable.OrderByDescending(GetSortColumnProterty(request));
 
         // Paging
@@ -50,10 +53,26 @@ public class GetListPostsQueryHandler : IQueryHandler<Contract.Services.V1.Posts
             request.PageSize
         );
 
-        var final = queryResult.Cast(p => new Response.PostResponse(
-                p.DocumentId,
-                p.Title,
-                p.Content
+        var final = queryResult.Map(p => new Response.PostListResponse(
+                Id: p.DocumentId,
+                Title: p.Title,
+                Slug: p.Slug,
+                Content: p.Content,
+                PostAuthor: new PostAuthorViewModel
+                {
+                    //id = p.Author.Id,
+                    Name = p.Author.Name,
+                    UserName = p.Author.UserName,
+                    Email = p.Author.Email,
+                    AvatarUrl = p.Author.AvatarUrl
+                },
+                PostTags: p.Tags.Select(t => new PostTagViewModel
+                {
+                    //Id = t.Id,
+                    Name = t.Name,
+                    Slug = t.Slug,
+                    Color = t.Color
+                }).ToList()
             ));
 
         return Result.Success(final);

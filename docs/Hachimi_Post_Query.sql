@@ -1,10 +1,17 @@
 SELECT TOP (1000) [Id]
       ,[Title]
       ,[Content]
+      ,[Slug]
+      ,[CoverImageUrl]
+      ,[IsPublished]
+      ,[ViewCount]
+      ,[ReadingTimeMinutes]
+      ,[AuthorId]
       ,[CreatedOnUtc]
       ,[ModifiedOnUtc]
       ,[IsDelete]
   FROM [HachimiDatabase].[dbo].[Post]
+
 SELECT TOP (1000) [Id]
       ,[Type]
       ,[Content]
@@ -13,6 +20,7 @@ SELECT TOP (1000) [Id]
       ,[Error]
   FROM [HachimiDatabase].[dbo].[OutboxMessages]
   
+-- Clear Post
 TRUNCATE TABLE [HachimiDatabase].[dbo].[OutboxMessages]
 Delete From [HachimiDatabase].[dbo].[Post]
 

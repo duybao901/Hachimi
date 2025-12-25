@@ -2,6 +2,7 @@
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 using Contract.Services.V1.Posts;
+using Contract.Services.V1.Posts.ViewModels;
 using Query.Domain.Abstractions.Repositories;
 using Query.Domain.Collections;
 
@@ -25,7 +26,16 @@ public sealed class GetAllPostsQueryHandler : IQueryHandler<Contract.Services.V1
 
         foreach (var post in posts)
         {
-            result.Add(new Response.PostResponse(post.DocumentId, post.Title, post.Content));
+            result.Add(new Response.PostResponse(post.DocumentId,
+                post.Title, 
+                post.Slug, 
+                post.Content, 
+                new PostAuthorViewModel()
+                {
+                    Name = post.Author.Name,
+                    Email = post.Author.Email,
+                })
+            );
         }
 
         return Result.Success(result);

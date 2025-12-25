@@ -24,7 +24,9 @@ public sealed class CreatePostCommandHandler : ICommandHandler<Contract.Services
             throw new PostException.MinimumTagsRequiredException(4);
         }
 
-        var tags = await _tagRepositoryBase.FindAll(tag => request.TagIds.Contains(tag.Id)).ToListAsync(cancellationToken);      
+        var tags = await _tagRepositoryBase.FindAll(tag => request.TagIds.Contains(tag.Id)).ToListAsync(cancellationToken);
+
+        var slug = SlugGenerator.Generate(request.Title);
 
         var tagViewModel = new List<PostTagViewModel>();
         foreach (var tag in tags)
@@ -38,7 +40,7 @@ public sealed class CreatePostCommandHandler : ICommandHandler<Contract.Services
             });
         }
 
-        var post = Domain.Entities.Posts.CreatePost(Guid.NewGuid(), request.Title, request.Content, request.AuthorId, tagViewModel);
+        var post = Domain.Entities.Posts.CreatePost(Guid.NewGuid(), request.Title, slug, request.Content, request.AuthorId, tagViewModel);
         _postRepositoryBase.Add(post);
 
         return Result.Success("Create post success");

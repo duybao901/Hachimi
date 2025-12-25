@@ -7,7 +7,7 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
 {
     public string Title { get; set; }
     public string Content { get; set; }
-    public string? Slug { get; set; }
+    public string Slug { get; set; }
     public string? CoverImageUrl { get; set; }
     public bool IsPublished { get; set; }
     public int? ViewCount { get; set; }
@@ -20,21 +20,22 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
     private readonly List<PostTags> _postTags = new();
     public IReadOnlyCollection<PostTags> PostTags => _postTags;
 
-    public Posts(Guid id, string title, string content, Guid authorId)
+    public Posts(Guid id, string title, string slug, string content, Guid authorId)
     {
         Id = id;
         Title = title;
+        Slug = slug;
         Content = content;
         AuthorId = authorId;
     }
 
-    public static Posts CreatePost(Guid id, string title, string content, Guid authorId, List<PostTagViewModel> tags)
+    public static Posts CreatePost(Guid id, string title, string slug, string content, Guid authorId, List<PostTagViewModel> tags)
     {
-        var post = new Posts(id, title, content, authorId);
+        var post = new Posts(id, title, slug, content, authorId);
 
         post.SetTags(tags);
 
-        post.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostCreatedEvent(Guid.NewGuid(), id, title, content, authorId, tags));
+        post.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostCreatedEvent(Guid.NewGuid(), id, title, slug, content, authorId, tags));
 
         return post;
     }

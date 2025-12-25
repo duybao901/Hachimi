@@ -17,4 +17,8 @@
     <ProjectReference Include="..\Query.Domain\Query.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ViewModel\" />
+  </ItemGroup>
+
 </Project>

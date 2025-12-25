@@ -10,12 +10,12 @@ public class ServiceProfile : Profile
     public ServiceProfile()
     {
         // CreateMap<Source, Destination>();
-        CreateMap<PostProjection, Response.PostResponse>().ReverseMap();
+        //CreateMap<PostProjection, Response.PostResponse>().ReverseMap();
 
-        CreateMap<PostProjection, Response.PostResponse>()
-            .ForCtorParam("Id", opt => opt.MapFrom(src => src.DocumentId))
-            .ForCtorParam("Title", opt => opt.MapFrom(src => src.Title))
-            .ForCtorParam("Content", opt => opt.MapFrom(src => src.Content));
+        //CreateMap<PostProjection, Response.PostResponse>()
+        //    .ForCtorParam("Id", opt => opt.MapFrom(src => src.DocumentId))
+        //    .ForCtorParam("Title", opt => opt.MapFrom(src => src.Title))
+        //    .ForCtorParam("Content", opt => opt.MapFrom(src => src.Content));
 
         //CreateMap<PostTagViewModel, TagReadViewModel>().ReverseMap();
     }

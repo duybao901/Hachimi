@@ -14,29 +14,23 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
 {
     private readonly IMongoRepository<PostProjection> _postRepository;
     private readonly IMongoRepository<TagProjection> _tagRepository;
+    private readonly IMongoRepository<AuthorProjection> _authorRepository;
     private readonly IMapper _mapper;
 
     public ProjectPostDetailsWhenProductChangeEventHandler(
         IMongoRepository<PostProjection> postRepository, 
-        IMongoRepository<TagProjection> tagRepository, 
+        IMongoRepository<TagProjection> tagRepository,
+        IMongoRepository<AuthorProjection> authorRepository,
         IMapper mapper)
     {
         _postRepository = postRepository;
         _tagRepository = tagRepository;
+        _authorRepository = authorRepository;
         _mapper = mapper;
     }
 
     public async Task<Result> Handle(DomainEvent.PostCreatedEvent request, CancellationToken cancellationToken)
     {
-        var post = new PostProjection
-        {
-            DocumentId = request.Id,
-            Title = request.Title,
-            Content = request.Content,
-            AuthorId = request.AuthorId,
-            TagIds = request.Tags.ConvertAll(t => t.Id),
-        };
-
         // Insert Tags if not exist
         foreach (var tag in request.Tags)
         {
@@ -54,6 +48,24 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             }
         }
 
+        AuthorProjection author = await _authorRepository.FindOneAsync(a => a.DocumentId == request.AuthorId);
+
+        var post = new PostProjection
+        {
+            DocumentId = request.Id,
+            Title = request.Title,
+            Slug = request.Slug,
+            Content = request.Content,
+            Author = author,
+            Tags = request.Tags.Select(t => new TagProjection
+            {
+                DocumentId = t.Id,
+                Name = t.Name,
+                Slug = t.Slug,
+                Color = t.Color,
+            }).ToList(),
+        };
+      
         await _postRepository.InsertOneAsync(post);
 
         return Result.Success();

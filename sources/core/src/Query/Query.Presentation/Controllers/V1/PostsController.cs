@@ -46,7 +46,7 @@ public class PostsController : ApiController
         int pageSize = 5
     )
     {
-        Result<PageResult<Response.PostResponse>> result = await Sender.Send(new QueryV1.GetListPostsQuery(
+        Result<PageResult<Response.PostListResponse>> result = await Sender.Send(new QueryV1.GetListPostsQuery(
             searchTerm, sortColumn, sortOrder, sortColumnAndOrder, pageIndex, pageSize));
 
         if (result.IsFailure)
