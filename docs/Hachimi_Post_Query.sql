@@ -24,7 +24,7 @@ SELECT TOP (1000) [Id]
 TRUNCATE TABLE [HachimiDatabase].[dbo].[OutboxMessages]
 Delete From [HachimiDatabase].[dbo].[Post]
 
-UPDATE [HachimiDatabase].[dbo].[OutboxMessages] set ProcessedOnUtc = null where Id = '3F078B28-2555-4121-9D03-FC526C95DCB0'
+UPDATE [HachimiDatabase].[dbo].[OutboxMessages] set ProcessedOnUtc = null where Id = '886FAD91-EE0F-48EC-ABFB-71FAE0EF4416'
 
 -- Seed Tags
  INSERT INTO Tags (Id, Name, Slug, Color, IsDelete,CreatedOnUtc)

@@ -65,14 +65,14 @@ public class GetListPostsQueryHandler : IQueryHandler<Contract.Services.V1.Posts
                     UserName = p.Author.UserName,
                     Email = p.Author.Email,
                     AvatarUrl = p.Author.AvatarUrl
-                },
-                PostTags: p.Tags.Select(t => new PostTagViewModel
-                {
-                    //Id = t.Id,
-                    Name = t.Name,
-                    Slug = t.Slug,
-                    Color = t.Color
-                }).ToList()
+                }
+                //PostTags: p.Tags.Select(t => new PostTagViewModel
+                //{
+                //    //Id = t.Id,
+                //    Name = t.Name,
+                //    Slug = t.Slug,
+                //    Color = t.Color
+                //}).ToList()
             ));
 
         return Result.Success(final);

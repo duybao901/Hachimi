@@ -1,11 +1,11 @@
-﻿using Command.Domain.Abstractions;
+﻿using ProjectionWorker.Abstractions;
 
-namespace Command.Persistence;
+namespace ProjectionWorker;
 public class EFUnitOfWork : IUnitOfWork
 {
-    private readonly ApplicationDbContext _context;
+    private readonly ReadDbContext _context;
 
-    public EFUnitOfWork(ApplicationDbContext context)
+    public EFUnitOfWork(ReadDbContext context)
         => _context = context;
 
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)

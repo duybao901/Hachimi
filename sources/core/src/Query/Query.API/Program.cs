@@ -22,8 +22,8 @@ builder.Services.AddServicePersistence();
 
 // Inject Infrastructure services
 builder.Services.ConfigureMongoDbSettingInfrastructure(builder.Configuration);
-builder.Services.AddMasstransitRabbitMQInfrastructure(builder.Configuration);
-builder.Services.AddMediatRInfrastructure();
+//builder.Services.AddMasstransitRabbitMQInfrastructure(builder.Configuration);
+//builder.Services.AddMediatRInfrastructure();
 
 // Inject Application services
 builder.Services.AddMediatRApplication();

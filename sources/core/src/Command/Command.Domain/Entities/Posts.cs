@@ -35,8 +35,8 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
 
         post.SetTags(tags);
 
-        post.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostCreatedEvent(Guid.NewGuid(), id, title, slug, content, authorId, tags));
-
+        post.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostCreatedEvent(Guid.NewGuid(), id, title, slug, content, authorId));
+        
         return post;
     }
 

@@ -1,7 +1,7 @@
-﻿using Query.Domain.Abstractions;
-using Query.Domain.Constants;
+﻿using ProjectionWorker.Abstractions;
+using ProjectionWorker.Constants;
 
-namespace Query.Domain.Collections;
+namespace ProjectionWorker.Collections;
 
 [CollectionName(CollectionNames.Post)]
 public class PostProjection : Document

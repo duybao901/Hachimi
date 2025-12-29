@@ -1,11 +1,10 @@
-﻿using AutoMapper;
-using Contract.Abstractions.Message;
+﻿using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 using Contract.Services.V1.Posts;
-using Query.Domain.Abstractions.Repositories;
-using Query.Domain.Collections;
+using ProjectionWorker.Abstractions.Repositories;
+using ProjectionWorker.Collections;
 
-namespace Query.Application.UseCases.V1.Commands.Posts;
+namespace ProjectionWorker.UseCases.V1.Commands.Posts;
 
 internal class ProjectPostDetailsWhenProductChangeEventHandler :
     ICommandHandler<DomainEvent.PostCreatedEvent>,
@@ -15,18 +14,16 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
     private readonly IMongoRepository<PostProjection> _postRepository;
     private readonly IMongoRepository<TagProjection> _tagRepository;
     private readonly IMongoRepository<AuthorProjection> _authorRepository;
-    private readonly IMapper _mapper;
+    //private readonly IMapper _mapper;
 
     public ProjectPostDetailsWhenProductChangeEventHandler(
-        IMongoRepository<PostProjection> postRepository, 
+        IMongoRepository<PostProjection> postRepository,
         IMongoRepository<TagProjection> tagRepository,
-        IMongoRepository<AuthorProjection> authorRepository,
-        IMapper mapper)
+        IMongoRepository<AuthorProjection> authorRepository)
     {
         _postRepository = postRepository;
         _tagRepository = tagRepository;
         _authorRepository = authorRepository;
-        _mapper = mapper;
     }
 
     public async Task<Result> Handle(DomainEvent.PostCreatedEvent request, CancellationToken cancellationToken)
@@ -65,7 +62,7 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             //    Color = t.Color,
             //}).ToList(),
         };
-      
+
         await _postRepository.InsertOneAsync(post);
 
         return Result.Success();
