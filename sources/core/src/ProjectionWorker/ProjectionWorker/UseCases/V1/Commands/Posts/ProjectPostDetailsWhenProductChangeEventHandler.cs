@@ -1,6 +1,7 @@
 ﻿using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 using Contract.Services.V1.Posts;
+using Microsoft.EntityFrameworkCore;
 using ProjectionWorker.Abstractions.Repositories;
 using ProjectionWorker.Collections;
 
@@ -8,44 +9,43 @@ namespace ProjectionWorker.UseCases.V1.Commands.Posts;
 
 internal class ProjectPostDetailsWhenProductChangeEventHandler :
     ICommandHandler<DomainEvent.PostCreatedEvent>,
-    ICommandHandler<DomainEvent.PostUpdatedEvent>,
+    ICommandHandler<DomainEvent.PostUpdatedContentEvent>,
+    ICommandHandler<DomainEvent.PostUpdatedTagEvent>,
     ICommandHandler<DomainEvent.PostDeletedEvent>
 {
-    private readonly IMongoRepository<PostProjection> _postRepository;
-    private readonly IMongoRepository<TagProjection> _tagRepository;
-    private readonly IMongoRepository<AuthorProjection> _authorRepository;
+    private readonly IMongoRepository<PostProjection> _postMongoRepository;
+    private readonly IMongoRepository<TagProjection> _tagMongoRepository;
+    private readonly IMongoRepository<AuthorProjection> _authorMongoRepository;
+    private readonly IRepositoryBase<TagReadEntity, Guid> _tagEfRepository;
+
     //private readonly IMapper _mapper;
 
     public ProjectPostDetailsWhenProductChangeEventHandler(
-        IMongoRepository<PostProjection> postRepository,
-        IMongoRepository<TagProjection> tagRepository,
-        IMongoRepository<AuthorProjection> authorRepository)
+        IMongoRepository<PostProjection> postMongoRepository,
+        IMongoRepository<TagProjection> tagMongoRepository,
+        IMongoRepository<AuthorProjection> authorMongoRepository,
+        IRepositoryBase<TagReadEntity, Guid> tagEfRepository)
     {
-        _postRepository = postRepository;
-        _tagRepository = tagRepository;
-        _authorRepository = authorRepository;
+        _postMongoRepository = postMongoRepository;
+        _tagMongoRepository = tagMongoRepository;
+        _authorMongoRepository = authorMongoRepository;
+        _tagEfRepository = tagEfRepository;
     }
 
     public async Task<Result> Handle(DomainEvent.PostCreatedEvent request, CancellationToken cancellationToken)
     {
-        // Insert Tags if not exist
-        //foreach (var tag in request.Tags)
-        //{
-        //    var existingTag = await _tagRepository.FindOneAsync(t => t.DocumentId == tag.Id);
-        //    if (existingTag == null)
-        //    {
-        //        var tagProjection = new TagProjection
-        //        {
-        //            DocumentId = tag.Id,
-        //            Name = tag.Name,
-        //            Slug = tag.Slug,
-        //            Color = tag.Color,
-        //        };
-        //        await _tagRepository.InsertOneAsync(tagProjection);
-        //    }
-        //}
+        var tagIds = request.TagIds;
+        var tags = await _tagEfRepository.FindAll(t => tagIds.Contains(t.Id)).ToListAsync();
 
-        AuthorProjection author = await _authorRepository.FindOneAsync(a => a.DocumentId == request.AuthorId);
+        var tagProjections = tags.Select(t => new TagProjection
+        {
+            DocumentId = t.Id,
+            Name = t.Name,
+            Slug = t.Slug,
+            Color = t.Color
+        }).ToList();
+
+        AuthorProjection author = await _authorMongoRepository.FindOneAsync(a => a.DocumentId == request.AuthorId);
 
         var post = new PostProjection
         {
@@ -54,38 +54,59 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             Slug = request.Slug,
             Content = request.Content,
             Author = author,
-            //Tags = request.Tags.Select(t => new TagProjection
-            //{
-            //    DocumentId = t.Id,
-            //    Name = t.Name,
-            //    Slug = t.Slug,
-            //    Color = t.Color,
-            //}).ToList(),
+            Tags = tagProjections
         };
 
-        await _postRepository.InsertOneAsync(post);
+        await _postMongoRepository.InsertOneAsync(post);
 
         return Result.Success();
     }
 
-    public async Task<Result> Handle(DomainEvent.PostUpdatedEvent request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(DomainEvent.PostUpdatedContentEvent request, CancellationToken cancellationToken)
     {
-        var post = await _postRepository.FindOneAsync(p => p.DocumentId == request.Id);
+        var post = await _postMongoRepository.FindOneAsync(p => p.DocumentId == request.Id);
 
         post.Title = request.Title;
         post.Content = request.Content;
         post.ModifiedOnUtc = DateTime.UtcNow;
 
-        await _postRepository.ReplaceOneAsync(post);
+        await _postMongoRepository.ReplaceOneAsync(post);
 
+        return Result.Success();
+    }
+
+    public async Task<Result> Handle(DomainEvent.PostUpdatedTagEvent request, CancellationToken cancellationToken)
+    {
+        var tagIds = request.NewTagIds;
+        var tags = await _tagEfRepository.FindAll(t => tagIds.Contains(t.Id)).ToListAsync();
+
+        var tagProjections = tags.Select(t => new TagProjection
+        {
+            DocumentId = t.Id,
+            Name = t.Name,
+            Slug = t.Slug,
+            Color = t.Color
+        }).ToList();
+
+        var post = await _postMongoRepository.FindOneAsync(p => p.DocumentId == request.Id);
+        if(post is null)
+        {
+            // In case the post projection does not exist, we just skip updating tags
+            return Result.Success();
+        }
+
+        post.Tags = tagProjections;
+        post.ModifiedOnUtc = DateTime.UtcNow;
+
+        await _postMongoRepository.ReplaceOneAsync(post);
         return Result.Success();
     }
 
     public async Task<Result> Handle(DomainEvent.PostDeletedEvent request, CancellationToken cancellationToken)
     {
-        var product = await _postRepository.FindOneAsync(p => p.DocumentId == request.Id) ?? throw new ArgumentNullException();
+        var product = await _postMongoRepository.FindOneAsync(p => p.DocumentId == request.Id) ?? throw new ArgumentNullException();
 
-        await _postRepository.DeleteOneAsync(p => p.Id == product.Id);
+        await _postMongoRepository.DeleteOneAsync(p => p.Id == product.Id);
         return Result.Success();
     }
 }

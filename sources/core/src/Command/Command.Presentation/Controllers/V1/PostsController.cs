@@ -1,9 +1,6 @@
 ﻿using Asp.Versioning;
 using Command.Presentation.Abstractions;
-using Contract.Abstractions.Shared;
-using Contract.Services.V1.Posts;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using CommandV1 = Contract.Services.V1.Posts.Command;
 
@@ -83,8 +80,8 @@ public class PostsController : ApiController
     [HttpPut("{postId}")]
     public async Task<IActionResult> UpdatePost(Guid postId, [FromBody] CommandV1.UpdatePostCommand request)
     {
-        var command = new CommandV1.UpdatePostCommand(postId, request.Title, request.Content);
-          
+        var command = new CommandV1.UpdatePostCommand(postId, request.Title, request.Content, request.TagIds);
+
         var result = await Sender.Send(command);
 
         if (result.IsFailure)

@@ -18,18 +18,18 @@ public abstract class Consumer<TMessage> : IConsumer<TMessage>
 
     public async Task Consume(ConsumeContext<TMessage> context)
     {
-        //var eventProjection = await _eventRepository.FindOneAsync(e => e.EventId == context.Message.IdEvent);
-        //if (eventProjection is null)
-        //{
+        var eventProjection = await _eventRepository.FindOneAsync(e => e.EventId == context.Message.IdEvent);
+        if (eventProjection is null)
+        {
             await _sender.Send(context.Message);
-        //    eventProjection = new EventProjection()
-        //    {
-        //        DocumentId = context.Message.Id,
-        //        EventId = context.Message.IdEvent,
-        //        Name = context.Message.GetType().Name,
-        //        Type = context.Message.GetType().Name,
-        //    };
-        //    await _eventRepository.InsertOneAsync(eventProjection);
-        //}
+            eventProjection = new EventProjection()
+            {
+                DocumentId = context.Message.Id,
+                EventId = context.Message.IdEvent,
+                Name = context.Message.GetType().Name,
+                Type = context.Message.GetType().Name,
+            };
+            await _eventRepository.InsertOneAsync(eventProjection);
+        }
     }
 }

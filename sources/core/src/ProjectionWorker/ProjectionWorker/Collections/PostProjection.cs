@@ -6,7 +6,6 @@ namespace ProjectionWorker.Collections;
 [CollectionName(CollectionNames.Post)]
 public class PostProjection : Document
 {
-
     public string Title { get; set; }
     public string Content { get; set; }
     public string Slug { get; set; }
@@ -16,5 +15,5 @@ public class PostProjection : Document
     public int ReadingTimeMinutes { get; set; }
 
     public required AuthorProjection Author { get; set; }
-    //public required List<TagProjection> Tags { get; set; } = new();
+    public required List<TagProjection> Tags { get; set; } = new();
 }

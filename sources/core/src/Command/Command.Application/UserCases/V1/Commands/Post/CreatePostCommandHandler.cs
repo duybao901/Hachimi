@@ -28,19 +28,7 @@ public sealed class CreatePostCommandHandler : ICommandHandler<Contract.Services
 
         var slug = SlugGenerator.Generate(request.Title);
 
-        var tagViewModel = new List<PostTagViewModel>();
-        foreach (var tag in tags)
-        {
-            tagViewModel.Add(new PostTagViewModel
-            {
-                Id = tag.Id,
-                Name = tag.Name,
-                Slug = tag.Slug,
-                Color = tag.Color,
-            });
-        }
-
-        var post = Domain.Entities.Posts.CreatePost(Guid.NewGuid(), request.Title, slug, request.Content, request.AuthorId, tagViewModel);
+        var post = Domain.Entities.Posts.CreatePost(Guid.NewGuid(), request.Title, slug, request.Content, request.AuthorId, request.TagIds);
         _postRepositoryBase.Add(post);
 
         return Result.Success("Create post success");

@@ -13,6 +13,6 @@ public static class Command
         bool IsPublished = false
     ) : ICommand;
 
-    public record UpdatePostCommand(Guid Id, string Title, string Content) : ICommand;
+    public record UpdatePostCommand(Guid Id, string Title, string Content, List<Guid> TagIds) : ICommand;
     public record DeletePostCommand(Guid Id) : ICommand;
 }

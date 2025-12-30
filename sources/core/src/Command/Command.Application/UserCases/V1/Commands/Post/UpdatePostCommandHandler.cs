@@ -18,7 +18,8 @@ public sealed class UpdatePostCommandHandler : ICommandHandler<Contract.Services
         var post = await _postRepositoryBase.FindByIdAsync(request.Id, cancellationToken) 
             ?? throw new PostException.PostNotFoundException(request.Id);
 
-        post.Update(request.Title, request.Content);
+        post.UpdateContent(request.Title, request.Content);
+        post.UpdateTags(request.TagIds);
         _postRepositoryBase.Update(post);
 
         return Result.Success("Update post success");

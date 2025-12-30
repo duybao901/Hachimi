@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="UseCases\V1\Commands\Posts\" />
     <Folder Include="ViewModel\" />
   </ItemGroup>
 

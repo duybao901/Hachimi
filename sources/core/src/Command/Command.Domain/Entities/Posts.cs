@@ -1,6 +1,7 @@
 ﻿using Command.Domain.Abstractions.Aggregates;
 using Command.Domain.Abstractions.Entities;
 using Contract.Services.V1.Posts.ViewModels;
+using System.Collections.Generic;
 
 namespace Command.Domain.Entities;
 public class Posts : AggregateRoot<Guid>, IAuditTableEntity
@@ -18,7 +19,8 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
 
     // Tags
     private readonly List<PostTags> _postTags = new();
-    public IReadOnlyCollection<PostTags> PostTags => _postTags;
+    public IReadOnlyCollection<PostTags> PostTags => _postTags.AsReadOnly();
+
 
     public Posts(Guid id, string title, string slug, string content, Guid authorId)
     {
@@ -29,26 +31,50 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
         AuthorId = authorId;
     }
 
-    public static Posts CreatePost(Guid id, string title, string slug, string content, Guid authorId, List<PostTagViewModel> tags)
+    public static Posts CreatePost(Guid id, string title, string slug, string content, Guid authorId, List<Guid> tags)
     {
         var post = new Posts(id, title, slug, content, authorId);
 
         post.SetTags(tags);
 
-        post.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostCreatedEvent(Guid.NewGuid(), id, title, slug, content, authorId));
+        post.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostCreatedEvent(Guid.NewGuid(), id, title, slug, content, authorId, tags));
         
         return post;
     }
 
-    public void Update(string title, string content)
+    public void UpdateContent(string title, string content)
     {
         Title = title;
-        Content = content;
+        Content = content;        
 
-        RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostUpdatedEvent(Guid.NewGuid(),
+        RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostUpdatedContentEvent(Guid.NewGuid(),
             Id,
             Title,
-            Content));
+            Content
+            ));
+    }
+
+    public void UpdateTags(List<Guid> newTagIds)
+    {
+        newTagIds = newTagIds.Distinct().ToList();
+
+        var oldTagIds = _postTags.Select(x => x.TagId).ToList();
+
+        var removed = oldTagIds.Except(newTagIds).ToList();
+        var added = newTagIds.Except(oldTagIds).ToList();
+
+        _postTags.RemoveAll(x => removed.Contains(x.TagId));
+
+        foreach (var tagId in added)
+        {
+            _postTags.Add(new PostTags(Id, tagId));
+        }
+
+        RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostUpdatedTagEvent(
+            Guid.NewGuid(),
+            Id,
+            newTagIds
+        ));
     }
 
     public void Delete()
@@ -56,13 +82,13 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
         RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostDeletedEvent(Guid.NewGuid(), Id));
     }
 
-    public void SetTags(List<PostTagViewModel> Tags)
+    public void SetTags(List<Guid> Tags)
     {
         _postTags.Clear();
 
         foreach (var tag in Tags)
         {
-            _postTags.Add(new PostTags(Id, tag.Id));
+            _postTags.Add(new PostTags(Id, tag));
         }
     }
 }

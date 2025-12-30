@@ -56,14 +56,23 @@ public class ProcessOutboxMessagesJob : IJob
                                     });
                         await _publishEndpoint.Publish<DomainEvent.PostCreatedEvent>(message: productCreated, context.CancellationToken);
                         break;
-                    case nameof(DomainEvent.PostUpdatedEvent):
-                        var productUpdated = JsonConvert.DeserializeObject<DomainEvent.PostUpdatedEvent>(
+                    case nameof(DomainEvent.PostUpdatedContentEvent):
+                        var productContentUpdated = JsonConvert.DeserializeObject<DomainEvent.PostUpdatedContentEvent>(
                                     outboxMessage.Content,
                                     new JsonSerializerSettings
                                     {
                                         TypeNameHandling = TypeNameHandling.All
                                     });
-                        await _publishEndpoint.Publish<DomainEvent.PostUpdatedEvent>(message: productUpdated, context.CancellationToken);
+                        await _publishEndpoint.Publish<DomainEvent.PostUpdatedContentEvent>(message: productContentUpdated, context.CancellationToken);
+                        break;
+                    case nameof(DomainEvent.PostUpdatedTagEvent):
+                        var postTagUpdate = JsonConvert.DeserializeObject<DomainEvent.PostUpdatedTagEvent>(
+                                    outboxMessage.Content,
+                                    new JsonSerializerSettings
+                                    {
+                                        TypeNameHandling = TypeNameHandling.All
+                                    });
+                        await _publishEndpoint.Publish<DomainEvent.PostUpdatedTagEvent>(message: postTagUpdate, context.CancellationToken);
                         break;
                     case nameof(DomainEvent.PostDeletedEvent):
                         var productDeleted = JsonConvert.DeserializeObject<DomainEvent.PostDeletedEvent>(

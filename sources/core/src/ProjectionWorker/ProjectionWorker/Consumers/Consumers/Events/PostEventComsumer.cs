@@ -16,9 +16,17 @@ public static class PostConsumer
         }
     }
 
-    public class PostUpdatedEvent : Consumer<DomainEvent.PostUpdatedEvent>
+    public class PostUpdatedContentEvent : Consumer<DomainEvent.PostUpdatedContentEvent>
     {
-        public PostUpdatedEvent(ISender sender, IMongoRepository<EventProjection> eventRepository)
+        public PostUpdatedContentEvent(ISender sender, IMongoRepository<EventProjection> eventRepository)
+            : base(sender, eventRepository)
+        {
+        }
+    }
+
+    public class PostUpdatedTagEvent : Consumer<DomainEvent.PostUpdatedTagEvent>
+    {
+        public PostUpdatedTagEvent(ISender sender, IMongoRepository<EventProjection> eventRepository)
             : base(sender, eventRepository)
         {
         }
