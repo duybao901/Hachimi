@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <Folder Include="Services\V1\Authors\Validators\" />
+    <Folder Include="Services\V1\Tags\Validators\" />
   </ItemGroup>
 
 </Project>

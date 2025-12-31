@@ -1,5 +1,4 @@
 ﻿using Contract.Abstractions.Message;
-using Contract.Services.V1.Posts.ViewModels;
 
 namespace Contract.Services.V1.Posts;
 public static class Command

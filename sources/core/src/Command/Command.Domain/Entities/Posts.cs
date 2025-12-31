@@ -1,7 +1,5 @@
 ﻿using Command.Domain.Abstractions.Aggregates;
 using Command.Domain.Abstractions.Entities;
-using Contract.Services.V1.Posts.ViewModels;
-using System.Collections.Generic;
 
 namespace Command.Domain.Entities;
 public class Posts : AggregateRoot<Guid>, IAuditTableEntity
@@ -38,14 +36,14 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
         post.SetTags(tags);
 
         post.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostCreatedEvent(Guid.NewGuid(), id, title, slug, content, authorId, tags));
-        
+
         return post;
     }
 
     public void UpdateContent(string title, string content)
     {
         Title = title;
-        Content = content;        
+        Content = content;
 
         RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostUpdatedContentEvent(Guid.NewGuid(),
             Id,
@@ -74,7 +72,7 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
 
         RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostUpdatedTagEvent(
             Guid.NewGuid(),
-            Id,            
+            Id,
             newTagIds
         ));
     }

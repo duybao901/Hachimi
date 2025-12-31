@@ -11,10 +11,22 @@ public class Tags : DomainEntity<Guid>, IAuditTableEntity
 
     private Tags() { }
 
-    public Tags(string name, string color)
+    public Tags(Guid id, string name, string slug, string color)
+    {
+        Id = id;
+        Name = name.ToLower().Trim();
+        Slug = slug;
+        Color = color;
+    }
+
+    public static Tags CreateTag(Guid Id, string Name, string Slug, string Color)
+    {
+        return new Tags(Id, Name, Slug, Color);
+    }
+    public void UpdateTag(string name, string slug, string color)
     {
         Name = name.ToLower().Trim();
-        Slug = Name.Replace(" ", "-");
+        Slug = slug;
         Color = color;
     }
 }
