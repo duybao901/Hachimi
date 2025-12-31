@@ -1,53 +1,25 @@
-﻿using System.Linq.Expressions;
-
-namespace ProjectionWorker.Abstractions.Repositories;
+﻿using MongoDB.Driver;
+using ProjectionWorker.Abstractions;
+using System.Linq.Expressions;
 
 public interface IMongoRepository<TDocument>
     where TDocument : IDocument
 {
+    // READ
     IQueryable<TDocument> AsQueryable(Expression<Func<TDocument, bool>> filterExpression);
 
     Task<IEnumerable<TDocument>> FindAll(Expression<Func<TDocument, bool>> filterExpression);
 
-    Task<IEnumerable<TDocument>> FindAll();
+    Task<TDocument?> FindOneAsync(Expression<Func<TDocument, bool>> filterExpression);
 
-    IEnumerable<TDocument> FilterBy(
-        Expression<Func<TDocument, bool>> filterExpression);
-
-    IEnumerable<TProjected> FilterBy<TProjected>(
+    // WRITE (Projection-safe)
+    Task UpdateOneAsync(
         Expression<Func<TDocument, bool>> filterExpression,
-        Expression<Func<TDocument, TProjected>> projectionExpression);
-
-    TDocument FindOne(Expression<Func<TDocument, bool>> filterExpression);
-
-    Task<TDocument> FindOneAsync(Expression<Func<TDocument, bool>> filterExpression);
-
-    TDocument FindById(string id);
-
-    Task<TDocument> FindByIdAsync(string id);
-
-    void InsertOne(TDocument document);
+        UpdateDefinition<TDocument> updateDefinition,
+        bool isUpsert = false
+    );
 
     Task InsertOneAsync(TDocument document);
 
-    void InsertMany(ICollection<TDocument> documents);
-
-    Task InsertManyAsync(ICollection<TDocument> documents);
-
-    void ReplaceOne(TDocument document);
-
-    Task ReplaceOneAsync(TDocument document);
-
-    void DeleteOne(Expression<Func<TDocument, bool>> filterExpression); // Expression: (p => p.id === productId)
-
-    Task DeleteOneAsync(Expression<Func<TDocument, bool>> filterExpression); // Expression: (p => p.id === productId)
-
-    void DeleteById(string id);
-
-    Task DeleteByIdAsync(string id);
-
-    void DeleteMany(Expression<Func<TDocument, bool>> filterExpression);
-
-    Task DeleteManyAsync(Expression<Func<TDocument, bool>> filterExpression);
+    Task DeleteOneAsync(Expression<Func<TDocument, bool>> filterExpression);
 }
-

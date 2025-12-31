@@ -56,7 +56,9 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
 
     public void UpdateTags(List<Guid> newTagIds)
     {
-        newTagIds = newTagIds.Distinct().ToList();
+        newTagIds = newTagIds
+        .Distinct()
+        .ToList();
 
         var oldTagIds = _postTags.Select(x => x.TagId).ToList();
 
@@ -72,7 +74,7 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
 
         RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostUpdatedTagEvent(
             Guid.NewGuid(),
-            Id,
+            Id,            
             newTagIds
         ));
     }

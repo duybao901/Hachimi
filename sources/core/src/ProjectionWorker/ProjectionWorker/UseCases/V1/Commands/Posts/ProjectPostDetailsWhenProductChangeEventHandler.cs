@@ -2,6 +2,7 @@
 using Contract.Abstractions.Shared;
 using Contract.Services.V1.Posts;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using ProjectionWorker.Abstractions.Repositories;
 using ProjectionWorker.Collections;
 
@@ -64,13 +65,13 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
 
     public async Task<Result> Handle(DomainEvent.PostUpdatedContentEvent request, CancellationToken cancellationToken)
     {
-        var post = await _postMongoRepository.FindOneAsync(p => p.DocumentId == request.Id);
-
-        post.Title = request.Title;
-        post.Content = request.Content;
-        post.ModifiedOnUtc = DateTime.UtcNow;
-
-        await _postMongoRepository.ReplaceOneAsync(post);
+        await _postMongoRepository.UpdateOneAsync(
+            p => p.DocumentId == request.Id,
+            Builders<PostProjection>.Update
+                .Set(p => p.Title, request.Title)
+                .Set(p => p.Content, request.Content)
+                .Set(p => p.ModifiedOnUtc, DateTime.UtcNow)
+        );
 
         return Result.Success();
     }
@@ -98,7 +99,12 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
         post.Tags = tagProjections;
         post.ModifiedOnUtc = DateTime.UtcNow;
 
-        await _postMongoRepository.ReplaceOneAsync(post);
+        await _postMongoRepository.UpdateOneAsync(
+            p => p.DocumentId == request.Id,
+            Builders<PostProjection>.Update
+                .Set(p => p.Tags, tagProjections)
+                .Set(p => p.ModifiedOnUtc, DateTime.UtcNow)
+        );
         return Result.Success();
     }
 

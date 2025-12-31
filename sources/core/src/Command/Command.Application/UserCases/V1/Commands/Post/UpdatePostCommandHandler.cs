@@ -1,4 +1,5 @@
 ﻿using Command.Domain.Abstractions.Repositories;
+using Command.Domain.Entities;
 using Command.Domain.Exceptions;
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
@@ -15,11 +16,16 @@ public sealed class UpdatePostCommandHandler : ICommandHandler<Contract.Services
 
     public async Task<Result> Handle(Contract.Services.V1.Posts.Command.UpdatePostCommand request, CancellationToken cancellationToken)
     {
-        var post = await _postRepositoryBase.FindByIdAsync(request.Id, cancellationToken) 
+        var post = await _postRepositoryBase.FindByIdAsync(
+                    request.Id,
+                    cancellationToken,
+                    x => x.PostTags
+                )
             ?? throw new PostException.PostNotFoundException(request.Id);
 
         post.UpdateContent(request.Title, request.Content);
         post.UpdateTags(request.TagIds);
+
         _postRepositoryBase.Update(post);
 
         return Result.Success("Update post success");

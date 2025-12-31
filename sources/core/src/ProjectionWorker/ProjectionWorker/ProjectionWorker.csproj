@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <Folder Include="Consumers\Consumers\Commands\" />
-    <Folder Include="MessageBus\Consumers\Commands\" />
   </ItemGroup>
 
   <ItemGroup>
