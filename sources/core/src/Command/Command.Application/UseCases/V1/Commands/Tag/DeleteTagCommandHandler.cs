@@ -32,6 +32,7 @@ public sealed class DeleteTagCommandHandler : ICommandHandler<Contract.Services.
         }
 
         _tagRepositoryBase.Remove(tag);
+        tag.DeleteTag();
 
         return Result.Success("Delete Tag Susccess");
     }

@@ -1,7 +1,6 @@
 ﻿using Contract.Services.V1.Posts;
 using MediatR;
 using ProjectionWorker.Abstractions.Messages;
-using ProjectionWorker.Abstractions.Repositories;
 using ProjectionWorker.Collections;
 
 namespace ProjectionWorker.Consumers.Consumers.Events;

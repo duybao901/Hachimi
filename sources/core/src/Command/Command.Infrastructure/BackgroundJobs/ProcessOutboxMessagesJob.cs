@@ -47,6 +47,7 @@ public class ProcessOutboxMessagesJob : IJob
             {
                 switch (domainEvent.GetType().Name)
                 {
+                    // Posts
                     case nameof(DomainEvent.PostCreatedEvent):
                         var productCreated = JsonConvert.DeserializeObject<DomainEvent.PostCreatedEvent>(
                                     outboxMessage.Content,
@@ -82,6 +83,35 @@ public class ProcessOutboxMessagesJob : IJob
                                         TypeNameHandling = TypeNameHandling.All
                                     });
                         await _publishEndpoint.Publish<DomainEvent.PostDeletedEvent>(message: productDeleted, context.CancellationToken);
+                        break;
+
+                    // Tags
+                    case nameof(Contract.Services.V1.Tags.DomainEvent.TagCreatedEvent):
+                        var tagCreated = JsonConvert.DeserializeObject<Contract.Services.V1.Tags.DomainEvent.TagCreatedEvent>(
+                                    outboxMessage.Content,
+                                    new JsonSerializerSettings
+                                    {
+                                        TypeNameHandling = TypeNameHandling.All
+                                    });
+                        await _publishEndpoint.Publish<Contract.Services.V1.Tags.DomainEvent.TagCreatedEvent>(message: tagCreated, context.CancellationToken);
+                        break;
+                    case nameof(Contract.Services.V1.Tags.DomainEvent.TagUpdatedEvent):
+                        var tagUpdated = JsonConvert.DeserializeObject<Contract.Services.V1.Tags.DomainEvent.TagUpdatedEvent>(
+                                    outboxMessage.Content,
+                                    new JsonSerializerSettings
+                                    {
+                                        TypeNameHandling = TypeNameHandling.All
+                                    });
+                        await _publishEndpoint.Publish<Contract.Services.V1.Tags.DomainEvent.TagUpdatedEvent>(message: tagUpdated, context.CancellationToken);
+                        break;
+                    case nameof(Contract.Services.V1.Tags.DomainEvent.TagDeletedEvent):
+                        var tagDeleted = JsonConvert.DeserializeObject<Contract.Services.V1.Tags.DomainEvent.TagDeletedEvent>(
+                                    outboxMessage.Content,
+                                    new JsonSerializerSettings
+                                    {
+                                        TypeNameHandling = TypeNameHandling.All
+                                    });
+                        await _publishEndpoint.Publish<Contract.Services.V1.Tags.DomainEvent.TagDeletedEvent>(message: tagDeleted, context.CancellationToken);
                         break;
                     default:
                         break;

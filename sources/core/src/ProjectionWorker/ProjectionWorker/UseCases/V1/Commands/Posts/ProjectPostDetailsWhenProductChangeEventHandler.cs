@@ -110,9 +110,7 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
 
     public async Task<Result> Handle(DomainEvent.PostDeletedEvent request, CancellationToken cancellationToken)
     {
-        var product = await _postMongoRepository.FindOneAsync(p => p.DocumentId == request.Id) ?? throw new ArgumentNullException();
-
-        await _postMongoRepository.DeleteOneAsync(p => p.Id == product.Id);
+        await _postMongoRepository.DeleteOneAsync(p => p.DocumentId == request.Id);
         return Result.Success();
     }
 }
