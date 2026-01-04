@@ -9,10 +9,10 @@ using Query.Domain.Exceptions;
 namespace Query.Application.UseCases.V1.Queries.Posts;
 public sealed class GetProductByIdQueryHandler : IQueryHandler<Contract.Services.V1.Posts.Query.GetPostByIdQuery, Response.PostResponse>
 {
-    private readonly IMongoRepository<PostProjection> _postRepository;
+    private readonly IMongoRepository<Post> _postRepository;
     private readonly IMapper _mapper;
 
-    public GetProductByIdQueryHandler(IMongoRepository<PostProjection> postRepository, IMapper mapper)
+    public GetProductByIdQueryHandler(IMongoRepository<Post> postRepository, IMapper mapper)
     {
         _postRepository = postRepository;
         _mapper = mapper;

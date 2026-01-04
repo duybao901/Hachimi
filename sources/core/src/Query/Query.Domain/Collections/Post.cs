@@ -4,9 +4,8 @@ using Query.Domain.Constants;
 namespace Query.Domain.Collections;
 
 [CollectionName(CollectionNames.Post)]
-public class PostProjection : Document
+public class Post : Document
 {
-
     public string Title { get; set; }
     public string Content { get; set; }
     public string Slug { get; set; }
@@ -15,6 +14,7 @@ public class PostProjection : Document
     public int ViewCount { get; set; }
     public int ReadingTimeMinutes { get; set; }
 
-    public required AuthorProjection Author { get; set; }
-    //public required List<TagProjection> Tags { get; set; } = new();
+    public required Author Author { get; set; }
+
+    public required List<Tag> Tags { get; set; } = new();
 }

@@ -14,12 +14,10 @@ public sealed class CreateTagCommandHandler : ICommandHandler<Contract.Services.
 
     public async Task<Result> Handle(Contract.Services.V1.Tags.Command.CreateTagCommand request, CancellationToken cancellationToken)
     {
-        var slug = request.Name.ToLower();
-
         var tag = Tags.CreateTag(
             Guid.NewGuid(),
             request.Name,
-            slug,
+            request.Description,
             request.Color
             );
 

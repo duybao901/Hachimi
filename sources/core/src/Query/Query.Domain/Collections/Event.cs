@@ -6,7 +6,7 @@ using Query.Domain.Constants;
 namespace Query.Domain.Collections;
 
 [CollectionName(CollectionNames.Event)]
-public class EventProjection : Document
+public class Event : Document
 {
     [BsonRepresentation(BsonType.String)]
     public Guid EventId { get; set; }

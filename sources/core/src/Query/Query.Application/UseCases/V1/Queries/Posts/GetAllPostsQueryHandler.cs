@@ -9,10 +9,10 @@ using Query.Domain.Collections;
 namespace Query.Application.UseCases.V1.Queries.Posts;
 public sealed class GetAllPostsQueryHandler : IQueryHandler<Contract.Services.V1.Posts.Query.GetAllPostsQuery, List<Response.PostResponse>>
 {
-    private readonly IMongoRepository<PostProjection> _postRepository;
+    private readonly IMongoRepository<Post> _postRepository;
     private readonly IMapper _mapper;
 
-    public GetAllPostsQueryHandler(IMongoRepository<PostProjection> postRepository, IMapper mapper)
+    public GetAllPostsQueryHandler(IMongoRepository<Post> postRepository, IMapper mapper)
     {
         _postRepository = postRepository;
         _mapper = mapper;

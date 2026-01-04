@@ -3,7 +3,7 @@ using Query.Domain.Constants;
 
 namespace Query.Domain.Collections;
 [CollectionName(CollectionNames.Author)]
-public class AuthorProjection : Document
+public class Author : Document
 {
     public string Name { get; set; }
     public string UserName { get; set; }

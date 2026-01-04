@@ -11,5 +11,8 @@ public class TagConfiguration : IEntityTypeConfiguration<Tags>
 
         builder.Property(t => t.Name).IsRequired()
             .HasMaxLength(50);
+
+        builder.Property(t => t.Description)
+            .HasMaxLength(250);
     }
 }

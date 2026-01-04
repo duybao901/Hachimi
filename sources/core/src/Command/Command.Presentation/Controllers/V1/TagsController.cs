@@ -31,7 +31,7 @@ public class TagsController : ApiController
     [HttpPut("{tagId}")]
     public async Task<IActionResult> UpdateTags(Guid tagId, [FromBody] CommandV1.UpdateTagCommand request)
     {
-        var result = await Sender.Send(new Contract.Services.V1.Tags.Command.UpdateTagCommand(tagId, request.Name, request.Color));
+        var result = await Sender.Send(request);
         if (result.IsFailure)
         {
             HandlerFailure(result);
@@ -46,7 +46,7 @@ public class TagsController : ApiController
     [HttpDelete("{tagId}")]
     public async Task<IActionResult> DeleteTags(Guid tagId)
     {
-        var result = await Sender.Send(new Contract.Services.V1.Tags.Command.DeleteTagCommand(tagId));
+        var result = await Sender.Send(new CommandV1.DeleteTagCommand(tagId));
         if (result.IsFailure)
         {
             HandlerFailure(result);

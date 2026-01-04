@@ -3,7 +3,7 @@
 public class TagReadEntity : DomainEntity<Guid>, IAuditTableEntity
 {
     public string Name { get; private set; }
-    public string Slug { get; private set; }
+    public string Description { get; private set; }
     public string Color { get; private set; }
 
     public DateTimeOffset CreatedOnUtc { get; set; }
@@ -14,7 +14,6 @@ public class TagReadEntity : DomainEntity<Guid>, IAuditTableEntity
     public TagReadEntity(string name, string color)
     {
         Name = name.ToLower().Trim();
-        Slug = Name.Replace(" ", "-");
         Color = color;
     }
 }

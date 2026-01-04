@@ -42,7 +42,7 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
         {
             DocumentId = t.Id,
             Name = t.Name,
-            Slug = t.Slug,
+            Description = t.Description,
             Color = t.Color
         }).ToList();
 
@@ -85,7 +85,7 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
         {
             DocumentId = t.Id,
             Name = t.Name,
-            Slug = t.Slug,
+            Description = t.Description,
             Color = t.Color
         }).ToList();
 

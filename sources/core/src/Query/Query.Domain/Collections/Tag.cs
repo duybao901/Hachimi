@@ -4,7 +4,7 @@ using Query.Domain.Constants;
 namespace Query.Domain.Collections;
 
 [CollectionName(CollectionNames.Tag)]
-public class TagProjection : Document
+public class Tag : Document
 {
     public string Name { get; set; }
     public string Slug { get; set; }

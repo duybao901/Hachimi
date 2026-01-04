@@ -19,9 +19,7 @@ public sealed class UpdateTagCommandHandler : ICommandHandler<UpdateTagCommand>
         var tag = await _tagReposityBase.FindByIdAsync(request.Id)
             ?? throw new TagException.TagNotFoundException(request.Id);
 
-        var slug = tag.Name.ToLower();
-
-        tag.UpdateTag(request.Name, slug, request.Color);
+        tag.UpdateTag(request.Name, request.Description, request.Color);
         _tagReposityBase.Update(tag);
 
         return Result.Success();

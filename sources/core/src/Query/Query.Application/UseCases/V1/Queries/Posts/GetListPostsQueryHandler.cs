@@ -13,11 +13,11 @@ using System.Linq.Expressions;
 namespace Query.Application.UseCases.V1.Queries.Posts;
 public class GetListPostsQueryHandler : IQueryHandler<Contract.Services.V1.Posts.Query.GetListPostsQuery, PageResult<Response.PostListResponse>>
 {
-    private readonly IMongoRepository<PostProjection> _postRepository;
-    private readonly IMongoRepository<AuthorProjection> _authorRepository;
+    private readonly IMongoRepository<Post> _postRepository;
+    private readonly IMongoRepository<Author> _authorRepository;
     private readonly IMapper _mapper;
 
-    public GetListPostsQueryHandler(IMongoRepository<PostProjection> postRepository, IMongoRepository<AuthorProjection> authorRepository, IMapper mapper)
+    public GetListPostsQueryHandler(IMongoRepository<Post> postRepository, IMongoRepository<Author> authorRepository, IMapper mapper)
     {
         _postRepository = postRepository;
         _authorRepository = authorRepository;
@@ -28,7 +28,7 @@ public class GetListPostsQueryHandler : IQueryHandler<Contract.Services.V1.Posts
     {
 
         SortOrder sort = SortOrderExtension.ConvertStringToSortOrder(request.SortOrder);
-        IDictionary<string, SortOrder> sortColumnAndOrderDict = SortOrderExtension.ConvertStringToSortColumnOrder<PostProjection>(request.SortColumnAndOrder);
+        IDictionary<string, SortOrder> sortColumnAndOrderDict = SortOrderExtension.ConvertStringToSortColumnOrder<Post>(request.SortColumnAndOrder);
 
         var queryable = _postRepository
             .AsQueryable(null);
@@ -78,7 +78,7 @@ public class GetListPostsQueryHandler : IQueryHandler<Contract.Services.V1.Posts
         return Result.Success(final);
     }
 
-    public static Expression<Func<PostProjection, object>> GetSortColumnProterty(Contract.Services.V1.Posts.Query.GetListPostsQuery request)
+    public static Expression<Func<Post, object>> GetSortColumnProterty(Contract.Services.V1.Posts.Query.GetListPostsQuery request)
     {
         return request.SortColumn?.ToLower() switch
         {

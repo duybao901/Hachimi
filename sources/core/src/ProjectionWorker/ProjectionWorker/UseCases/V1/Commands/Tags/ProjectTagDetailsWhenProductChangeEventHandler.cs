@@ -24,7 +24,7 @@ public class ProjectTagDetailsWhenProductChangeEventHandler:
         var tag = new TagProjection
         {
             Name = request.Name,
-            Slug = request.Slug,
+            Description = request.Description,
             Color = request.Color,
             DocumentId = request.Id
         };
@@ -39,7 +39,7 @@ public class ProjectTagDetailsWhenProductChangeEventHandler:
         var newTag = new TagProjection
         {
             Name = request.Name,
-            Slug = request.Slug,
+            Description = request.Description,
             Color = request.Color,
             DocumentId = request.Id
         };
@@ -48,7 +48,7 @@ public class ProjectTagDetailsWhenProductChangeEventHandler:
             p => p.DocumentId == request.Id,
             Builders<TagProjection>.Update
                 .Set(p => p.Name, request.Name)
-                .Set(p => p.Slug, request.Slug)
+                .Set(p => p.Description, request.Description)
                 .Set(p => p.Color, request.Color)
                 .Set(p => p.ModifiedOnUtc, DateTime.UtcNow)
         ).ConfigureAwait(true);

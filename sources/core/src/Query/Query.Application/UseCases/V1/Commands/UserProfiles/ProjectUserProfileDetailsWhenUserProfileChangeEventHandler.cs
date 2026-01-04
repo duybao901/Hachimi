@@ -8,9 +8,9 @@ namespace Query.Application.UseCases.V1.Commands.UserProfiles;
 public class ProjectUserProfileDetailsWhenUserProfileChangeEventHandler :
     ICommandHandler<DomainEvent.UserRegisterEvent>
 {
-    private readonly IMongoRepository<AuthorProjection> _authorRepository;
+    private readonly IMongoRepository<Author> _authorRepository;
 
-    public ProjectUserProfileDetailsWhenUserProfileChangeEventHandler(IMongoRepository<AuthorProjection> authorRepository)
+    public ProjectUserProfileDetailsWhenUserProfileChangeEventHandler(IMongoRepository<Author> authorRepository)
     {
         _authorRepository = authorRepository;
     }
@@ -18,7 +18,7 @@ public class ProjectUserProfileDetailsWhenUserProfileChangeEventHandler :
 
     public async Task<Result> Handle(DomainEvent.UserRegisterEvent request, CancellationToken cancellationToken)
     {
-        var newAuthor = new AuthorProjection
+        var newAuthor = new Author
         {
             DocumentId = request.Id,
             Name = request?.Name,
