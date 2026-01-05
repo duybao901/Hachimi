@@ -1,6 +1,7 @@
 ﻿using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 using Contract.Services.V1.Tags;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using ProjectionWorker.Collections;
 
@@ -12,11 +13,14 @@ public class ProjectTagDetailsWhenProductChangeEventHandler:
 
 {
     private readonly IMongoRepository<TagProjection> _tagMongoRepository;
+    private readonly IMongoRepository<PostProjection> _postMongoRepository;
 
     public ProjectTagDetailsWhenProductChangeEventHandler(
-        IMongoRepository<TagProjection> tagMongoRepository)
+        IMongoRepository<TagProjection> tagMongoRepository,
+        IMongoRepository<PostProjection> postMongoRepository)
     {
         _tagMongoRepository = tagMongoRepository;
+        _postMongoRepository = postMongoRepository;
     }
 
     public async Task<Result> Handle(DomainEvent.TagCreatedEvent request, CancellationToken cancellationToken)
@@ -52,6 +56,23 @@ public class ProjectTagDetailsWhenProductChangeEventHandler:
                 .Set(p => p.Color, request.Color)
                 .Set(p => p.ModifiedOnUtc, DateTime.UtcNow)
         ).ConfigureAwait(true);
+
+        var arrayFilters = new[]
+            {
+                new BsonDocumentArrayFilterDefinition<BsonDocument>(
+                    new BsonDocument("t.DocumentId", request.Id.ToString())
+                )
+            };
+
+        await _postMongoRepository.UpdateManyAsync(
+            p => p.Tags.Any(t => t.DocumentId == request.Id),
+            Builders<PostProjection>.Update
+                .Set("Tags.$[t].Name", request.Name)
+                .Set("Tags.$[t].Color", request.Color)
+                .Set("Tags.$[t].Description", request.Description),
+            arrayFilters
+            )
+            .ConfigureAwait(true);
 
         return Result.Success();
     }

@@ -31,7 +31,7 @@ public class TagsController : ApiController
     [HttpPut("{tagId}")]
     public async Task<IActionResult> UpdateTags(Guid tagId, [FromBody] CommandV1.UpdateTagCommand request)
     {
-        var result = await Sender.Send(request);
+        var result = await Sender.Send(new CommandV1.UpdateTagCommand(tagId, request.Name, request.Description, request.Color));
         if (result.IsFailure)
         {
             HandlerFailure(result);

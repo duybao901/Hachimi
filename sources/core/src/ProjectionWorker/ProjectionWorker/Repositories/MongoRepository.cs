@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using ProjectionWorker.Abstractions;
 using ProjectionWorker.Abstractions.Options;
 using System.Linq.Expressions;
@@ -29,48 +30,55 @@ public class MongoRepository<TDocument> : IMongoRepository<TDocument>
                 $"Missing [CollectionName] attribute on {documentType.Name}");
     }
 
-    // --------------------
-    // READ (Query side)
-    // --------------------
-
-    public IQueryable<TDocument> AsQueryable(Expression<Func<TDocument, bool>>? filterExpression = null)
-        => filterExpression is null
-            ? _collection.AsQueryable()
-            : _collection.AsQueryable().Where(filterExpression);
-
-    public async Task<TDocument?> FindOneAsync(Expression<Func<TDocument, bool>> filterExpression)
-        => await _collection
-            .Find(filterExpression)
-            .FirstOrDefaultAsync();
-
-    public async Task<IReadOnlyList<TDocument>> FindAllAsync(Expression<Func<TDocument, bool>>? filterExpression = null)
-        => filterExpression is null
-            ? await _collection.Find(FilterDefinition<TDocument>.Empty).ToListAsync()
-            : await _collection.Find(filterExpression).ToListAsync();
-
-    // --------------------
-    // WRITE (Projection-safe)
-    // --------------------
-
-    public async Task InsertOneAsync(TDocument document)
-        => await _collection.InsertOneAsync(document);
-
-    public async Task UpdateOneAsync(
-        Expression<Func<TDocument, bool>> filterExpression,
-        UpdateDefinition<TDocument> updateDefinition,
-        bool isUpsert = false)
+    public virtual Task<TDocument> FindOneAsync(Expression<Func<TDocument, bool>> filterExpression)
     {
-        await _collection.UpdateOneAsync(
-            filterExpression,
-            updateDefinition,
-            new UpdateOptions { IsUpsert = isUpsert });
+        return Task.Run(() => _collection.Find(filterExpression).FirstOrDefaultAsync());
     }
 
-    public async Task DeleteOneAsync(Expression<Func<TDocument, bool>> filterExpression)
-        => await _collection.DeleteOneAsync(filterExpression);
 
-    public Task<IEnumerable<TDocument>> FindAll(Expression<Func<TDocument, bool>> filterExpression)
+    public async Task InsertOneAsync(TDocument document)
     {
-        throw new NotImplementedException();
+        await _collection.InsertOneAsync(document);
+    }
+
+    public async Task UpdateOneAsync(
+        Expression<Func<TDocument, bool>> filter,
+        UpdateDefinition<TDocument> update,
+        bool isUpsert = false
+    )
+    {
+        await _collection.UpdateOneAsync(
+            filter,
+            update,
+            new UpdateOptions
+            {
+                IsUpsert = isUpsert
+            }
+        );
+    }
+
+    public async Task UpdateManyAsync(
+        Expression<Func<TDocument, bool>> filter,
+        UpdateDefinition<TDocument> update,
+        ArrayFilterDefinition[]? arrayFilters = null
+    )
+    {
+        var options = new UpdateOptions
+        {
+            ArrayFilters = arrayFilters
+        };
+
+        await _collection.UpdateManyAsync(
+            filter,
+            update,
+            options
+        );
+    }
+
+    public async Task DeleteOneAsync(
+        Expression<Func<TDocument, bool>> filter
+    )
+    {
+        await _collection.DeleteOneAsync(filter);
     }
 }

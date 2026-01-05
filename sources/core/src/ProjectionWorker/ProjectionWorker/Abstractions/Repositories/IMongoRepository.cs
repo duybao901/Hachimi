@@ -5,21 +5,23 @@ using System.Linq.Expressions;
 public interface IMongoRepository<TDocument>
     where TDocument : IDocument
 {
-    // READ
-    IQueryable<TDocument> AsQueryable(Expression<Func<TDocument, bool>> filterExpression);
-
-    Task<IEnumerable<TDocument>> FindAll(Expression<Func<TDocument, bool>> filterExpression);
-
-    Task<TDocument?> FindOneAsync(Expression<Func<TDocument, bool>> filterExpression);
-
-    // WRITE (Projection-safe)
-    Task UpdateOneAsync(
-        Expression<Func<TDocument, bool>> filterExpression,
-        UpdateDefinition<TDocument> updateDefinition,
-        bool isUpsert = false
-    );
+    Task<TDocument> FindOneAsync(Expression<Func<TDocument, bool>> filterExpression);
 
     Task InsertOneAsync(TDocument document);
 
-    Task DeleteOneAsync(Expression<Func<TDocument, bool>> filterExpression);
+    Task UpdateOneAsync(
+        Expression<Func<TDocument, bool>> filter,
+        UpdateDefinition<TDocument> update,
+        bool isUpsert = false
+    );
+
+    Task UpdateManyAsync(
+        Expression<Func<TDocument, bool>> filter,
+        UpdateDefinition<TDocument> update,
+        ArrayFilterDefinition[]? arrayFilters = null
+    );
+
+    Task DeleteOneAsync(
+        Expression<Func<TDocument, bool>> filter
+    );
 }
