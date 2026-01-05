@@ -21,7 +21,7 @@ public sealed class GetProductByIdQueryHandler : IQueryHandler<Contract.Services
     public async Task<Result<Response.PostResponse>> Handle(Contract.Services.V1.Posts.Query.GetPostByIdQuery request, CancellationToken cancellationToken)
     {
         var post = await _postRepository.FindOneAsync(p => p.DocumentId == request.PostId)
-            ?? throw new PostException.ProductNotFoundException(request.PostId);
+            ?? throw new PostException.PostNotFoundException(request.PostId);
 
         var result = new Response.PostResponse(
             post.DocumentId, 

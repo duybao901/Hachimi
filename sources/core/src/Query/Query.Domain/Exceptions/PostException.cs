@@ -1,17 +1,17 @@
 ﻿namespace Query.Domain.Exceptions;
 public class PostException
 {
-    public class ProductNotFoundException : NotFoundException
+    public class PostNotFoundException : NotFoundException
     {
-        public ProductNotFoundException(Guid id)
+        public PostNotFoundException(Guid id)
             : base($"The post with the id {id} was not found")
         {
         }
     }
 
-    public class ProductNameWrongFormat : BadRequestException
+    public class PostNameWrongFormat : BadRequestException
     {
-        public ProductNameWrongFormat(string name)
+        public PostNameWrongFormat(string name)
             : base($"The post name '{name}' must contant 'product' in name.")
         {
         }

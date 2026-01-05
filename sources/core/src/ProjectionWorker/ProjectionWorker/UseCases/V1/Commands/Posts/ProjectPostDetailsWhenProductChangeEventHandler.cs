@@ -15,7 +15,6 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
     ICommandHandler<DomainEvent.PostDeletedEvent>
 {
     private readonly IMongoRepository<PostProjection> _postMongoRepository;
-    private readonly IMongoRepository<TagProjection> _tagMongoRepository;
     private readonly IMongoRepository<AuthorProjection> _authorMongoRepository;
     private readonly IRepositoryBase<TagReadEntity, Guid> _tagEfRepository;
 
@@ -28,7 +27,6 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
         IRepositoryBase<TagReadEntity, Guid> tagEfRepository)
     {
         _postMongoRepository = postMongoRepository;
-        _tagMongoRepository = tagMongoRepository;
         _authorMongoRepository = authorMongoRepository;
         _tagEfRepository = tagEfRepository;
     }
