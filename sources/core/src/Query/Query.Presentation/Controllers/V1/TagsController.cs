@@ -15,9 +15,9 @@ public class TagsController : ApiController
 
     [HttpGet]
     [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
-    public async Task<IResult> GetAllPosts()
+    public async Task<IResult> SearchTags([FromQuery] string? searchTerm = null)
     {
-        var query = new QueryV1.GetAllTags();
+        var query = new QueryV1.SearchTags(searchTerm);
         Result result = await Sender.Send(query);
 
         if (result.IsFailure)

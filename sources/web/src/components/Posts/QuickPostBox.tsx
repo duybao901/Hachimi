@@ -59,7 +59,7 @@ function QuickPostBox() {
           <p className="text-xs text-(--link-color-secondary)">
             <span className="font-bold">Quickie Posts</span> show up in the feed
             but not notifications or your profile –{" "}
-            <Link to="/" className="text-primary">
+            <Link to="/new" className="text-primary">
               Open Full Editor
             </Link>
           </p>

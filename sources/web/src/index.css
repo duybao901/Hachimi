@@ -81,6 +81,9 @@
   --base-90: oklch(0.2603 0 0);
   --base-80: oklch(0.4032 0 0);
 
+
+  --header-height: 64px;
+  --article-form-actions-height: 88px;
 }
 
 .dark {

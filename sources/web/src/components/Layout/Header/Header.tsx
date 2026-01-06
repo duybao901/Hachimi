@@ -41,7 +41,9 @@ function Header() {
         <nav className="basis-1/3 ml-4">
           {currentUser ? (
             <div className="flex items-center justify-end gap-4">
-              <Button variant="outline">Create Post</Button>
+              <Link to="/new">
+                <Button variant='outline'>Create Post</Button>
+              </Link>
               <Link to="/notifications">
                 <Button variant="secondary" className="bg-white">
                   <BellIcon className="w-5 h-5"></BellIcon>
@@ -84,7 +86,7 @@ function Header() {
                     </Link>
                     <Link
                       onClick={() => setOpen(false)}
-                      to="/"
+                      to="/new"
                       className="text-[15px] font-light px-4 py-2 h-auto w-full flex flex-col items-start justify-start gap-0 hover:bg-primary/10 rounded-md hover:text-primary hover:underline"
                     >
                       Create Post

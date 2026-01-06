@@ -1,11 +1,12 @@
 ﻿using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 using Contract.Services.V1.Tags;
+using MongoDB.Driver.Linq;
 using Query.Domain.Abstractions.Repositories;
 using Query.Domain.Collections;
 
 namespace Query.Application.UseCases.V1.Queries.Tags;
-public sealed class GetAllTagsQueryHandler : IQueryHandler<Contract.Services.V1.Tags.Query.GetAllTags, List<Response.TagResponse>>
+public sealed class GetAllTagsQueryHandler : IQueryHandler<Contract.Services.V1.Tags.Query.SearchTags, List<Response.TagResponse>>
 {
     private readonly IMongoRepository<Tag> _tagRepository;
 
@@ -14,13 +15,21 @@ public sealed class GetAllTagsQueryHandler : IQueryHandler<Contract.Services.V1.
         _tagRepository = tagRepository;
     }
 
-    public async Task<Result<List<Response.TagResponse>>> Handle(Contract.Services.V1.Tags.Query.GetAllTags request, CancellationToken cancellationToken)
+    public async Task<Result<List<Response.TagResponse>>> Handle(Contract.Services.V1.Tags.Query.SearchTags request, CancellationToken cancellationToken)
     {
+        var queryable = _tagRepository
+           .AsQueryable(null);
 
-        var tags = await _tagRepository.FindAll();
+        // Search
+        if (!string.IsNullOrEmpty(request.SearchTerm))
+        {
+            queryable = queryable.Where(x => x.Name.ToLower().Contains(request.SearchTerm.ToLower()));
+        }
+
+        var tagsSearch = await queryable.ToListAsync();
         var tagResponses = new List<Response.TagResponse>();
 
-        foreach(var tag in tags)
+        foreach(var tag in tagsSearch)
         {
             tagResponses.Add(new Response.TagResponse(
                 tag.DocumentId, tag.Name, tag.Description, tag.Color));
