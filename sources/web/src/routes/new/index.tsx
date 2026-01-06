@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea"
 import type { Tag } from "@/types/tag"
 import { hexToRgb } from "@/utils/hexToRgb"
 import { fetchSearchTags } from "@/services/tag.service"
-import { set } from "zod"
+import PostEditor from "@/components/Posts/PostEditor"
 
 export const Route = createFileRoute("/new/")({
   component: RouteComponent,
@@ -51,7 +51,6 @@ function RouteComponent() {
 
   useEffect(() => {
     if (!isFocused && input === "") {
-      setSuggestions([])
       return
     }
 
@@ -79,6 +78,16 @@ function RouteComponent() {
 
   function removeTag(tagId: string) {
     setSelectedTags(selectedTags.filter((t) => t.id !== tagId))
+  }
+
+  const onBlur = () => {
+    setIsFocused(false)
+    setSuggestions([])
+  }
+
+  const onChange = (value: string) => {
+    setInput(value)
+    if (value === "") setSuggestions([])
   }
 
   return (
@@ -173,7 +182,8 @@ function RouteComponent() {
 
                     <input
                       value={input}
-                      onChange={(e) => setInput(e.target.value)}
+                      onChange={() => onChange((event.target as HTMLInputElement).value)}
+                      onBlur={() => onBlur()}
                       placeholder={
                         selectedTags.length > 0
                           ? "Add another..."
@@ -181,7 +191,6 @@ function RouteComponent() {
                       }
                       className="border-none outline-none font-light text-(--base-90) placeholder:text-(--link-color-secondary) focus:ring-0 bg-transparent"
                       onFocus={() => setIsFocused(true)}
-                      onBlur={() => setIsFocused(false)}
                     />
                   </div>
 
@@ -212,7 +221,7 @@ function RouteComponent() {
 
                 {/* Post Body */}
                 <div className="w-full p-8">
-                 
+                  <PostEditor></PostEditor>
                 </div>
               </>
             ) : (
@@ -228,9 +237,24 @@ function RouteComponent() {
           <div className="mt-2 col-span-4 h-(--article-form-actions-height)">
             <div className="flex items-center gap-4">
               <Button>Publish</Button>
-              <Button variant='secondary' className="font-normal bg-transparent">Save Draft</Button>
-              <Button variant='secondary' className="font-normal bg-transparent"><ClipboardClockIcon/></Button>
-              <Button variant='secondary' className="font-normal bg-transparent">Revert new changes</Button>
+              <Button
+                variant="secondary"
+                className="font-normal bg-transparent"
+              >
+                Save Draft
+              </Button>
+              <Button
+                variant="secondary"
+                className="font-normal bg-transparent"
+              >
+                <ClipboardClockIcon />
+              </Button>
+              <Button
+                variant="secondary"
+                className="font-normal bg-transparent"
+              >
+                Revert new changes
+              </Button>
             </div>
           </div>
         </div>
