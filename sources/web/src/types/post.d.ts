@@ -1,4 +1,11 @@
+import type { en } from "zod/v4/locales";
 import type { Author } from "./author";
+
+export enum PostStatus {
+    Draft = "Draft",
+    Published = "Published",
+    Archived = "Archived"
+}
 
 export interface Tag {
     id: string;
@@ -24,7 +31,7 @@ export interface Post {
     readingTimeMinutes?: number;
     viewCount: number | 0; 
     coverImageUrl?: string;
-    isPublished: boolean;
+    PostStatus: PostStatus | PostStatus.Draft;    
     tags: Tag[]
     isFirstPost: boolean | false;
     comments: PostComment[];

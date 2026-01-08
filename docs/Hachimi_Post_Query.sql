@@ -3,14 +3,15 @@ SELECT TOP (1000) [Id]
       ,[Content]
       ,[Slug]
       ,[CoverImageUrl]
-      ,[IsPublished]
       ,[ViewCount]
       ,[ReadingTimeMinutes]
       ,[AuthorId]
       ,[CreatedOnUtc]
       ,[ModifiedOnUtc]
       ,[IsDelete]
+      ,[PostStatus]
   FROM [HachimiDatabase].[dbo].[Post]
+
 
 SELECT TOP (1000) [Id]
       ,[Type]
@@ -18,7 +19,7 @@ SELECT TOP (1000) [Id]
       ,[OccurredOnUtc]
       ,[ProcessedOnUtc]
       ,[Error]
-  FROM [HachimiDatabase].[dbo].[OutboxMessages]
+  FROM [HachimiDatabase].[dbo].[OutboxMessages] ORDER BY [ProcessedOnUtc] DESC
   
 -- Clear Post
 TRUNCATE TABLE [HachimiDatabase].[dbo].[OutboxMessages]

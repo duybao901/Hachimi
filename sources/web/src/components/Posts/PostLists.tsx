@@ -1,4 +1,4 @@
-import type { Post } from "@/types/post"
+import { PostStatus, type Post } from "@/types/post"
 import PostCard from "./PostCard"
 
 function PostLists() {
@@ -15,7 +15,8 @@ function PostLists() {
           "https://res.cloudinary.com/dxnfxl89q/image/upload/v1766509116/Hachimi/GFaSsnub0AAXCNS_syuddp.jpg",
       },
       content: "This is the content of the first post.",
-      isPublished: true,
+      PostStatus: PostStatus.Published,
+
       tags: [
         { id: "t1", name: "discuss", color: "#2396F3" },
         { id: "t2", name: "webdev", color: "#3396A3" },
@@ -50,7 +51,7 @@ function PostLists() {
           "https://res.cloudinary.com/dxnfxl89q/image/upload/v1766509112/Hachimi/Screenshot_2025-05-16_210725_xghzr8.png",
       },
       content: "This is the content of the second post.",
-      isPublished: true,
+      PostStatus: PostStatus.Published,
       tags: [
         { id: "t1", name: "discuss", color: "#2396F3" },
         { id: "t2", name: "webdev", color: "#3396A3" },
@@ -72,7 +73,7 @@ function PostLists() {
           "https://res.cloudinary.com/dxnfxl89q/image/upload/v1766509107/Hachimi/Screenshot_2025-10-25_015739_et58i0.png",
       },
       content: "This is the content of the second post.",
-      isPublished: true,
+      PostStatus: PostStatus.Published,
       tags: [
         { id: "t1", name: "discuss", color: "#2396F3" },
         { id: "t2", name: "webdev", color: "#3396A3" },
