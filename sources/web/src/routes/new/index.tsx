@@ -14,7 +14,7 @@ export const Route = createFileRoute("/new/")({
   component: RouteComponent,
 })
 
-const MAX_LINES = 5
+const MAX_LINES = 4
 
 function RouteComponent() {
   const [editMode, setEditMode] = useState<boolean>(true)
@@ -138,19 +138,19 @@ function RouteComponent() {
           {/* Main content */}
           <div
             className="col-span-8 bg-white rounded-md border border-gray-100
-                          h-[calc(100vh-var(--header-height)-var(--article-form-actions-height))] p-8"
+                          h-[calc(100vh-var(--header-height)-var(--article-form-actions-height))]"
           >
             {editMode ? (
-              <>
+              <div className="h-[calc(100vh-var(--header-height) - var(--article-form-actions-height))] flex flex-col overflow-y-auto">
                 {/* Post Actions */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 p-8">
                   <Button variant="border">Upload Cover Image</Button>
                   <Button variant="border">🍌 Generate Image</Button>
                   <Button variant="border">Cover Video Link</Button>
                 </div>
 
                 {/* Post Title */}
-                <div className="w-full h-auto mt-4 p-0">
+                <div className="w-full h-auto mt-4 p-0 px-8">
                   <Textarea
                     ref={textareaRef}
                     rows={1}
@@ -159,11 +159,11 @@ function RouteComponent() {
                     className="p-0 w-full text-5xl font-extrabold resize-none border-0
                               focus:ring-0 outline-none
                               overflow-hidden
-                              placeholder:text-(--link-color-secondary)"
+                              placeholder:text-(--link-color-secondary) max-h-60"
                   />
                 </div>
 
-                <div className="mt-4">
+                <div className="mt-4 px-8">
                   <div className="flex gap-2">
                     {selectedTags.map((tag) => (
                       <div
@@ -220,12 +220,12 @@ function RouteComponent() {
                 </div>
 
                 {/* Post Body */}
-                <div className="w-full p-8">
+                <div className="w-full mt-4">
                   <PostEditor></PostEditor>
                 </div>
-              </>
+              </div>
             ) : (
-              <div className="w-full p-8">
+              <div className="w-full">
                 Preview mode
                 {/* <RenderedPostPreview /> */}
               </div>

@@ -1,4 +1,5 @@
 ﻿using Command.Domain.Entities;
+using Command.Domain.Enums;
 using Command.Persistence.Contants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -15,5 +16,6 @@ internal class PostConfiguration : IEntityTypeConfiguration<Posts>
         builder.Property(x => x.Title).HasMaxLength(200).IsRequired(true);
         builder.Property(x => x.Content).IsRequired(true);
         builder.Property(x => x.Slug).IsRequired(true);
+        builder.Property(x => x.PostStatus).IsRequired(true).HasDefaultValue(PostStatus.Draft);
     }
 }

@@ -1,0 +1,29 @@
+/* ===== Dev.to Markdown Style ===== */
+.devto-editor .wmde-markdown-var {
+    
+    font-size: 18px;
+    line-height: 1.75;
+    color: #171717;
+    background: #ffffff;
+    border: none;
+    box-shadow: none;
+}
+
+/* Toolbar */
+.devto-editor .wmde-markdown-var .w-md-editor-toolbar {
+    background-color: #f9f9f9;
+    padding: 20px;
+}
+
+.devto-editor .wmde-markdown-var .w-md-editor-toolbar ul li {
+    margin-right: 8px;
+}
+
+.devto-editor .wmde-markdown-var .w-md-editor-toolbar button svg{
+    width: 18px;
+    height: 18px;
+}
+
+.devto-editor .wmde-markdown-var .w-md-editor-toolbar button:hover {
+  background: #f3f4f6;
+}
