@@ -1,8 +1,8 @@
-import { PostStatus, type Post } from "@/types/post"
+import type { PostView } from "@/types/queries/Posts/post"
 import PostCard from "./PostCard"
 
 function PostLists() {
-  const posts: Post[] = [
+  const posts: PostView[] = [
     {
       id: "1",
       title: "5 Terminal Commands That Saved Me Hours of Clicking",
@@ -15,8 +15,7 @@ function PostLists() {
           "https://res.cloudinary.com/dxnfxl89q/image/upload/v1766509116/Hachimi/GFaSsnub0AAXCNS_syuddp.jpg",
       },
       content: "This is the content of the first post.",
-      PostStatus: PostStatus.Published,
-
+      postStatus: "Published",
       tags: [
         { id: "t1", name: "discuss", color: "#2396F3" },
         { id: "t2", name: "webdev", color: "#3396A3" },
@@ -38,6 +37,7 @@ function PostLists() {
         },
       ],
       viewCount: 0,
+      createdOnUtc: ""
     },
     {
       id: "2",
@@ -51,7 +51,7 @@ function PostLists() {
           "https://res.cloudinary.com/dxnfxl89q/image/upload/v1766509112/Hachimi/Screenshot_2025-05-16_210725_xghzr8.png",
       },
       content: "This is the content of the second post.",
-      PostStatus: PostStatus.Published,
+      postStatus: "Published",
       tags: [
         { id: "t1", name: "discuss", color: "#2396F3" },
         { id: "t2", name: "webdev", color: "#3396A3" },
@@ -59,6 +59,7 @@ function PostLists() {
       isFirstPost: false,
       comments: [],
       viewCount: 0,
+      createdOnUtc: ""
     },
     {
       id: "3",
@@ -73,7 +74,7 @@ function PostLists() {
           "https://res.cloudinary.com/dxnfxl89q/image/upload/v1766509107/Hachimi/Screenshot_2025-10-25_015739_et58i0.png",
       },
       content: "This is the content of the second post.",
-      PostStatus: PostStatus.Published,
+      postStatus: "Published",
       tags: [
         { id: "t1", name: "discuss", color: "#2396F3" },
         { id: "t2", name: "webdev", color: "#3396A3" },
@@ -81,6 +82,7 @@ function PostLists() {
       isFirstPost: false,
       comments: [],
       viewCount: 0,
+      createdOnUtc: ""
     },
   ]
 

@@ -19,6 +19,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { DialogClose } from "@radix-ui/react-dialog"
+import { usePostStore } from "@/store/post.store"
+import { useAuthStore } from "@/store/auth.store"
+import { toast } from "sonner"
+import { CreatePost } from "@/services/post.service"
+import type { CreatePostCommand } from "@/types/commands/Posts/posts"
+import { extractValidationMessages } from "@/utils/extractValidationMessages"
+import type { ValidationErrorResponse } from "@/types/api"
+
 
 export const Route = createFileRoute("/new/")({
   component: RouteComponent,
@@ -27,19 +35,53 @@ export const Route = createFileRoute("/new/")({
 const MAX_LINES = 4
 
 function RouteComponent() {
-  const [editMode, setEditMode] = useState<boolean>(true)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
-  const [input, setInput] = useState("")
-  const [selectedTags, setSelectedTags] = useState<Tag[]>([
-    {
-      id: "1",
-      name: "javascript",
-      description: "All about JavaScript",
-      color: "#f7df1e",
-    },
-  ])
-  const [suggestions, setSuggestions] = useState<any>([])
+
+  const [editMode, setEditMode] = useState<boolean>(true)
+  const [tagInput, setTagInput] = useState("")
+  const [selectedTags, setSelectedTags] = useState<Tag[] | []>([])
+  const [suggestions, setSuggestions] = useState<Tag[] | []>([])
   const [isFocused, setIsFocused] = useState(false)
+  const [isLoadingTag, setIsLoadingTag] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>()
+
+  const { setCurrentEditPost } = usePostStore.getState()
+  const { currentUser } = useAuthStore.getState();
+  const { currentEditPost } = usePostStore.getState();
+
+  useEffect(() => {
+    // call api to get current edit post
+    setCurrentEditPost({
+      title: currentEditPost?.title || "",
+      content: currentEditPost?.content || "",
+      authorId: currentUser?.id || "",
+      tagIds: [],
+    })
+  }, [])
+
+  useEffect(() => {
+    if (!isFocused && tagInput === "") {
+      return
+    }
+
+    const fetchData = async () => {
+      try {
+        setIsLoadingTag(true)
+        const res = await fetchSearchTags(tagInput)
+        if (res.data) {
+          setSuggestions(res.data.value)
+        }
+      } catch (error) {
+        console.error("Error fetching tag suggestions:", error)
+      } finally {
+        setIsLoadingTag(false)
+      }
+    }
+
+    const timer = setTimeout(fetchData, 300)
+
+    return () => clearTimeout(timer)
+  }, [tagInput, isFocused])
 
   const handleInput = () => {
     const el = textareaRef.current
@@ -59,30 +101,15 @@ function RouteComponent() {
     }
   }
 
-  useEffect(() => {
-    if (!isFocused && input === "") {
-      return
-    }
-
-    const fetchData = async () => {
-      try {
-        const res = await fetchSearchTags(input)
-        setSuggestions(res.data.value)
-      } catch (error) {
-        console.error("Error fetching tag suggestions:", error)
-      }
-    }
-
-    const timer = setTimeout(fetchData, 300)
-
-    return () => clearTimeout(timer)
-  }, [input, isFocused])
-
   function selectTag(tag: Tag) {
     if (selectedTags.some((t) => t.id === tag.id)) return
 
-    setSelectedTags([...selectedTags, tag])
-    setInput("")
+    if (selectedTags) {
+      setSelectedTags([...selectedTags, tag])
+    } else {
+      setSelectedTags([tag]);
+    }
+    setTagInput("")
     setSuggestions([])
   }
 
@@ -100,9 +127,41 @@ function RouteComponent() {
     if (value === "") setSuggestions([])
   }
 
-  const saveDraftPost = () => {
-    // Implementation for saving draft post
-    console.log("Draft post saved", textareaRef.current?.value)
+  const saveDraftPost = async () => {
+    try {
+      console.log(currentEditPost)
+      if (!currentEditPost) return
+
+      const draftPost: CreatePostCommand = {
+        title: title || "",
+        content: currentEditPost.content,
+        tagIds: selectedTags.map((tag) => tag.id),
+        authorId: currentEditPost.authorId,
+      }
+
+      console.log(draftPost)
+
+      await CreatePost(draftPost)
+
+    } catch (error: any) {
+      const data = error?.response?.data as ValidationErrorResponse | undefined
+
+      if (data?.errors) {
+        const messages = extractValidationMessages(data.errors)
+
+        toast.error("Validation error", {
+          description: (
+            <ul className="list-disc pl-4">
+              {messages.map((msg) => (
+                <li key={msg}>{msg}</li>
+              ))}
+            </ul>
+          ),
+        })
+      } else {
+        toast.error("Something went wrong")
+      }
+    }
   }
 
   return (
@@ -172,8 +231,7 @@ function RouteComponent() {
 
             {/* Main content */}
             <div
-              className="col-span-8 bg-white rounded-md border border-gray-100
-                          h-[calc(100vh-var(--header-height)-var(--article-form-actions-height))]"
+              className="col-span-8 bg-white rounded-md border border-gray-100"
             >
               {editMode ? (
                 <div className="h-[calc(100vh-var(--header-height) - var(--article-form-actions-height))] flex flex-col overflow-y-auto">
@@ -187,6 +245,8 @@ function RouteComponent() {
                   {/* Post Title */}
                   <div className="w-full h-auto mt-4 p-0 px-8">
                     <Textarea
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
                       ref={textareaRef}
                       rows={1}
                       placeholder="New post title here..."
@@ -216,11 +276,11 @@ function RouteComponent() {
                       ))}
 
                       <input
-                        value={input}
-                        onChange={() => onChange((event.target as HTMLInputElement).value)}
+                        value={tagInput}
+                        onChange={(e) => setTitle(e.target.value)}
                         onBlur={() => onBlur()}
                         placeholder={
-                          selectedTags.length > 0
+                          isLoadingTag ? "Searching..." : selectedTags && selectedTags.length > 0
                             ? "Add another..."
                             : "Add up to 4 tags..."
                         }

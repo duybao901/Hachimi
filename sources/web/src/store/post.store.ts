@@ -1,14 +1,38 @@
 import { create } from "zustand"
 import { devtools } from "zustand/middleware"
 
-import { Post } from '@/types/post'
-import { Author } from "@/types/author"
+import type { PostView } from "@/types/queries/Posts/post"
+import type { CreatePostCommand } from "@/types/commands/Posts/posts"
 
 type PostState = {
-    posts: Post[]
-    currentEditPost: Post
+  posts: PostView[]
+  currentEditPost: CreatePostCommand | null
 }
 
-type PostActionss = {
-    setCurrentEditPost: (post: Post | null) => void
+type PostActions = {
+  setCurrentEditPost: (post: CreatePostCommand | null) => void
+  setCurrentEditPostContent: (content: string) => void
 }
+
+export const usePostStore = create<PostState & PostActions>()(
+  devtools((set) => ({
+    posts: [],
+    currentEditPost: null,
+
+    setCurrentEditPost: (post) =>
+      set({ currentEditPost: post }),
+
+    setCurrentEditPostContent: (content) =>
+      set((state) => {
+        if (!state.currentEditPost) return state
+
+        return {
+          ...state,
+          currentEditPost: {
+            ...state.currentEditPost,
+            content,
+          },
+        }
+      }),
+  }))
+)

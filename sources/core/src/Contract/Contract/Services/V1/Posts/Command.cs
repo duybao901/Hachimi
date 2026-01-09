@@ -8,8 +8,7 @@ public static class Command
         string Content,
         Guid AuthorId,
         List<Guid> TagIds,
-        string? CoverImageUrl = null,
-        bool IsPublished = false
+        string? CoverImageUrl = null
     ) : ICommand;
 
     public record UpdatePostCommand(Guid Id, string Title, string Content, List<Guid> TagIds) : ICommand;

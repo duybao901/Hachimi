@@ -1,4 +1,4 @@
-import type { Post } from "@/types/post"
+import type { PostView } from "@/types/queries/Posts/post"
 import { hexToRgb } from "@/utils/hexToRgb"
 import { Link } from "@tanstack/react-router"
 import { Button } from "../ui/button"
@@ -6,9 +6,10 @@ import {
   Bookmark as BookmarkIcon,
   MessageCircle as MessageCircleIcon,
 } from "lucide-react"
+import type { Tag } from "@/types/tag"
 
 type PostCardProps = {
-  post: Post
+  post: PostView
 }
 
 function PostCard({ post }: PostCardProps) {
@@ -53,7 +54,7 @@ function PostCard({ post }: PostCardProps) {
                 {post.title}
               </Link>
               <div className="mt-2">
-                {post.tags?.map((tag) => {
+                {post.tags?.map((tag: any) => {
                   return (
                     <Link
                       to={`/tag/${tag.name}`}

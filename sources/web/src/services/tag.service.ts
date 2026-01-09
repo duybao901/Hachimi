@@ -1,8 +1,9 @@
 import type { Tag } from '@/types/tag';
 import { queryApi } from '../api/query.api';
+import type { ApiResponse } from '@/types/api';
 
 export async function fetchSearchTags(searchTerm: string = '') {
-    return await queryApi.get(`/tags`, {
-        params: { searchTerm }
-    });
-} 
+  return queryApi.get<ApiResponse<Tag[]>>(`/tags`, {
+    params: { searchTerm },
+  })
+}
