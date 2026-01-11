@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Contract.Abstractions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Query.Domain.Abstractions.Options;
+using Query.Infrastructure.Identity;
 
 namespace Query.Infrastructure.DependencyInjection.Extensions;
 public static class ServiceCollectionExtensions
@@ -15,5 +17,10 @@ public static class ServiceCollectionExtensions
         // 1. Đăng ký sử dụng IOptions<MongoDbSettings>
         services.AddSingleton<IMongoDbSettings>((serviceProvider) =>
             serviceProvider.GetRequiredService<IOptions<MongoDbSettings>>().Value);
+    }
+
+    public static void AddServiceIdentityInfrastructure(this IServiceCollection services)
+    {
+        services.AddScoped<ICurrentUser, CurrentUser>();
     }
 }

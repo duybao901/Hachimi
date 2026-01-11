@@ -27,7 +27,6 @@ import type { CreatePostCommand } from "@/types/commands/Posts/posts"
 import { extractValidationMessages } from "@/utils/extractValidationMessages"
 import type { ValidationErrorResponse } from "@/types/api"
 
-
 export const Route = createFileRoute("/new/")({
   component: RouteComponent,
 })
@@ -42,22 +41,26 @@ function RouteComponent() {
   const [selectedTags, setSelectedTags] = useState<Tag[] | []>([])
   const [suggestions, setSuggestions] = useState<Tag[] | []>([])
   const [isFocused, setIsFocused] = useState(false)
-  const [isLoadingTag, setIsLoadingTag] = useState<boolean>(false);
+  const [isLoadingTag, setIsLoadingTag] = useState<boolean>(false)
   const [title, setTitle] = useState<string>()
+  const [content, setContent] = useState<string>()
 
-  const { setCurrentEditPost } = usePostStore.getState()
-  const { currentUser } = useAuthStore.getState();
-  const { currentEditPost } = usePostStore.getState();
+  const { setCurrentEditPost, currentEditPost } = usePostStore.getState()
+  const { currentUser } = useAuthStore.getState()
+
+  // useEffect(() => {
+
+
+
+  //   setCurrentEditPost()
+  // }, [])
 
   useEffect(() => {
-    // call api to get current edit post
-    setCurrentEditPost({
-      title: currentEditPost?.title || "",
-      content: currentEditPost?.content || "",
-      authorId: currentUser?.id || "",
-      tagIds: [],
-    })
-  }, [])
+    if (currentEditPost) {
+      setTitle(currentEditPost?.title)
+      setContent(currentEditPost?.content)
+    }
+  }, [currentEditPost])
 
   useEffect(() => {
     if (!isFocused && tagInput === "") {
@@ -107,7 +110,7 @@ function RouteComponent() {
     if (selectedTags) {
       setSelectedTags([...selectedTags, tag])
     } else {
-      setSelectedTags([tag]);
+      setSelectedTags([tag])
     }
     setTagInput("")
     setSuggestions([])
@@ -122,27 +125,18 @@ function RouteComponent() {
     setSuggestions([])
   }
 
-  const onChange = (value: string) => {
-    setInput(value)
-    if (value === "") setSuggestions([])
-  }
-
   const saveDraftPost = async () => {
     try {
-      console.log(currentEditPost)
-      if (!currentEditPost) return
-
       const draftPost: CreatePostCommand = {
         title: title || "",
-        content: currentEditPost.content,
+        content: content || "",
         tagIds: selectedTags.map((tag) => tag.id),
-        authorId: currentEditPost.authorId,
+        authorId: currentUser?.id || "",
       }
 
       console.log(draftPost)
 
-      await CreatePost(draftPost)
-
+      // await CreatePost(draftPost)
     } catch (error: any) {
       const data = error?.response?.data as ValidationErrorResponse | undefined
 
@@ -216,13 +210,16 @@ function RouteComponent() {
                   <DialogHeader>
                     <DialogTitle>You have unsaved changes</DialogTitle>
                     <DialogDescription>
-                      You've made changes to your post. Do you want to navigate to leave this page?
+                      You've made changes to your post. Do you want to navigate
+                      to leave this page?
                     </DialogDescription>
                   </DialogHeader>
                   <DialogFooter>
-                    <Button type="submit" onClick={saveDraftPost}>Yes, Leave the page</Button>
+                    <Button type="submit" onClick={saveDraftPost}>
+                      Yes, Leave the page
+                    </Button>
                     <DialogClose asChild>
-                      <Button variant='secondary'>No, Keep editing</Button>
+                      <Button variant="secondary">No, Keep editing</Button>
                     </DialogClose>
                   </DialogFooter>
                 </DialogContent>
@@ -230,9 +227,7 @@ function RouteComponent() {
             </div>
 
             {/* Main content */}
-            <div
-              className="col-span-8 bg-white rounded-md border border-gray-100"
-            >
+            <div className="col-span-8 bg-white rounded-md border border-gray-100">
               {editMode ? (
                 <div className="h-[calc(100vh-var(--header-height) - var(--article-form-actions-height))] flex flex-col overflow-y-auto">
                   {/* Post Actions */}
@@ -280,9 +275,11 @@ function RouteComponent() {
                         onChange={(e) => setTitle(e.target.value)}
                         onBlur={() => onBlur()}
                         placeholder={
-                          isLoadingTag ? "Searching..." : selectedTags && selectedTags.length > 0
-                            ? "Add another..."
-                            : "Add up to 4 tags..."
+                          isLoadingTag
+                            ? "Searching..."
+                            : selectedTags && selectedTags.length > 0
+                              ? "Add another..."
+                              : "Add up to 4 tags..."
                         }
                         className="border-none outline-none font-light text-(--base-90) placeholder:text-(--link-color-secondary) focus:ring-0 bg-transparent"
                         onFocus={() => setIsFocused(true)}

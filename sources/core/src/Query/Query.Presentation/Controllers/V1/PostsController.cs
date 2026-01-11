@@ -1,12 +1,9 @@
 ﻿using Asp.Versioning;
 using Contract.Abstractions.Shared;
-using Contract.Enumerations;
-using Contract.Extensions;
 using Contract.Services.V1.Posts;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Query.Domain.Collections;
 using Query.Presentation.Abstractions;
 using QueryV1 = Contract.Services.V1.Posts.Query;
 
@@ -62,6 +59,21 @@ public class PostsController : ApiController
     public async Task<IResult> GetPostById(Guid postId)
     {
         var query = new QueryV1.GetPostByIdQuery(postId);
+        Result result = await Sender.Send(query);
+
+        if (result.IsFailure)
+        {
+            return HandlerFailure(result);
+        }
+
+        return Results.Ok(result);
+    }
+
+    [HttpGet("current-edit")]
+    [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
+    public async Task<IResult> GetCurrentEditPost()
+    {
+        var query = new QueryV1.GetCurrentEditPost();
         Result result = await Sender.Send(query);
 
         if (result.IsFailure)
