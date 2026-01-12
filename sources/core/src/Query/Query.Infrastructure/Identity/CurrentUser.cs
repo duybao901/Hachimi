@@ -16,10 +16,12 @@ internal sealed class CurrentUser : ICurrentUser
 
         var userIdHeader = headers["X-User-Id"].ToString();
 
-        if (Guid.TryParse(userIdHeader, out var userId))
+        if (!Guid.TryParse(userIdHeader, out var userId))
         {
-            UserId = userId;
+            throw new UnauthorizedAccessException("Invalid user id");
         }
+
+        UserId = userId;
 
         Email = headers["X-User-Email"].ToString();
     }

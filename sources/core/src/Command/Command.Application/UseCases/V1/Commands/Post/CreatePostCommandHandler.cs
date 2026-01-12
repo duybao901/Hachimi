@@ -2,7 +2,6 @@
 using Command.Domain.Exceptions;
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
-using Contract.Services.V1.Posts.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace Command.Application.UserCases.V1.Commands.Post;

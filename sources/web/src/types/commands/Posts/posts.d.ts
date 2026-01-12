@@ -18,8 +18,8 @@ export interface UpdatePostTagsCommand {
 }
 
 export interface PostEditorState {
-  title: string;
-  content: string;
-  tags: Tag[];
-  isDirty: boolean;
+    title: string;
+    content: string;
+    tags: Tag[];
+    isDirty: boolean;
 }

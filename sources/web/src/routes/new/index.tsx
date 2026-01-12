@@ -22,7 +22,7 @@ import { DialogClose } from "@radix-ui/react-dialog"
 import { usePostStore } from "@/store/post.store"
 import { useAuthStore } from "@/store/auth.store"
 import { toast } from "sonner"
-import { CreatePost } from "@/services/post.service"
+import { CreatePost, GetCurrentEditPost } from "@/services/post.service"
 import type { CreatePostCommand } from "@/types/commands/Posts/posts"
 import { extractValidationMessages } from "@/utils/extractValidationMessages"
 import type { ValidationErrorResponse } from "@/types/api"
@@ -48,12 +48,21 @@ function RouteComponent() {
   const { setCurrentEditPost, currentEditPost } = usePostStore.getState()
   const { currentUser } = useAuthStore.getState()
 
-  // useEffect(() => {
+  useEffect(() => {
+    const getCurrentEditPostAsync = async () => {
+      try {
+        const res = await GetCurrentEditPost();
+        if(res.data){
+          setTitle(res.data.value.title)
+          setContent(res.data.value.content)
+        }
+      } catch (error: any) {
+        
+      }
+    }
 
-
-
-  //   setCurrentEditPost()
-  // }, [])
+    getCurrentEditPostAsync()
+  }, [])
 
   useEffect(() => {
     if (currentEditPost) {
