@@ -18,16 +18,10 @@ public static class ServiceCollectionExtensions
                 if (user?.Identity?.IsAuthenticated == true)
                 {
                     context.ProxyRequest.Headers.Remove("X-User-Id");
-                    context.ProxyRequest.Headers.Remove("X-User-Email");
 
                     context.ProxyRequest.Headers.Add(
                         "X-User-Id",
                         user.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                    );
-
-                    context.ProxyRequest.Headers.Add(
-                        "X-User-Email",
-                        user.FindFirst(ClaimTypes.Email)?.Value
                     );
                 }
             });

@@ -7,6 +7,7 @@ using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 using Contract.Services.V1.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
 namespace AuthorizationApi.UseCases.V1.Queries;
@@ -75,12 +76,18 @@ public class GetRefreshTokenQueryHandler : IQueryHandler<Contract.Services.V1.Id
         };
         await _cacheService.SetAsync(hashNewRefreshToken, newAuthenticated, cancellationToken).ConfigureAwait(true);
 
-        var email = principal.FindFirstValue(ClaimTypes.Email).ToString();
-        var user = await _userManager.FindByEmailAsync(email);
+        var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier).ToString();
+
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            throw new SecurityTokenException("userId claim not found");
+        }
+
+        var user = await _userManager.FindByIdAsync(userId);
 
         if (user == null)
         {
-            throw new IdentityException.UserNotExistsException(email);
+            throw new IdentityException.UserNotExistsException(userId);
         }
 
         var userProfile = await _userProfileRepositoryBase.FindSingleAsync(u => u.UserId == user.Id);

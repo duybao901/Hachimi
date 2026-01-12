@@ -42,34 +42,29 @@ function RouteComponent() {
   const [suggestions, setSuggestions] = useState<Tag[] | []>([])
   const [isFocused, setIsFocused] = useState(false)
   const [isLoadingTag, setIsLoadingTag] = useState<boolean>(false)
-  const [title, setTitle] = useState<string>()
-  const [content, setContent] = useState<string>()
+  const [currentEditPost, setCurrentEditPost] = useState<CreatePostCommand>({
+    title: "",
+    content: "",
+    authorId: "",
+    tagIds: [],
+  })
 
-  const { setCurrentEditPost, currentEditPost } = usePostStore.getState()
   const { currentUser } = useAuthStore.getState()
 
   useEffect(() => {
     const getCurrentEditPostAsync = async () => {
       try {
-        const res = await GetCurrentEditPost();
-        if(res.data){
-          setTitle(res.data.value.title)
-          setContent(res.data.value.content)
+        const res = await GetCurrentEditPost()
+        if (res.data) {
+          setCurrentEditPost(res.data.value)
         }
       } catch (error: any) {
-        
+        toast.error(error.message)
       }
     }
 
     getCurrentEditPostAsync()
   }, [])
-
-  useEffect(() => {
-    if (currentEditPost) {
-      setTitle(currentEditPost?.title)
-      setContent(currentEditPost?.content)
-    }
-  }, [currentEditPost])
 
   useEffect(() => {
     if (!isFocused && tagInput === "") {
@@ -83,8 +78,8 @@ function RouteComponent() {
         if (res.data) {
           setSuggestions(res.data.value)
         }
-      } catch (error) {
-        console.error("Error fetching tag suggestions:", error)
+      } catch (error: any) {
+        toast.error(error.message)
       } finally {
         setIsLoadingTag(false)
       }
@@ -137,8 +132,8 @@ function RouteComponent() {
   const saveDraftPost = async () => {
     try {
       const draftPost: CreatePostCommand = {
-        title: title || "",
-        content: content || "",
+        title: currentEditPost?.title || "",
+        content: currentEditPost?.content || "",
         tagIds: selectedTags.map((tag) => tag.id),
         authorId: currentUser?.id || "",
       }
@@ -249,8 +244,13 @@ function RouteComponent() {
                   {/* Post Title */}
                   <div className="w-full h-auto mt-4 p-0 px-8">
                     <Textarea
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
+                      value={currentEditPost?.title}
+                      onChange={(e) =>
+                        setCurrentEditPost({
+                          ...currentEditPost,
+                          title: e.target.value,
+                        })
+                      }
                       ref={textareaRef}
                       rows={1}
                       placeholder="New post title here..."
@@ -281,7 +281,6 @@ function RouteComponent() {
 
                       <input
                         value={tagInput}
-                        onChange={(e) => setTitle(e.target.value)}
                         onBlur={() => onBlur()}
                         placeholder={
                           isLoadingTag

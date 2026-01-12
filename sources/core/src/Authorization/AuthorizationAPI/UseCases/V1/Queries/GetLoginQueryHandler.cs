@@ -55,7 +55,7 @@ public class GetLoginQueryHandler : IQueryHandler<Contract.Services.V1.Identity.
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Email, user.Email),
+            new Claim("Email", user.Email),
         };
 
         foreach (var role in roles)
