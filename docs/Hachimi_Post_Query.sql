@@ -10,8 +10,8 @@ SELECT TOP (1000) [Id]
       ,[ModifiedOnUtc]
       ,[IsDelete]
       ,[PostStatus]
+      ,[IsPostEditing]
   FROM [HachimiDatabase].[dbo].[Post]
-
 
 SELECT TOP (1000) [Id]
       ,[Type]
@@ -43,7 +43,6 @@ BEGIN
     INSERT INTO [HachimiDatabase].[dbo].AppRoles (Id, Name, NormalizedName, ConcurrencyStamp, Description, RoleCode)
     VALUES (NEWID(), 'Author', 'AUTHOR', NEWID(), 'Default author role', 'AUTHOR');
 END
-
 IF NOT EXISTS (SELECT 1 FROM [HachimiDatabase].[dbo].AppRoles WHERE NormalizedName = 'ADMIN')
 BEGIN
     INSERT INTO [HachimiDatabase].[dbo].AppRoles (Id, Name, NormalizedName, ConcurrencyStamp, Description, RoleCode)

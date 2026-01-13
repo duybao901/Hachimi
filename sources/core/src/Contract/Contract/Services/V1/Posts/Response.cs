@@ -5,5 +5,5 @@ public static class Response
 {
     public record PostResponse(Guid Id, string Title, string Slug, string Content, PostAuthorViewModel PostAuthor);
     public record PostListResponse(Guid Id, string Title, string Slug, string Content, PostAuthorViewModel PostAuthor);
-    public record PostCurrentEditReponse(Guid Id, string Title, string Content, Guid AuthorId, ICollection<Guid> TagIds);
+    public record PostCurrentEditReponse(Guid Id, string Title, string Content, string AuthorId, ICollection<Guid> TagIds);
 }

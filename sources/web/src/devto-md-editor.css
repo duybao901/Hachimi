@@ -27,3 +27,7 @@
 .devto-editor .wmde-markdown-var .w-md-editor-toolbar button:hover {
   background: #f3f4f6;
 }
+
+.devto-editor .w-md-editor-text {
+    padding: 10px 20px !important;
+}

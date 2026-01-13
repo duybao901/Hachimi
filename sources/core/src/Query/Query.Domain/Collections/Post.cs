@@ -1,5 +1,6 @@
 ﻿using Query.Domain.Abstractions;
 using Query.Domain.Constants;
+using Query.Domain.Enums;
 
 namespace Query.Domain.Collections;
 
@@ -10,7 +11,8 @@ public class Post : Document
     public string Content { get; set; }
     public string Slug { get; set; }
     public string CoverImageUrl { get; set; }
-    public bool IsPublished { get; set; }
+    public PostStatus PostStatus { get; set; } 
+    public bool IsPostEditing { get; set; }
     public int ViewCount { get; set; }
     public int ReadingTimeMinutes { get; set; }
 

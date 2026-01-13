@@ -53,7 +53,9 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             Slug = request.Slug,
             Content = request.Content,
             Author = author,
-            Tags = tagProjections
+            Tags = tagProjections,
+            IsPostEditing = request.IsPostEditing,
+            PostStatus = Enums.PostStatus.Draft
         };
 
         await _postMongoRepository.InsertOneAsync(post);

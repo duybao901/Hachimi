@@ -26,7 +26,7 @@ public class UserProfile : AggregateRoot<Guid>
             AvatarUrl = "https://res.cloudinary.com/dxnfxl89q/image/upload/v1765901290/Hachimi/capybara_vwpmqp.png"
         };
 
-        userProfile.RaiseDomainEvent(new DomainEvent.UserRegisterEvent(Guid.NewGuid(), userProfile.Id, name, userName, email, userProfile.AvatarUrl));
+        userProfile.RaiseDomainEvent(new DomainEvent.UserRegisterEvent(Guid.NewGuid(), userProfile.Id, userId, name, userName, email, userProfile.AvatarUrl));
 
         return userProfile;
     }

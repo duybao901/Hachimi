@@ -22,22 +22,23 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
     public IReadOnlyCollection<PostTags> PostTags => _postTags.AsReadOnly();
 
 
-    public Posts(Guid id, string title, string slug, string content, Guid authorId)
+    public Posts(Guid id, string title, string slug, string content, Guid authorId, bool isPostEditing)
     {
         Id = id;
         Title = title;
         Slug = slug;
         Content = content;
         AuthorId = authorId;
+        IsPostEditing = isPostEditing;
     }
 
-    public static Posts CreatePost(Guid id, string title, string slug, string content, Guid authorId, List<Guid> tags)
+    public static Posts CreatePost(Guid id, string title, string slug, string content, Guid authorId, List<Guid> tags, bool isPostEditing)
     {
-        var post = new Posts(id, title, slug, content, authorId);
+        var post = new Posts(id, title, slug, content, authorId, isPostEditing);
 
         post.SetTags(tags);
 
-        post.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostCreatedEvent(Guid.NewGuid(), id, title, slug, content, authorId, tags));
+        post.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostCreatedEvent(Guid.NewGuid(), id, title, slug, content, authorId, tags, isPostEditing));
 
         return post;
     }

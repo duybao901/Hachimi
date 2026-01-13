@@ -55,6 +55,7 @@ function RouteComponent() {
     const getCurrentEditPostAsync = async () => {
       try {
         const res = await GetCurrentEditPost()
+        console.log({ res })
         if (res.data) {
           setCurrentEditPost(res.data.value)
         }
@@ -64,7 +65,7 @@ function RouteComponent() {
     }
 
     getCurrentEditPostAsync()
-  }, [])
+  }, [setCurrentEditPost])
 
   useEffect(() => {
     if (!isFocused && tagInput === "") {
@@ -107,6 +108,10 @@ function RouteComponent() {
       el.style.overflowY = "hidden"
     }
   }
+
+  useEffect(() => {
+    handleInput()
+  }, [currentEditPost?.title])
 
   function selectTag(tag: Tag) {
     if (selectedTags.some((t) => t.id === tag.id)) return
@@ -321,7 +326,13 @@ function RouteComponent() {
 
                   {/* Post Body */}
                   <div className="w-full mt-4">
-                    <PostEditor></PostEditor>
+                    <PostEditor value={currentEditPost.content}
+                      onChange={(newContent) =>
+                        setCurrentEditPost((prev) => ({
+                          ...prev,
+                          content: newContent
+                        }))
+                      }></PostEditor>
                   </div>
                 </div>
               ) : (

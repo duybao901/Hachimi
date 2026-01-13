@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
+using Command.Application.Abstractions;
 using Command.Infrastructure.BackgroundJobs;
 using Command.Infrastructure.DependencyInjection.Options;
+using Command.Infrastructure.Identity;
 using Command.Infrastructure.PipelineObservers;
 using Contract.JsonConverters;
 using MassTransit;
@@ -13,14 +15,10 @@ using Quartz.Simpl;
 namespace Command.Infrastructure.DependencyInjection.Extensions;
 public static class ServiceCollectionExtensions
 {
-    //public static void AddInfrastructureRedisServices(this IServiceCollection services, IConfiguration configuration)
-    //{
-    //    services.AddStackExchangeRedisCache(redisOption =>
-    //    {
-    //        string? connectionString = configuration.GetConnectionString("Redis");
-    //        redisOption.Configuration = connectionString;
-    //    });
-    //}
+    public static void AddServiceInfrastructure(this IServiceCollection services)
+    {
+        services.AddScoped<ICurrentUser, CurrentUser>();
+    }
 
     public static IServiceCollection AddMasstransitRabbitMQInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {

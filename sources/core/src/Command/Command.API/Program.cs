@@ -31,6 +31,7 @@ builder.Services.AddConfigurationAutoMapperApplication();
 // Inject Infrastructure Services
 builder.Services.AddMasstransitRabbitMQInfrastructure(builder.Configuration);
 builder.Services.AddQuartzInfrastructure();
+builder.Services.AddServiceInfrastructure();
 
 // Middleware 
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();

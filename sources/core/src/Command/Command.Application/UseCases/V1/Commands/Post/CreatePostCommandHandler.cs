@@ -1,4 +1,5 @@
-﻿using Command.Domain.Abstractions.Repositories;
+﻿using Command.Application.Abstractions;
+using Command.Domain.Abstractions.Repositories;
 using Command.Domain.Exceptions;
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
@@ -7,18 +8,20 @@ using Microsoft.EntityFrameworkCore;
 namespace Command.Application.UserCases.V1.Commands.Post;
 public sealed class CreatePostCommandHandler : ICommandHandler<Contract.Services.V1.Posts.Command.CreatePostCommand>
 {
+    private readonly ICurrentUser _currentUser;
     private readonly IRepositoryBase<Domain.Entities.Posts, Guid> _postRepositoryBase;
-
     private readonly IRepositoryBase<Tags, Guid> _tagRepositoryBase;
 
-    public CreatePostCommandHandler(IRepositoryBase<Domain.Entities.Posts, Guid> postRepositoryBase, IRepositoryBase<Tags, Guid> tagRepositoryBase)
+    public CreatePostCommandHandler(ICurrentUser currentUser, IRepositoryBase<Domain.Entities.Posts, Guid> postRepositoryBase, IRepositoryBase<Tags, Guid> tagRepositoryBase)
     {
         _postRepositoryBase = postRepositoryBase;
         _tagRepositoryBase = tagRepositoryBase;
+        _currentUser = currentUser;
     }
 
     public async Task<Result> Handle(Contract.Services.V1.Posts.Command.CreatePostCommand request, CancellationToken cancellationToken)
     {
+        var userId = _currentUser.UserId;
         if (request.TagIds.Count() < 4)
         {
             throw new PostException.MinimumTagsRequiredException(4);
@@ -28,7 +31,8 @@ public sealed class CreatePostCommandHandler : ICommandHandler<Contract.Services
 
         var slug = SlugGenerator.Generate(request.Title);
 
-        var post = Domain.Entities.Posts.CreatePost(Guid.NewGuid(), request.Title, slug, request.Content, request.AuthorId, request.TagIds);
+        var isPostEditing = true;
+        var post = Domain.Entities.Posts.CreatePost(Guid.NewGuid(), request.Title, slug, request.Content, request.AuthorId, request.TagIds, isPostEditing);
         _postRepositoryBase.Add(post);
 
         return Result.Success("Create post success");

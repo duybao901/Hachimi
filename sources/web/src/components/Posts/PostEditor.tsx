@@ -1,15 +1,16 @@
-import { useState } from "react"
 import MDEditor from "@uiw/react-md-editor"
 
-function PostEditor() {
+type PostEditorProps = {
+  value: string
+  onChange: (value: string) => void
+}
 
-  const [value, setValue] = useState<string>("")
-
+function PostEditor({ value, onChange }: PostEditorProps) {
   return (
     <div data-color-mode="light" className="devto-editor">
       <MDEditor
         value={value}
-        onChange={(v) => setValue(v ?? "")}
+        onChange={(v) => onChange(v ?? "")}
         preview="edit"
         visibleDragbar={false}
         height={500}

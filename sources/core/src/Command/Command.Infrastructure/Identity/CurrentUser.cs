@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Query.Application.Abstraction;
+﻿using Command.Application.Abstractions;
+using Microsoft.AspNetCore.Http;
 
-namespace Query.Infrastructure.Identity;
+namespace Command.Infrastructure.Identity;
 internal sealed class CurrentUser : ICurrentUser
 {
-    public string UserId { get; }
+    public Guid UserId { get; }
     public string Email { get; }
 
     public CurrentUser(IHttpContextAccessor accessor)
@@ -21,7 +21,7 @@ internal sealed class CurrentUser : ICurrentUser
             throw new UnauthorizedAccessException("Invalid user id");
         }
 
-        UserId = userId.ToString();
+        UserId = userId;
 
         Email = headers["X-User-Email"].ToString();
     }

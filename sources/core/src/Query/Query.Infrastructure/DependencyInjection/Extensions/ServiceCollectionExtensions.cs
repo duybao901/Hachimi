@@ -1,5 +1,4 @@
-﻿using Contract.Abstractions;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Query.Domain.Abstractions.Options;
@@ -21,6 +20,6 @@ public static class ServiceCollectionExtensions
 
     public static void AddServiceIdentityInfrastructure(this IServiceCollection services)
     {
-        services.AddScoped<ICurrentUser, CurrentUser>();
+        services.AddScoped<Application.Abstraction.ICurrentUser, CurrentUser>();
     }
 }
