@@ -2,11 +2,11 @@
 using AuthorizationApi.Abstractions;
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
-using Contract.Services.V1.Identity;
+using Contract.Services.V1.Identitys;
 
 namespace AuthorizationApi.UseCases.V1.Commands;
 
-public class RevokeTokenCommandHandler : ICommandHandler<Contract.Services.V1.Identity.Command.RevokeToken>
+public class RevokeTokenCommandHandler : ICommandHandler<Command.RevokeToken>
 {
     private readonly ICacheService _cacheService;
     private readonly IJwtTokenService _jwtTokenService;
@@ -17,7 +17,7 @@ public class RevokeTokenCommandHandler : ICommandHandler<Contract.Services.V1.Id
         _jwtTokenService = jwtTokenService;
     }
 
-    public async Task<Result> Handle(Contract.Services.V1.Identity.Command.RevokeToken request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(Command.RevokeToken request, CancellationToken cancellationToken)
     {
         var AccessToken = request.AccessToken;
         var principal = _jwtTokenService.GetPrincipalFromExpiredToken(AccessToken);

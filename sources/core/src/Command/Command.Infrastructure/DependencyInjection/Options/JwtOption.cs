@@ -1,4 +1,4 @@
-﻿namespace Command.API.DependencyInjection.Options;
+﻿namespace Command.Infrastructure.DependencyInjection.Options;
 
 public class JwtOption
 {

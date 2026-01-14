@@ -7,11 +7,11 @@ using AuthorizationAPI.Entities.Identity;
 using AuthorizationAPI.Exceptions;
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
-using Contract.Services.V1.Identity;
+using Contract.Services.V1.Identitys;
 using Microsoft.AspNetCore.Identity;
 
 namespace AuthorizationApi.UseCases.V1.Queries;
-public class GetLoginQueryHandler : IQueryHandler<Contract.Services.V1.Identity.Query.Login, Response.LoginTokenResponse>
+public class GetLoginQueryHandler : IQueryHandler<Query.Login, Response.LoginTokenResponse>
 {
     private readonly IJwtTokenService _jwtTokenService;
     private readonly ICacheService _cacheService;
@@ -33,7 +33,7 @@ public class GetLoginQueryHandler : IQueryHandler<Contract.Services.V1.Identity.
         _userProfileRepositoryBase = userProfileRepositoryBase;
     }
 
-    public async Task<Result<Response.LoginTokenResponse>> Handle(Contract.Services.V1.Identity.Query.Login request, CancellationToken cancellationToken)
+    public async Task<Result<Response.LoginTokenResponse>> Handle(Query.Login request, CancellationToken cancellationToken)
     {
         // Check user
         var user = await _userManager.FindByEmailAsync(request.Email);

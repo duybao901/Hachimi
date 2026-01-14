@@ -24,7 +24,7 @@ public sealed class GetCurrentEditPostQueryHandler : IQueryHandler<Contract.Serv
         var userId = _currentUser.UserId;
         var author = await _authorRepository.FindOneAsync(author => author.UserId == userId);
 
-        var postCurrentEdit = await _postRepository.FindOneAsync(p => p.Author.DocumentId == author.DocumentId & p.IsPostEditing);
+        var postCurrentEdit = await _postRepository.FindOneAsync(p => p.Author.DocumentId == author.DocumentId & p.PostStatus == PostStatus.Draft);
        
         if (postCurrentEdit == null)
         {

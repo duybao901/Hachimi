@@ -1,12 +1,12 @@
 ﻿using Asp.Versioning;
 using AuthorizationAPI.Abstractions;
 using Contract.Abstractions.Shared;
-using Contract.Services.V1.Identity;
+using Contract.Services.V1.Identitys;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using CommandV1 = Contract.Services.V1.Identity.Command;
+using CommandV1 = Contract.Services.V1.Identitys.Command;
 
 namespace AuthorizationAPI.Controllers.V1;
 

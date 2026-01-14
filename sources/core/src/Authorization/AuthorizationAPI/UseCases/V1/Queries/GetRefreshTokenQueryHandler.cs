@@ -5,14 +5,14 @@ using AuthorizationAPI.Entities;
 using AuthorizationAPI.Exceptions;
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
-using Contract.Services.V1.Identity;
+using Contract.Services.V1.Identitys;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
 namespace AuthorizationApi.UseCases.V1.Queries;
 
-public class GetRefreshTokenQueryHandler : IQueryHandler<Contract.Services.V1.Identity.Query.Refresh, Response.RefreshTokenResponse>
+public class GetRefreshTokenQueryHandler : IQueryHandler<Query.Refresh, Response.RefreshTokenResponse>
 {
     private readonly IJwtTokenService _jwtTokenService;
     private readonly ICacheService _cacheService;
@@ -31,7 +31,7 @@ public class GetRefreshTokenQueryHandler : IQueryHandler<Contract.Services.V1.Id
         _userProfileRepositoryBase = userProfileRepositoryBase;
     }
 
-    public async Task<Result<Response.RefreshTokenResponse>> Handle(Contract.Services.V1.Identity.Query.Refresh request, CancellationToken cancellationToken)
+    public async Task<Result<Response.RefreshTokenResponse>> Handle(Query.Refresh request, CancellationToken cancellationToken)
     {
         var refreshToken = request.RefreshToken;
         var hashRefreshToken = _jwtTokenService.HashToken(refreshToken);

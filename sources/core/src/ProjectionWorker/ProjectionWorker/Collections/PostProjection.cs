@@ -12,7 +12,6 @@ public class PostProjection : Document
     public string Slug { get; set; }
     public string CoverImageUrl { get; set; }
     public PostStatus PostStatus { get; set; } = PostStatus.Draft;
-    public bool IsPostEditing { get; set; }
     public int ViewCount { get; set; }
     public int ReadingTimeMinutes { get; set; }
 

@@ -4,7 +4,7 @@ using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 using static Contract.Services.V1.Tags.Command;
 
-namespace Command.Application.UserCases.V1.Commands.Tag;
+namespace Command.Application.UseCases.V1.Commands.Tag;
 public sealed class UpdateTagCommandHandler : ICommandHandler<UpdateTagCommand>
 {
     private readonly IRepositoryBase<Tags, Guid> _tagReposityBase;

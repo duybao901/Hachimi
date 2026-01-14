@@ -1,6 +1,6 @@
 ﻿using Contract.Abstractions.Message;
 
-namespace Contract.Services.V1.Identity;
+namespace Contract.Services.V1.Identitys;
 public static class Command
 {
     public record class RegisterUserCommand(

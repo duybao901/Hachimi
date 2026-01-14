@@ -5,7 +5,7 @@ using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 using Microsoft.EntityFrameworkCore;
 
-namespace Command.Application.UserCases.V1.Commands.Tag;
+namespace Command.Application.UseCases.V1.Commands.Tag;
 public sealed class DeleteTagCommandHandler : ICommandHandler<Contract.Services.V1.Tags.Command.DeleteTagCommand>
 {
     private readonly IRepositoryBase<Tags, Guid> _tagRepositoryBase;
@@ -26,7 +26,7 @@ public sealed class DeleteTagCommandHandler : ICommandHandler<Contract.Services.
         .FindAll(p => p.PostTags.Any(pt => pt.TagId == request.Id))
         .AnyAsync();
 
-        if(isUsed)
+        if (isUsed)
         {
             throw new TagException.TagAlreadyExitsInAnotherPost();
         }

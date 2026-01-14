@@ -2,7 +2,7 @@
 using AuthorizationApi.Exceptions;
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
-using Contract.Services.V1.Identity;
+using Contract.Services.V1.Identitys;
 
 namespace AuthorizationAPI.UseCases.V1.Commands;
 

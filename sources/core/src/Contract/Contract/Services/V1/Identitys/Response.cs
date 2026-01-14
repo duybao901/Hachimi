@@ -1,4 +1,4 @@
-﻿namespace Contract.Services.V1.Identity;
+﻿namespace Contract.Services.V1.Identitys;
 public static class Response
 {
     public record Authenticated
@@ -27,7 +27,7 @@ public static class Response
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
-        public string AvatarUrl { get ; set; }
-        public string UserName { get;set ; }
+        public string AvatarUrl { get; set; }
+        public string UserName { get; set; }
     }
 }

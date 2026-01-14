@@ -1,8 +1,6 @@
 ﻿using Command.Domain.Abstractions.Aggregates;
 using Command.Domain.Abstractions.Entities;
 using Contract.Enumerations;
-using System.Net.Http.Headers;
-
 
 namespace Command.Domain.Entities;
 public class Posts : AggregateRoot<Guid>, IAuditTableEntity
@@ -12,7 +10,6 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
     public string Slug { get; set; }
     public string? CoverImageUrl { get; set; }
     public PostStatus PostStatus { get; set; } = PostStatus.Draft;
-    public bool IsPostEditing { get; set; }
     public int? ViewCount { get; set; }
     public int? ReadingTimeMinutes { get; set; }
     public Guid AuthorId { get; set; }
@@ -24,23 +21,22 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
     public IReadOnlyCollection<PostTags> PostTags => _postTags.AsReadOnly();
 
 
-    public Posts(Guid id, string title, string slug, string content, Guid authorId, bool isPostEditing)
+    public Posts(Guid id, string title, string slug, string content, Guid authorId)
     {
         Id = id;
         Title = title;
         Slug = slug;
         Content = content;
         AuthorId = authorId;
-        IsPostEditing = isPostEditing;
     }
 
-    public static Posts CreatePost(Guid id, string title, string slug, string content, Guid authorId, List<Guid> tags, bool isPostEditing)
+    public static Posts CreatePost(Guid id, string title, string slug, string content, string CoverImageUrl, Guid UserId, List<Guid> tags)
     {
-        var post = new Posts(id, title, slug, content, authorId, isPostEditing);
+        var post = new Posts(id, title, slug, content, UserId);
 
         post.SetTags(tags);
 
-        post.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostCreatedEvent(Guid.NewGuid(), id, title, slug, content, authorId, tags, isPostEditing));
+        post.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostCreatedEvent(Guid.NewGuid(), id, title, slug, content, CoverImageUrl, UserId, tags));
 
         return post;
     }
@@ -99,6 +95,6 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
 
     public void PublishPost(Guid Id)
     {
-        RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostPublishedEvent(Guid.NewGuid(),Id));
+        RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostPublishedEvent(Guid.NewGuid(), Id));
     }
 }

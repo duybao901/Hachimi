@@ -2,7 +2,7 @@
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 
-namespace Command.Application.UserCases.V1.Commands.Tag;
+namespace Command.Application.UseCases.V1.Commands.Tag;
 public sealed class CreateTagCommandHandler : ICommandHandler<Contract.Services.V1.Tags.Command.CreateTagCommand>
 {
     private readonly IRepositoryBase<Tags, Guid> _tagRepository;

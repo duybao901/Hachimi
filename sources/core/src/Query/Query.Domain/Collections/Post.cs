@@ -1,6 +1,6 @@
-﻿using Query.Domain.Abstractions;
+﻿using Contract.Enumerations;
+using Query.Domain.Abstractions;
 using Query.Domain.Constants;
-using Query.Domain.Enums;
 
 namespace Query.Domain.Collections;
 
@@ -12,11 +12,9 @@ public class Post : Document
     public string Slug { get; set; }
     public string CoverImageUrl { get; set; }
     public PostStatus PostStatus { get; set; } 
-    public bool IsPostEditing { get; set; }
     public int ViewCount { get; set; }
     public int ReadingTimeMinutes { get; set; }
 
     public required Author Author { get; set; }
-
     public required List<Tag> Tags { get; set; } = new();
 }

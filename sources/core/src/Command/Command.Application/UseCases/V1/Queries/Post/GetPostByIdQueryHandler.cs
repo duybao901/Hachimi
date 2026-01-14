@@ -5,7 +5,7 @@ using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 using Contract.Services.V1.Posts;
 
-namespace Command.Application.UserCases.V1.Queries.Post;
+namespace Command.Application.UseCases.V1.Queries.Post;
 public class GetPostByIdQueryHandler : IQueryHandler<Query.GetPostByIdQuery, Response.PostResponse>
 {
     private readonly IRepositoryBase<Domain.Entities.Posts, Guid> _postRepositoryBase;
@@ -19,7 +19,7 @@ public class GetPostByIdQueryHandler : IQueryHandler<Query.GetPostByIdQuery, Res
 
     public async Task<Result<Response.PostResponse>> Handle(Query.GetPostByIdQuery request, CancellationToken cancellationToken)
     {
-        var post = await _postRepositoryBase.FindByIdAsync(request.PostId, cancellationToken) 
+        var post = await _postRepositoryBase.FindByIdAsync(request.PostId, cancellationToken)
             ?? throw new PostException.PostNotFoundException(request.PostId);
 
         var result = _mapper.Map<Response.PostResponse>(post);

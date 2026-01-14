@@ -1,9 +1,5 @@
 ﻿using AuthorizationApi.Abstractions;
-using Contract.Services.V1.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.JsonWebTokens;
-using Serilog;
-using System.Security.Claims;
 
 namespace AuthorizationApi.Attributes;
 
@@ -15,7 +11,7 @@ public class CustomJwtBearerEvents : JwtBearerEvents
     public CustomJwtBearerEvents(ICacheService cacheService, ILogger<CustomJwtBearerEvents> logger)
     {
         _cacheService = cacheService;
-         _logger = logger;
+        _logger = logger;
     }
 
 

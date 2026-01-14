@@ -37,13 +37,9 @@ public sealed class GetOrCreateDraftCommandHandler : ICommandHandler<Contract.Se
             return Result.Success(initialCurrentEditPost);
         }
 
-        //var tags = await _tagRepository.FindAll(tag => request.TagIds.Contains(tag.Id)).ToListAsync(cancellationToken);
-        //foreach (var tag in currentPostDraft.Tags)
-        //{
-        //    tagIds.Add(tag.DocumentId);
-        //}
+        var tagIds = currentPostDraft.PostTags.Select(pt => pt.TagId).ToList();
 
-        var currentEditPost = new Response.PostDraftReponse(currentPostDraft.Id, currentPostDraft.Title, currentPostDraft.Content, userId.ToString(), [], Contract.Enumerations.PostStatus.Draft);
+        var currentEditPost = new Response.PostDraftReponse(currentPostDraft.Id, currentPostDraft.Title, currentPostDraft.Content, userId.ToString(), tagIds, Contract.Enumerations.PostStatus.Draft);
 
         return Result.Success(currentEditPost);
     }

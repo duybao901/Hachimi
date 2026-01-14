@@ -10,4 +10,8 @@
     <PackageReference Include="MongoDB.Bson" Version="3.5.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Contract\Contract\Contract.csproj" />
+  </ItemGroup>
+
 </Project>

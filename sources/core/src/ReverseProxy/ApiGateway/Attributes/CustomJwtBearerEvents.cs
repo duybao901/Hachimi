@@ -1,8 +1,5 @@
 ﻿using ApiGateway.Abstractions;
-using Contract.Services.V1.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.JsonWebTokens;
-using System.Security.Claims;
 
 namespace ApiGateway.Attributes;
 

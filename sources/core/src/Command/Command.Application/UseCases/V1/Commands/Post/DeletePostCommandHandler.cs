@@ -3,7 +3,7 @@ using Command.Domain.Exceptions;
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 
-namespace Command.Application.UserCases.V1.Commands.Post;
+namespace Command.Application.UseCases.V1.Commands.Post;
 public sealed class DeletePostCommandHandler : ICommandHandler<Contract.Services.V1.Posts.Command.DeletePostCommand>
 {
     private readonly IRepositoryBase<Domain.Entities.Posts, Guid> _postRepositoryBase;

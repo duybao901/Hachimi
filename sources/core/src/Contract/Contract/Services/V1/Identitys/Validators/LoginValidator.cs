@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Contract.Services.V1.Identity.Validators;
+namespace Contract.Services.V1.Identitys.Validators;
 public class LoginValidator : AbstractValidator<Query.Login>
 {
     public LoginValidator()

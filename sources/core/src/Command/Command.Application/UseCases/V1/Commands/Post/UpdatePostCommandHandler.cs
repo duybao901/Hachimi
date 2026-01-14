@@ -4,12 +4,12 @@ using Command.Domain.Exceptions;
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 
-namespace Command.Application.UserCases.V1.Commands.Post;
+namespace Command.Application.UseCases.V1.Commands.Post;
 public sealed class UpdatePostCommandHandler : ICommandHandler<Contract.Services.V1.Posts.Command.UpdatePostCommand>
 {
-    private readonly IRepositoryBase<Domain.Entities.Posts, Guid> _postRepositoryBase;
+    private readonly IRepositoryBase<Posts, Guid> _postRepositoryBase;
 
-    public UpdatePostCommandHandler(IRepositoryBase<Domain.Entities.Posts, Guid> postRepositoryBase)
+    public UpdatePostCommandHandler(IRepositoryBase<Posts, Guid> postRepositoryBase)
     {
         _postRepositoryBase = postRepositoryBase;
     }

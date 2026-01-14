@@ -5,7 +5,7 @@ using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 using Microsoft.EntityFrameworkCore;
 
-namespace Command.Application.UserCases.V1.Commands.Post;
+namespace Command.Application.UseCases.V1.Commands.Post;
 public sealed class CreatePostCommandHandler : ICommandHandler<Contract.Services.V1.Posts.Command.CreatePostCommand>
 {
     private readonly ICurrentUser _currentUser;
@@ -32,7 +32,7 @@ public sealed class CreatePostCommandHandler : ICommandHandler<Contract.Services
         var slug = SlugGenerator.Generate(request.Title);
 
         var isPostEditing = true;
-        var post = Domain.Entities.Posts.CreatePost(Guid.NewGuid(), request.Title, slug, request.Content, request.AuthorId, request.TagIds, isPostEditing);
+        var post = Domain.Entities.Posts.CreatePost(Guid.NewGuid(), request.Title, slug, request.Content, request.CoverImageUrl, userId, request.TagIds);
         _postRepositoryBase.Add(post);
 
         return Result.Success("Create post success");

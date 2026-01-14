@@ -45,7 +45,7 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             Color = t.Color
         }).ToList();
 
-        AuthorProjection author = await _authorMongoRepository.FindOneAsync(a => a.DocumentId == request.AuthorId);
+        AuthorProjection author = await _authorMongoRepository.FindOneAsync(a => a.UserId == request.UserId.ToString());
 
         var post = new PostProjection
         {
@@ -55,7 +55,7 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             Content = request.Content,
             Author = author,
             Tags = tagProjections,
-            IsPostEditing = request.IsPostEditing,
+            CoverImageUrl = request.CoverImgUrl,
             PostStatus = Contract.Enumerations.PostStatus.Draft,
         };
 
@@ -127,7 +127,6 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
         await _postMongoRepository.UpdateOneAsync(
             p => p.DocumentId == request.Id,
             Builders<PostProjection>.Update
-                .Set(p => p.IsPostEditing, false)
                 .Set(p => p.ModifiedOnUtc, DateTime.UtcNow)
                 .Set(p => p.PostStatus, Contract.Enumerations.PostStatus.Published)
         ).ConfigureAwait(true);

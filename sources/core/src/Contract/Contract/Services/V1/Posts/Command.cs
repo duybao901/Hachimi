@@ -6,7 +6,7 @@ public static class Command
     public record CreatePostCommand(
         string Title,
         string Content,
-        Guid AuthorId,
+        Guid UserId,
         List<Guid> TagIds,
         string? CoverImageUrl = null
     ) : ICommand;

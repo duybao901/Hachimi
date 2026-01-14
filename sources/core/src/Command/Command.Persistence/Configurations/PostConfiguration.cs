@@ -16,6 +16,5 @@ internal class PostConfiguration : IEntityTypeConfiguration<Posts>
         builder.Property(x => x.Content).IsRequired(true);
         builder.Property(x => x.Slug).IsRequired(true);
         builder.Property(x => x.PostStatus).IsRequired(true);
-        builder.Property(x => x.IsPostEditing).HasDefaultValue(false);
     }
 }

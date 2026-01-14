@@ -6,7 +6,7 @@ using AuthorizationAPI.Entities.Identity;
 using AuthorizationAPI.Extensions;
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
-using Contract.Services.V1.Identity;
+using Contract.Services.V1.Identitys;
 using Microsoft.AspNetCore.Identity;
 
 namespace AuthorizationAPI.UseCases.V1.Commands;
