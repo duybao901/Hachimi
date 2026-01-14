@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 
 namespace Command.Infrastructure.Identity;
-internal sealed class CurrentUser : ICurrentUser
+public sealed class CurrentUser : ICurrentUser
 {
     public Guid UserId { get; }
     public string Email { get; }

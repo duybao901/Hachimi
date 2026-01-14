@@ -38,4 +38,12 @@ public static class PostConsumer
         {
         }
     }
+
+    public class PostPublishedEvent : Consumer<DomainEvent.PostPublishedEvent>
+    {
+        public PostPublishedEvent(ISender sender, IMongoRepository<EventProjection> eventRepository)
+            : base(sender, eventRepository)
+        {
+        }
+    }
 }

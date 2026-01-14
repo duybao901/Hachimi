@@ -1,9 +1,10 @@
-﻿using Contract.Services.V1.Posts.ViewModels;
+﻿using Contract.Enumerations;
+using Contract.Services.V1.Posts.ViewModels;
 
 namespace Contract.Services.V1.Posts;
 public static class Response
 {
     public record PostResponse(Guid Id, string Title, string Slug, string Content, PostAuthorViewModel PostAuthor);
     public record PostListResponse(Guid Id, string Title, string Slug, string Content, PostAuthorViewModel PostAuthor);
-    public record PostCurrentEditReponse(Guid Id, string Title, string Content, string AuthorId, ICollection<Guid> TagIds);
+    public record PostCurrentEditReponse(Guid? Id, string Title, string Content, string AuthorId, ICollection<Guid> TagIds, PostStatus PostStatus, bool IsEditing = true);
 }

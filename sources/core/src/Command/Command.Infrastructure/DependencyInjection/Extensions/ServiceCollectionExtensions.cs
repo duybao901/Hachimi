@@ -17,7 +17,7 @@ public static class ServiceCollectionExtensions
 {
     public static void AddServiceInfrastructure(this IServiceCollection services)
     {
-        services.AddScoped<ICurrentUser, CurrentUser>();
+        services.AddScoped<ICurrentUser, Infrastructure.Identity.CurrentUser>();
     }
 
     public static IServiceCollection AddMasstransitRabbitMQInfrastructure(this IServiceCollection services, IConfiguration configuration)

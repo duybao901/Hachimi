@@ -1,4 +1,4 @@
-﻿namespace ProjectionWorker.Enums;
+﻿namespace Contract.Enumerations;
 public enum PostStatus
 {
     Draft = 0,

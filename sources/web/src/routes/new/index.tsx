@@ -91,7 +91,23 @@ function RouteComponent() {
     return () => clearTimeout(timer)
   }, [tagInput, isFocused])
 
-  const handleInput = () => {
+  useEffect(() => {
+    handleInput()
+  }, [currentEditPost?.title])
+
+  function selectTag(tag: Tag) {
+    if (selectedTags.some((t) => t.id === tag.id)) return
+
+    if (selectedTags) {
+      setSelectedTags([...selectedTags, tag])
+    } else {
+      setSelectedTags([tag])
+    }
+    setTagInput("")
+    setSuggestions([])
+  }
+
+    const handleInput = () => {
     const el = textareaRef.current
     if (!el) return
 
@@ -107,22 +123,6 @@ function RouteComponent() {
       el.style.height = `${el.scrollHeight}px`
       el.style.overflowY = "hidden"
     }
-  }
-
-  useEffect(() => {
-    handleInput()
-  }, [currentEditPost?.title])
-
-  function selectTag(tag: Tag) {
-    if (selectedTags.some((t) => t.id === tag.id)) return
-
-    if (selectedTags) {
-      setSelectedTags([...selectedTags, tag])
-    } else {
-      setSelectedTags([tag])
-    }
-    setTagInput("")
-    setSuggestions([])
   }
 
   function removeTag(tagId: string) {

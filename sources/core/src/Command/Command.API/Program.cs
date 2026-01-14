@@ -1,5 +1,6 @@
 using Command.API.DependencyInjection.Extensions;
 using Command.API.Middleware;
+using Command.Application.Abstractions;
 using Command.Application.DependencyInjection.Extensions;
 using Command.Infrastructure.DependencyInjection.Extensions;
 using Command.Persistence.DependencyInjection.Extensions;
@@ -31,6 +32,7 @@ builder.Services.AddConfigurationAutoMapperApplication();
 // Inject Infrastructure Services
 builder.Services.AddMasstransitRabbitMQInfrastructure(builder.Configuration);
 builder.Services.AddQuartzInfrastructure();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddServiceInfrastructure();
 
 // Middleware 

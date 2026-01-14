@@ -1,6 +1,6 @@
-﻿using ProjectionWorker.Abstractions;
+﻿using Contract.Enumerations;
+using ProjectionWorker.Abstractions;
 using ProjectionWorker.Constants;
-using ProjectionWorker.Enums;
 
 namespace ProjectionWorker.Collections;
 

@@ -109,4 +109,23 @@ public class PostsController : ApiController
 
         return Ok(result);
     }
+
+    /// <summary>
+    /// Publish a post
+    /// </summary>
+    [HttpPut("{postId}/publish")]
+    public async Task<IActionResult> PublishPost(Guid postId)
+    {
+        var command = new CommandV1.PublishPostCommand(postId);
+
+        var result = await Sender.Send(command);
+
+        if (result.IsFailure)
+        {
+            HandlerFailure(result);
+        }
+
+        return Ok(result);
+    }
+
 }

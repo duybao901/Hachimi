@@ -76,13 +76,22 @@ public class ProcessOutboxMessagesJob : IJob
                         await _publishEndpoint.Publish<DomainEvent.PostUpdatedTagEvent>(message: postTagUpdate, context.CancellationToken);
                         break;
                     case nameof(DomainEvent.PostDeletedEvent):
-                        var productDeleted = JsonConvert.DeserializeObject<DomainEvent.PostDeletedEvent>(
+                        var postDeleted = JsonConvert.DeserializeObject<DomainEvent.PostDeletedEvent>(
                                     outboxMessage.Content,
                                     new JsonSerializerSettings
                                     {
                                         TypeNameHandling = TypeNameHandling.All
                                     });
-                        await _publishEndpoint.Publish<DomainEvent.PostDeletedEvent>(message: productDeleted, context.CancellationToken);
+                        await _publishEndpoint.Publish<DomainEvent.PostDeletedEvent>(message: postDeleted, context.CancellationToken);
+                        break;
+                    case nameof(DomainEvent.PostPublishedEvent):
+                        var postPublished = JsonConvert.DeserializeObject<DomainEvent.PostPublishedEvent>(
+                                    outboxMessage.Content,
+                                    new JsonSerializerSettings
+                                    {
+                                        TypeNameHandling = TypeNameHandling.All
+                                    });
+                        await _publishEndpoint.Publish<DomainEvent.PostPublishedEvent>(message: postPublished, context.CancellationToken);
                         break;
 
                     // Tags

@@ -12,7 +12,8 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
     ICommandHandler<DomainEvent.PostCreatedEvent>,
     ICommandHandler<DomainEvent.PostUpdatedContentEvent>,
     ICommandHandler<DomainEvent.PostUpdatedTagEvent>,
-    ICommandHandler<DomainEvent.PostDeletedEvent>
+    ICommandHandler<DomainEvent.PostDeletedEvent>,
+    ICommandHandler<DomainEvent.PostPublishedEvent>
 {
     private readonly IMongoRepository<PostProjection> _postMongoRepository;
     private readonly IMongoRepository<AuthorProjection> _authorMongoRepository;
@@ -55,7 +56,7 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             Author = author,
             Tags = tagProjections,
             IsPostEditing = request.IsPostEditing,
-            PostStatus = Enums.PostStatus.Draft
+            PostStatus = Contract.Enumerations.PostStatus.Draft,
         };
 
         await _postMongoRepository.InsertOneAsync(post);
@@ -111,6 +112,26 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
     public async Task<Result> Handle(DomainEvent.PostDeletedEvent request, CancellationToken cancellationToken)
     {
         await _postMongoRepository.DeleteOneAsync(p => p.DocumentId == request.Id);
+        return Result.Success();
+    }
+
+    public async Task<Result> Handle(DomainEvent.PostPublishedEvent request, CancellationToken cancellationToken)
+    {
+        var post = await _postMongoRepository.FindOneAsync(p => p.DocumentId == request.Id);
+        if (post is null)
+        {
+            // In case the post projection does not exist, we just skip updating tags
+            return Result.Success();
+        }
+
+        await _postMongoRepository.UpdateOneAsync(
+            p => p.DocumentId == request.Id,
+            Builders<PostProjection>.Update
+                .Set(p => p.IsPostEditing, false)
+                .Set(p => p.ModifiedOnUtc, DateTime.UtcNow)
+                .Set(p => p.PostStatus, Contract.Enumerations.PostStatus.Published)
+        ).ConfigureAwait(true);
+
         return Result.Success();
     }
 }

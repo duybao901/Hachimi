@@ -1,5 +1,6 @@
 ﻿using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
+using Contract.Enumerations;
 using Contract.Services.V1.Posts;
 using Query.Application.Abstraction;
 using Query.Domain.Abstractions.Repositories;
@@ -27,12 +28,18 @@ public sealed class GetCurrentEditPostQueryHandler : IQueryHandler<Contract.Serv
        
         if (postCurrentEdit == null)
         {
-            var initialCurrentEditPost = new Response.PostCurrentEditReponse(Guid.NewGuid(), "", "", userId, []);
+            var initialCurrentEditPost = new Response.PostCurrentEditReponse(null, "", "", userId, [], PostStatus.Draft);
 
             return Result.Success(initialCurrentEditPost);
         }
 
-        var currentEditPost = new Response.PostCurrentEditReponse(Guid.NewGuid(), postCurrentEdit.Title, postCurrentEdit.Content, userId, []);
+        var tagIds = new List<Guid>();
+        foreach(var tag in postCurrentEdit.Tags)
+        {
+            tagIds.Add(tag.DocumentId);
+        }
+
+        var currentEditPost = new Response.PostCurrentEditReponse(postCurrentEdit.DocumentId, postCurrentEdit.Title, postCurrentEdit.Content, userId, tagIds, PostStatus.Draft);
 
         return Result.Success(currentEditPost);
     }

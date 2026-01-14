@@ -1,6 +1,8 @@
 ﻿using Command.Domain.Abstractions.Aggregates;
 using Command.Domain.Abstractions.Entities;
-using Command.Domain.Enums;
+using Contract.Enumerations;
+using System.Net.Http.Headers;
+
 
 namespace Command.Domain.Entities;
 public class Posts : AggregateRoot<Guid>, IAuditTableEntity
@@ -93,5 +95,10 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
         {
             _postTags.Add(new PostTags(Id, tag));
         }
+    }
+
+    public void PublishPost(Guid Id)
+    {
+        RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostPublishedEvent(Guid.NewGuid(),Id));
     }
 }

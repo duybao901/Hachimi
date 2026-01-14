@@ -7,4 +7,5 @@ public static class DomainEvent
     public record PostUpdatedContentEvent(Guid IdEvent, Guid Id, string Title, string Content) : IDomainEvent, ICommand;
     public record PostUpdatedTagEvent(Guid IdEvent, Guid Id, ICollection<Guid> NewTagIds) : IDomainEvent, ICommand;
     public record PostDeletedEvent(Guid IdEvent, Guid Id) : IDomainEvent, ICommand;
+    public record PostPublishedEvent(Guid IdEvent, Guid Id) : IDomainEvent, ICommand;
 }
