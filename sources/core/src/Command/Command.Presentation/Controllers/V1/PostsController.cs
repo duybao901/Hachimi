@@ -128,4 +128,17 @@ public class PostsController : ApiController
         return Ok(result);
     }
 
+    [HttpGet("draft")]
+    public async Task<IActionResult> GetOrCreateDraft()
+    {
+
+        var result = await Sender.Send(new CommandV1.GetOrCreateDraftCommand());
+
+        if (result.IsFailure)
+        {
+            HandlerFailure(result);
+        }
+
+        return Ok(result);
+    }
 }

@@ -14,5 +14,6 @@ public static class Command
     public record UpdatePostCommand(Guid Id, string Title, string Content, List<Guid> TagIds) : ICommand;
     public record DeletePostCommand(Guid Id) : ICommand;
     public record PublishPostCommand(Guid Id) : ICommand;
+    public record GetOrCreateDraftCommand() : ICommand<Response.PostDraftReponse>;
 
 }
