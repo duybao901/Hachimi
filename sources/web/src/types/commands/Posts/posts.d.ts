@@ -1,3 +1,5 @@
+import type { PostStatus } from "@/types";
+
 export interface CreatePostCommand {
     title: string;
     content: string;
@@ -22,4 +24,13 @@ export interface PostEditorState {
     content: string;
     tags: Tag[];
     isDirty: boolean;
+}
+
+export interface GetOrCreateDraftPostResponse {
+    id: string
+    title: string
+    content: string
+    tagIds: string[]
+    userId: string
+    postStatus: PostStatus
 }

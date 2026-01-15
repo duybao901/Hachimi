@@ -1,8 +1,6 @@
 import type { en } from "zod/v4/locales";
 import type { Author } from "../../author";
 
-export type PostStatus = "Draft" | "Published" | "Archived";
-
 export interface Tag {
     id: string;
     name: string;

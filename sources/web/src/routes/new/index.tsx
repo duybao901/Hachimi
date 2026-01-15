@@ -22,10 +22,11 @@ import { DialogClose } from "@radix-ui/react-dialog"
 import { usePostStore } from "@/store/post.store"
 import { useAuthStore } from "@/store/auth.store"
 import { toast } from "sonner"
-import { CreatePost, GetCurrentEditPost } from "@/services/post.service"
-import type { CreatePostCommand } from "@/types/commands/Posts/posts"
+import { CreatePost, GetCurrentEditPost, GetOrCreateDraftPost } from "@/services/post.service"
+import type { CreatePostCommand, GetOrCreateDraftPostResponse } from "@/types/commands/Posts/posts"
 import { extractValidationMessages } from "@/utils/extractValidationMessages"
 import type { ValidationErrorResponse } from "@/types/api"
+import { PostStatus } from '@/types'
 
 export const Route = createFileRoute("/new/")({
   component: RouteComponent,
@@ -42,11 +43,13 @@ function RouteComponent() {
   const [suggestions, setSuggestions] = useState<Tag[] | []>([])
   const [isFocused, setIsFocused] = useState(false)
   const [isLoadingTag, setIsLoadingTag] = useState<boolean>(false)
-  const [currentEditPost, setCurrentEditPost] = useState<CreatePostCommand>({
+  const [currentEditPost, setCurrentEditPost] = useState<GetOrCreateDraftPostResponse>({
+    id:"",
     title: "",
     content: "",
-    authorId: "",
+    userId: "",
     tagIds: [],
+    postStatus: "Draft",
   })
 
   const { currentUser } = useAuthStore.getState()
@@ -54,7 +57,7 @@ function RouteComponent() {
   useEffect(() => {
     const getCurrentEditPostAsync = async () => {
       try {
-        const res = await GetCurrentEditPost()
+        const res = await GetOrCreateDraftPost()
         console.log({ res })
         if (res.data) {
           setCurrentEditPost(res.data.value)
@@ -107,7 +110,7 @@ function RouteComponent() {
     setSuggestions([])
   }
 
-    const handleInput = () => {
+  const handleInput = () => {
     const el = textareaRef.current
     if (!el) return
 
