@@ -1,4 +1,5 @@
 ﻿using Command.Domain.Abstractions.Repositories;
+using Command.Domain.Entities;
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 

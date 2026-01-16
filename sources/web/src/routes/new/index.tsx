@@ -22,11 +22,10 @@ import { DialogClose } from "@radix-ui/react-dialog"
 import { usePostStore } from "@/store/post.store"
 import { useAuthStore } from "@/store/auth.store"
 import { toast } from "sonner"
-import { CreatePost, GetCurrentEditPost, GetOrCreateDraftPost } from "@/services/post.service"
-import type { CreatePostCommand, GetOrCreateDraftPostResponse } from "@/types/commands/Posts/posts"
+import { CreatePost, GetCurrentEditPost, GetOrCreateDraftPost, UpdatePost } from "@/services/post.service"
+import type { CreatePostCommand, GetOrCreateDraftPostResponse, UpdatePostCommand } from "@/types/commands/Posts/posts"
 import { extractValidationMessages } from "@/utils/extractValidationMessages"
 import type { ValidationErrorResponse } from "@/types/api"
-import { PostStatus } from '@/types'
 
 export const Route = createFileRoute("/new/")({
   component: RouteComponent,
@@ -49,6 +48,7 @@ function RouteComponent() {
     content: "",
     userId: "",
     tagIds: [],
+    coverImageUrl: "",
     postStatus: "Draft",
   })
 
@@ -139,16 +139,18 @@ function RouteComponent() {
 
   const saveDraftPost = async () => {
     try {
-      const draftPost: CreatePostCommand = {
+      const draftPost: UpdatePostCommand = {
+        id: currentEditPost.id,
         title: currentEditPost?.title || "",
         content: currentEditPost?.content || "",
         tagIds: selectedTags.map((tag) => tag.id),
-        authorId: currentUser?.id || "",
+        coverImageUrl: currentEditPost.coverImageUrl 
       }
 
       console.log(draftPost)
 
-      // await CreatePost(draftPost)
+      const res = await UpdatePost(draftPost.id ,draftPost)
+      console.log(res)
     } catch (error: any) {
       const data = error?.response?.data as ValidationErrorResponse | undefined
 

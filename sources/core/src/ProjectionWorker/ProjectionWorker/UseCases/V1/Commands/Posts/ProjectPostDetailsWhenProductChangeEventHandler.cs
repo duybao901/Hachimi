@@ -13,7 +13,8 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
     ICommandHandler<DomainEvent.PostUpdatedContentEvent>,
     ICommandHandler<DomainEvent.PostUpdatedTagEvent>,
     ICommandHandler<DomainEvent.PostDeletedEvent>,
-    ICommandHandler<DomainEvent.PostPublishedEvent>
+    ICommandHandler<DomainEvent.PostPublishedEvent>,
+    ICommandHandler<DomainEvent.PostSavedEvent>
 {
     private readonly IMongoRepository<PostProjection> _postMongoRepository;
     private readonly IMongoRepository<AuthorProjection> _authorMongoRepository;
@@ -35,7 +36,7 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
     public async Task<Result> Handle(DomainEvent.PostCreatedEvent request, CancellationToken cancellationToken)
     {
         var tagIds = request.TagIds;
-        var tags = await _tagEfRepository.FindAll(t => tagIds.Contains(t.Id)).ToListAsync();
+        var tags = await _tagEfRepository.FindAll(t => tagIds.Contains(t.Id)).ToListAsync(cancellationToken: cancellationToken);
 
         var tagProjections = tags.Select(t => new TagProjection
         {
@@ -71,6 +72,7 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             Builders<PostProjection>.Update
                 .Set(p => p.Title, request.Title)
                 .Set(p => p.Content, request.Content)
+                .Set(p => p.CoverImageUrl, request.CoverImageUrl)
                 .Set(p => p.ModifiedOnUtc, DateTime.UtcNow)
         );
 
@@ -80,7 +82,7 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
     public async Task<Result> Handle(DomainEvent.PostUpdatedTagEvent request, CancellationToken cancellationToken)
     {
         var tagIds = request.NewTagIds;
-        var tags = await _tagEfRepository.FindAll(t => tagIds.Contains(t.Id)).ToListAsync();
+        var tags = await _tagEfRepository.FindAll(t => tagIds.Contains(t.Id)).ToListAsync(cancellationToken: cancellationToken);
 
         var tagProjections = tags.Select(t => new TagProjection
         {
@@ -89,16 +91,6 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             Description = t.Description,
             Color = t.Color
         }).ToList();
-
-        var post = await _postMongoRepository.FindOneAsync(p => p.DocumentId == request.Id);
-        if(post is null)
-        {
-            // In case the post projection does not exist, we just skip updating tags
-            return Result.Success();
-        }
-
-        post.Tags = tagProjections;
-        post.ModifiedOnUtc = DateTime.UtcNow;
 
         await _postMongoRepository.UpdateOneAsync(
             p => p.DocumentId == request.Id,
@@ -130,6 +122,38 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
                 .Set(p => p.ModifiedOnUtc, DateTime.UtcNow)
                 .Set(p => p.PostStatus, Contract.Enumerations.PostStatus.Published)
         ).ConfigureAwait(true);
+
+        return Result.Success();
+    }
+
+    public async Task<Result> Handle(DomainEvent.PostSavedEvent request, CancellationToken cancellationToken)
+    {
+        var tagIds = request.TagIds;
+        var tags = await _tagEfRepository.FindAll(t => tagIds.Contains(t.Id)).ToListAsync(cancellationToken: cancellationToken);
+
+        var tagProjections = tags.Select(t => new TagProjection
+        {
+            DocumentId = t.Id,
+            Name = t.Name,
+            Description = t.Description,
+            Color = t.Color
+        }).ToList();
+
+        AuthorProjection author = await _authorMongoRepository.FindOneAsync(a => a.UserId == request.UserId.ToString());
+
+        var post = new PostProjection
+        {
+            DocumentId = request.Id,
+            Title = request.Title,
+            Slug = request.Slug,
+            Content = request.Content,
+            Author = author,
+            Tags = tagProjections,
+            CoverImageUrl = request.CoverImgUrl,
+            PostStatus = Contract.Enumerations.PostStatus.Draft,
+        };
+
+        await _postMongoRepository.InsertOneAsync(post);
 
         return Result.Success();
     }

@@ -5,25 +5,14 @@ export interface CreatePostCommand {
     content: string;
     authorId: string;
     tagIds: string[];
-
 }
 
-export interface UpdatePostContentCommand {
+export interface UpdatePostCommand {
     id: string;
     title: string;
     content: string;
-}
-
-export interface UpdatePostTagsCommand {
-    id: string;
+    coverImageUrl: string;
     tagIds: string[];
-}
-
-export interface PostEditorState {
-    title: string;
-    content: string;
-    tags: Tag[];
-    isDirty: boolean;
 }
 
 export interface GetOrCreateDraftPostResponse {
@@ -32,5 +21,6 @@ export interface GetOrCreateDraftPostResponse {
     content: string
     tagIds: string[]
     userId: string
+    coverImageUrl: string
     postStatus: PostStatus
 }

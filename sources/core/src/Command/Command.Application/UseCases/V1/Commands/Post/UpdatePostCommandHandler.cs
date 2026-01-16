@@ -23,7 +23,7 @@ public sealed class UpdatePostCommandHandler : ICommandHandler<Contract.Services
                 )
             ?? throw new PostException.PostNotFoundException(request.Id);
 
-        post.UpdateContent(request.Title, request.Content);
+        post.UpdateContent(request.Title, request.Content, request.CoverImageUrl);
         post.UpdateTags(request.TagIds);
 
         _postRepositoryBase.Update(post);

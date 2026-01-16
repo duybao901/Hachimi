@@ -41,15 +41,28 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
         return post;
     }
 
-    public void UpdateContent(string title, string content)
+    public static Posts CreateDraftPost(Guid id, string title, string slug, string content, string CoverImageUrl, Guid UserId, List<Guid> tags)
+    {
+        var post = new Posts(id, title, slug, content, UserId);
+
+        post.SetTags(tags);
+
+        post.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostSavedEvent(Guid.NewGuid(), id, title, slug, content, CoverImageUrl, UserId, tags));
+
+        return post;
+    }
+
+    public void UpdateContent(string title, string content, string coverImageUrl)
     {
         Title = title;
         Content = content;
+        CoverImageUrl = coverImageUrl;
 
         RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostUpdatedContentEvent(Guid.NewGuid(),
             Id,
             Title,
-            Content
+            Content,
+            CoverImageUrl
             ));
     }
 

@@ -1,6 +1,6 @@
 import { queryApi } from '../api/query.api';
 import { commandApiV1 } from '../api/command.api';
-import type {CreatePostCommand, GetOrCreateDraftPostResponse} from '@/types/commands/Posts/posts'
+import type {CreatePostCommand, GetOrCreateDraftPostResponse, UpdatePostCommand} from '@/types/commands/Posts/posts'
 import type { ApiResponse } from '@/types/api';
 
 export async function CreatePost(post: CreatePostCommand) {
@@ -13,4 +13,12 @@ export async function GetCurrentEditPost() {
 
 export async function GetOrCreateDraftPost() {
     return await commandApiV1.get<ApiResponse<GetOrCreateDraftPostResponse>>('/posts/draft');
+}
+
+export async function UpdatePost(postId: string ,data: UpdatePostCommand) {
+    return await commandApiV1.put<ApiResponse<string>>(`/posts/${postId}`, data);
+}
+
+export async function PushPost(postId: string) {
+
 }

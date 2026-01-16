@@ -80,7 +80,7 @@ public class PostsController : ApiController
     [HttpPut("{postId}")]
     public async Task<IActionResult> UpdatePost(Guid postId, [FromBody] CommandV1.UpdatePostCommand request)
     {
-        var command = new CommandV1.UpdatePostCommand(postId, request.Title, request.Content, request.TagIds);
+        var command = new CommandV1.UpdatePostCommand(postId, request.Title, request.Content, request.TagIds, request.CoverImageUrl);
 
         var result = await Sender.Send(command);
 
@@ -133,6 +133,19 @@ public class PostsController : ApiController
     {
 
         var result = await Sender.Send(new CommandV1.GetOrCreateDraftCommand());
+
+        if (result.IsFailure)
+        {
+            HandlerFailure(result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpGet("save-draft")]
+    public async Task<IActionResult> SaveDraftPost([FromBody] CommandV1.SaveDraftPost request)
+    {
+        var result = await Sender.Send(request);
 
         if (result.IsFailure)
         {

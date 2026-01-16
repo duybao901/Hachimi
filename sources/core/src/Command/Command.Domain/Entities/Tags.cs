@@ -1,7 +1,7 @@
 ﻿using Command.Domain.Abstractions.Aggregates;
 using Command.Domain.Abstractions.Entities;
-using MongoDB.Bson;
 
+namespace Command.Domain.Entities;
 public class Tags : AggregateRoot<Guid>, IAuditTableEntity
 {
     public string Name { get; private set; }

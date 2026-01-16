@@ -46,4 +46,12 @@ public static class PostConsumer
         {
         }
     }
+
+    public class PostSaveddEvent : Consumer<DomainEvent.PostSavedEvent>
+    {
+        public PostSaveddEvent(ISender sender, IMongoRepository<EventProjection> eventRepository)
+            : base(sender, eventRepository)
+        {
+        }
+    }
 }

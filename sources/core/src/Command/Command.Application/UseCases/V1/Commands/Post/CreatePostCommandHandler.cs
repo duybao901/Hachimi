@@ -1,5 +1,6 @@
 ﻿using Command.Application.Abstractions;
 using Command.Domain.Abstractions.Repositories;
+using Command.Domain.Entities;
 using Command.Domain.Exceptions;
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
@@ -9,10 +10,10 @@ namespace Command.Application.UseCases.V1.Commands.Post;
 public sealed class CreatePostCommandHandler : ICommandHandler<Contract.Services.V1.Posts.Command.CreatePostCommand>
 {
     private readonly ICurrentUser _currentUser;
-    private readonly IRepositoryBase<Domain.Entities.Posts, Guid> _postRepositoryBase;
+    private readonly IRepositoryBase<Posts, Guid> _postRepositoryBase;
     private readonly IRepositoryBase<Tags, Guid> _tagRepositoryBase;
 
-    public CreatePostCommandHandler(ICurrentUser currentUser, IRepositoryBase<Domain.Entities.Posts, Guid> postRepositoryBase, IRepositoryBase<Tags, Guid> tagRepositoryBase)
+    public CreatePostCommandHandler(ICurrentUser currentUser, IRepositoryBase<Posts, Guid> postRepositoryBase, IRepositoryBase<Tags, Guid> tagRepositoryBase)
     {
         _postRepositoryBase = postRepositoryBase;
         _tagRepositoryBase = tagRepositoryBase;
@@ -32,7 +33,7 @@ public sealed class CreatePostCommandHandler : ICommandHandler<Contract.Services
         var slug = SlugGenerator.Generate(request.Title);
 
         var isPostEditing = true;
-        var post = Domain.Entities.Posts.CreatePost(Guid.NewGuid(), request.Title, slug, request.Content, request.CoverImageUrl, userId, request.TagIds);
+        var post = Posts.CreatePost(Guid.NewGuid(), request.Title, slug, request.Content, request.CoverImageUrl, userId, request.TagIds);
         _postRepositoryBase.Add(post);
 
         return Result.Success("Create post success");

@@ -62,8 +62,8 @@ indent_size = 2
 
 # Rule 1: Interfaces must start with I
 dotnet_naming_rule.interface_should_start_with_I.symbols = interface_symbols
-dotnet_naming_rule.interface_should_start_with_I.style = interface_prefix_style
-dotnet_naming_rule.interface_should_start_with_I.severity = error
+dotnet_naming_rule.interface_should_start_with_i.style = interface_prefix_style
+dotnet_naming_rule.interface_should_start_with_i.severity = error
 
 dotnet_naming_symbols.interface_symbols.applicable_kinds = interface
 dotnet_naming_symbols.interface_symbols.applicable_accessibilities = *
@@ -116,3 +116,5 @@ dotnet_style_prefer_collection_expression = when_types_loosely_match:suggestion
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 csharp_style_prefer_method_group_conversion = true:silent
 csharp_prefer_system_threading_lock = true:suggestion
+
+dotnet_diagnostic.CA2007.severity = none
