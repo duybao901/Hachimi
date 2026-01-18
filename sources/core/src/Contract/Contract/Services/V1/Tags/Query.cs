@@ -5,4 +5,5 @@ public class Query
 {
     public record SearchTags(string? SearchTerm) : IQuery<List<Response.TagResponse>>;
     public record GetTagById(Guid Id) : IQuery<Response.TagResponse>;
+    public record GetTagByListId(ICollection<Guid> TagIds) : IQuery<List<Response.TagResponse>>;
 }

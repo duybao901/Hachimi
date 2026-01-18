@@ -7,3 +7,9 @@ export async function fetchSearchTags(searchTerm: string = '') {
     params: { searchTerm },
   })
 }
+
+export async function getTagListFromIds(tagIds: string[]){
+  return queryApi.post<ApiResponse<Tag[]>>(`/tags/ids`, {
+    tagIds: tagIds
+  })
+}

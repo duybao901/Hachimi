@@ -42,4 +42,18 @@ public class TagsController : ApiController
 
         return Results.Ok(result);
     }
+
+    [HttpPost("ids")]
+    [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
+    public async Task<IResult> GetTagByListId([FromBody] Contract.Services.V1.Tags.Query.GetTagByListId request)
+    {
+        Result result = await Sender.Send(request);
+
+        if (result.IsFailure)
+        {
+            return HandlerFailure(result);
+        }
+
+        return Results.Ok(result);
+    }
 }

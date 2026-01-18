@@ -1,10 +1,23 @@
 import type { PostStatus } from "@/types";
 
+export interface DraftPost {
+    title: string 
+    content: string 
+    tagList: string[]
+    coverImageUrl: string
+}
+
 export interface CreatePostCommand {
     title: string;
     content: string;
-    authorId: string;
     tagIds: string[];
+}
+
+export interface SaveDraftPostCommand {
+    title: string;
+    content: string;
+    tagIds: string[];
+    coverImageUrl: string;
 }
 
 export interface UpdatePostCommand {

@@ -2,12 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router"
 import Logo from "@/assets/horse_logo.png"
 import { X as XIcon, ClipboardClock as ClipboardClockIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useEffect, useRef, useState } from "react"
+import { use, useEffect, useRef, useState } from "react"
 import { cn } from "@/lib/utils"
 import { Textarea } from "@/components/ui/textarea"
 import type { Tag } from "@/types/tag"
 import { hexToRgb } from "@/utils/hexToRgb"
-import { fetchSearchTags } from "@/services/tag.service"
+import { fetchSearchTags, getTagListFromIds } from "@/services/tag.service"
 import PostEditor from "@/components/Posts/PostEditor"
 import {
   Dialog,
@@ -19,11 +19,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { DialogClose } from "@radix-ui/react-dialog"
-import { usePostStore } from "@/store/post.store"
-import { useAuthStore } from "@/store/auth.store"
 import { toast } from "sonner"
-import { CreatePost, GetCurrentEditPost, GetOrCreateDraftPost, UpdatePost } from "@/services/post.service"
-import type { CreatePostCommand, GetOrCreateDraftPostResponse, UpdatePostCommand } from "@/types/commands/Posts/posts"
+import { SaveDraftPost } from "@/services/post.service"
+import type { DraftPost, SaveDraftPostCommand } from "@/types/commands/Posts/posts"
 import { extractValidationMessages } from "@/utils/extractValidationMessages"
 import type { ValidationErrorResponse } from "@/types/api"
 
@@ -32,6 +30,7 @@ export const Route = createFileRoute("/new/")({
 })
 
 const MAX_LINES = 4
+const DRAFT_POST_KEY = "editor-v2-hachimi/new"
 
 function RouteComponent() {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
@@ -42,33 +41,34 @@ function RouteComponent() {
   const [suggestions, setSuggestions] = useState<Tag[] | []>([])
   const [isFocused, setIsFocused] = useState(false)
   const [isLoadingTag, setIsLoadingTag] = useState<boolean>(false)
-  const [currentEditPost, setCurrentEditPost] = useState<GetOrCreateDraftPostResponse>({
-    id:"",
-    title: "",
-    content: "",
-    userId: "",
-    tagIds: [],
-    coverImageUrl: "",
-    postStatus: "Draft",
-  })
 
-  const { currentUser } = useAuthStore.getState()
+  const initialDraft = (() => {
+    const raw = localStorage.getItem(DRAFT_POST_KEY)
+    return raw
+      ? JSON.parse(raw)
+      : {
+        title: "",
+        content: "",
+        tagList: [],
+        coverImageUrl: "",
+      }
+  })()
+
+  const [draftPost, setDraftPost] = useState<DraftPost>(initialDraft)
 
   useEffect(() => {
-    const getCurrentEditPostAsync = async () => {
-      try {
-        const res = await GetOrCreateDraftPost()
-        console.log({ res })
-        if (res.data) {
-          setCurrentEditPost(res.data.value)
-        }
-      } catch (error: any) {
-        toast.error(error.message)
-      }
-    }
+    const timer = setTimeout(() => {
+      localStorage.setItem(
+        DRAFT_POST_KEY,
+        JSON.stringify({
+          ...draftPost,
+          updatedAt: Date.now()
+        })
+      )
+    }, 400)
 
-    getCurrentEditPostAsync()
-  }, [setCurrentEditPost])
+    return () => clearTimeout(timer)
+  }, [draftPost])
 
   useEffect(() => {
     if (!isFocused && tagInput === "") {
@@ -95,17 +95,59 @@ function RouteComponent() {
   }, [tagInput, isFocused])
 
   useEffect(() => {
+    const fetchTagsListFromIdsAsync = async () => {
+      try {
+        const res = await getTagListFromIds(draftPost.tagList)
+        if (res.data.value) {
+          setSelectedTags(res.data.value)
+        }
+      } catch (error: any) {
+        console.log({ error })
+        const data = error?.response?.data as ValidationErrorResponse | undefined
+
+        if (data?.errors) {
+          const messages = extractValidationMessages(data.errors)
+
+          toast.error("Validation error", {
+            description: (
+              <ul className="list-disc pl-4">
+                {messages.map((msg) => (
+                  <li key={msg}>{msg}</li>
+                ))}
+              </ul>
+            ),
+          })
+        } else {
+          if (error.response) {
+            toast.error(
+              error.response?.data?.Detail || error.message || "Server error"
+            )
+          }
+        }
+      }
+    }
+
+    fetchTagsListFromIdsAsync();
+  }, [draftPost])
+
+  useEffect(() => {
     handleInput()
-  }, [currentEditPost?.title])
+  }, [draftPost?.title])
 
   function selectTag(tag: Tag) {
-    if (selectedTags.some((t) => t.id === tag.id)) return
+    setSelectedTags((prev) => {
+      if (prev.some((t) => t.id === tag.id)) return prev
 
-    if (selectedTags) {
-      setSelectedTags([...selectedTags, tag])
-    } else {
-      setSelectedTags([tag])
-    }
+      const next = [...prev, tag]
+
+      setDraftPost((draft) => ({
+        ...draft,
+        tagList: next.map((t) => t.id),
+      }))
+
+      return next
+    })
+
     setTagInput("")
     setSuggestions([])
   }
@@ -129,7 +171,12 @@ function RouteComponent() {
   }
 
   function removeTag(tagId: string) {
-    setSelectedTags(selectedTags.filter((t) => t.id !== tagId))
+    const tags = selectedTags.filter((t) => t.id !== tagId)
+    setSelectedTags(tags)
+    setDraftPost((draft) => ({
+      ...draft,
+      tagList: tags.map((t) => t.id),
+    }))
   }
 
   const onBlur = () => {
@@ -139,18 +186,14 @@ function RouteComponent() {
 
   const saveDraftPost = async () => {
     try {
-      const draftPost: UpdatePostCommand = {
-        id: currentEditPost.id,
-        title: currentEditPost?.title || "",
-        content: currentEditPost?.content || "",
+      const draftPostData: SaveDraftPostCommand = {
+        title: draftPost?.title || "",
+        content: draftPost?.content || "",
         tagIds: selectedTags.map((tag) => tag.id),
-        coverImageUrl: currentEditPost.coverImageUrl 
+        coverImageUrl: draftPost.coverImageUrl,
       }
 
-      console.log(draftPost)
-
-      const res = await UpdatePost(draftPost.id ,draftPost)
-      console.log(res)
+      await SaveDraftPost(draftPostData)
     } catch (error: any) {
       const data = error?.response?.data as ValidationErrorResponse | undefined
 
@@ -167,9 +210,20 @@ function RouteComponent() {
           ),
         })
       } else {
-        toast.error("Something went wrong")
+        if (error.response) {
+          toast.error(
+            error.response?.data?.Detail || error.message || "Server error"
+          )
+        }
       }
     }
+  }
+
+  const postTitleOnChange = (e: any) => {
+    setDraftPost((prev) => ({
+      ...prev,
+      title: e.target.value
+    }))
   }
 
   return (
@@ -229,7 +283,7 @@ function RouteComponent() {
                     </DialogDescription>
                   </DialogHeader>
                   <DialogFooter>
-                    <Button type="submit" onClick={saveDraftPost}>
+                    <Button type="submit">
                       Yes, Leave the page
                     </Button>
                     <DialogClose asChild>
@@ -254,13 +308,8 @@ function RouteComponent() {
                   {/* Post Title */}
                   <div className="w-full h-auto mt-4 p-0 px-8">
                     <Textarea
-                      value={currentEditPost?.title}
-                      onChange={(e) =>
-                        setCurrentEditPost({
-                          ...currentEditPost,
-                          title: e.target.value,
-                        })
-                      }
+                      value={draftPost?.title}
+                      onChange={postTitleOnChange}
                       ref={textareaRef}
                       rows={1}
                       placeholder="New post title here..."
@@ -331,9 +380,9 @@ function RouteComponent() {
 
                   {/* Post Body */}
                   <div className="w-full mt-4">
-                    <PostEditor value={currentEditPost.content}
+                    <PostEditor value={draftPost.content}
                       onChange={(newContent) =>
-                        setCurrentEditPost((prev) => ({
+                        setDraftPost((prev) => ({
                           ...prev,
                           content: newContent
                         }))
@@ -356,6 +405,7 @@ function RouteComponent() {
                 <Button
                   variant="secondary"
                   className="font-normal bg-transparent"
+                  onClick={saveDraftPost}
                 >
                   Save Draft
                 </Button>

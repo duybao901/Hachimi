@@ -21,12 +21,13 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
     public IReadOnlyCollection<PostTags> PostTags => _postTags.AsReadOnly();
 
 
-    public Posts(Guid id, string title, string slug, string content, Guid authorId)
+    public Posts(Guid id, string title, string slug, string content, Guid authorId, string CoverImageUrl = null)
     {
         Id = id;
         Title = title;
         Slug = slug;
         Content = content;
+        CoverImageUrl = CoverImageUrl;
         AuthorId = authorId;
     }
 
@@ -41,15 +42,12 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
         return post;
     }
 
-    public static Posts CreateDraftPost(Guid id, string title, string slug, string content, string CoverImageUrl, Guid UserId, List<Guid> tags)
+    public static Posts CreateDraftPost(Guid UserId)
     {
-        var post = new Posts(id, title, slug, content, UserId);
+        var postDraft = new Posts(Guid.NewGuid(), "", "", "", UserId);
+        postDraft.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostCreatedEvent(Guid.NewGuid(), postDraft.Id, postDraft.Title, postDraft.Slug, postDraft.Content, postDraft.CoverImageUrl, UserId, []));
 
-        post.SetTags(tags);
-
-        post.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostSavedEvent(Guid.NewGuid(), id, title, slug, content, CoverImageUrl, UserId, tags));
-
-        return post;
+        return postDraft;
     }
 
     public void UpdateContent(string title, string content, string coverImageUrl)

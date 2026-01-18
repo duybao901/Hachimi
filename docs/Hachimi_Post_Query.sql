@@ -10,7 +10,6 @@ SELECT TOP (1000) [Id]
       ,[ModifiedOnUtc]
       ,[IsDelete]
       ,[PostStatus]
-      ,[IsPostEditing]
   FROM [HachimiDatabase].[dbo].[Post]
 
 SELECT TOP (1000) [Id]
