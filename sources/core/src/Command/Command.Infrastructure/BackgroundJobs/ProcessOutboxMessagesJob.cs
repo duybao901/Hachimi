@@ -125,7 +125,6 @@ public class ProcessOutboxMessagesJob : IJob
                     default:
                         break;
                 }
-
                 outboxMessage.ProcessedOnUtc = DateTime.UtcNow;
             }
             catch (Exception ex)

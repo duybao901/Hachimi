@@ -58,13 +58,12 @@ public class ProcessOutboxMessagesJob : IJob
                                         TypeNameHandling = TypeNameHandling.All
                                     });
                         await _publishEndpoint.Publish<UserProfileDomainEvent.UserRegisterEvent>(message: userRegisted, context.CancellationToken);
+                        outboxMessage.ProcessedOnUtc = DateTime.UtcNow;
                         break;
                     default:
                         _logger.LogError("Unknown domain event type: {DomainEventType}", domainEvent.GetType().Name);
                         break;
                 }
-
-                outboxMessage.ProcessedOnUtc = DateTime.UtcNow;
             }
             catch (Exception ex)
             {

@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router"
 import Logo from "@/assets/horse_logo.png"
 import { X as XIcon, ClipboardClock as ClipboardClockIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { use, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { cn } from "@/lib/utils"
 import { Textarea } from "@/components/ui/textarea"
 import type { Tag } from "@/types/tag"
@@ -102,7 +102,6 @@ function RouteComponent() {
           setSelectedTags(res.data.value)
         }
       } catch (error: any) {
-        console.log({ error })
         const data = error?.response?.data as ValidationErrorResponse | undefined
 
         if (data?.errors) {
@@ -128,7 +127,7 @@ function RouteComponent() {
     }
 
     fetchTagsListFromIdsAsync();
-  }, [draftPost])
+  }, [draftPost.tagList])
 
   useEffect(() => {
     handleInput()
@@ -193,7 +192,15 @@ function RouteComponent() {
         coverImageUrl: draftPost.coverImageUrl,
       }
 
-      await SaveDraftPost(draftPostData)
+      const res = await SaveDraftPost(draftPostData)
+      toast.success(res.data.value)
+      setDraftPost({
+        title: "",
+        content: "",
+        tagList: [],
+        coverImageUrl: "",
+      })
+
     } catch (error: any) {
       const data = error?.response?.data as ValidationErrorResponse | undefined
 
@@ -339,6 +346,7 @@ function RouteComponent() {
                       ))}
 
                       <input
+                        onChange={(e) => setTagInput(e.target.value)}
                         value={tagInput}
                         onBlur={() => onBlur()}
                         placeholder={
