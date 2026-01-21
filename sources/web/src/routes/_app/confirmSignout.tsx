@@ -34,7 +34,7 @@ function RouteComponent() {
   }
 
   return (
-    <div className="w-screen h-80 flex flex-col items-center justify-center">
+    <div className="w-full h-80 flex flex-col items-center justify-center">
       <h1 className="text-2xl font-semibold mb-4">
         Are you sure you want to sign out?
       </h1>

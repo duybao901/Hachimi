@@ -1,27 +1,31 @@
 /* ===== Dev.to Markdown Style ===== */
+
+.w-md-editor {
+}
+
 .devto-editor .wmde-markdown-var {
-    
-    font-size: 18px;
-    line-height: 1.75;
-    color: #171717;
-    background: #ffffff;
-    border: none;
-    box-shadow: none;
+  font-size: 18px;
+  line-height: 1.75;
+  color: #171717;
+  background: #ffffff;
+  border: none;
+  box-shadow: none;
 }
 
 /* Toolbar */
 .devto-editor .wmde-markdown-var .w-md-editor-toolbar {
-    background-color: #f9f9f9;
-    padding: 20px;
+  background-color: #f9f9f9;
+  padding: 20px 0px;
+  border: none;
 }
 
 .devto-editor .wmde-markdown-var .w-md-editor-toolbar ul li {
-    margin-right: 8px;
+  margin-right: 8px;
 }
 
-.devto-editor .wmde-markdown-var .w-md-editor-toolbar button svg{
-    width: 18px;
-    height: 18px;
+.devto-editor .wmde-markdown-var .w-md-editor-toolbar button svg {
+  width: 18px;
+  height: 18px;
 }
 
 .devto-editor .wmde-markdown-var .w-md-editor-toolbar button:hover {
@@ -29,5 +33,5 @@
 }
 
 .devto-editor .w-md-editor-text {
-    padding: 10px 20px !important;
+  padding: 10px 20px !important;
 }

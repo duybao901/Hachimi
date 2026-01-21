@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router"
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
 import Logo from "@/assets/horse_logo.png"
 import { X as XIcon, ClipboardClock as ClipboardClockIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -24,6 +24,7 @@ import { SaveDraftPost } from "@/services/post.service"
 import type { DraftPost, SaveDraftPostCommand } from "@/types/commands/Posts/posts"
 import { extractValidationMessages } from "@/utils/extractValidationMessages"
 import type { ValidationErrorResponse } from "@/types/api"
+import { useGlobalLoading } from "@/store/globalLoading.store"
 
 export const Route = createFileRoute("/new/")({
   component: RouteComponent,
@@ -40,7 +41,7 @@ function RouteComponent() {
   const [selectedTags, setSelectedTags] = useState<Tag[] | []>([])
   const [suggestions, setSuggestions] = useState<Tag[] | []>([])
   const [isFocused, setIsFocused] = useState(false)
-  const [isLoadingTag, setIsLoadingTag] = useState<boolean>(false)
+  const navigate = useNavigate()
 
   const initialDraft = (() => {
     const raw = localStorage.getItem(DRAFT_POST_KEY)
@@ -55,6 +56,8 @@ function RouteComponent() {
   })()
 
   const [draftPost, setDraftPost] = useState<DraftPost>(initialDraft)
+
+  const localding = useGlobalLoading.getState()
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -77,15 +80,12 @@ function RouteComponent() {
 
     const fetchData = async () => {
       try {
-        setIsLoadingTag(true)
         const res = await fetchSearchTags(tagInput)
         if (res.data) {
           setSuggestions(res.data.value)
         }
       } catch (error: any) {
         toast.error(error.message)
-      } finally {
-        setIsLoadingTag(false)
       }
     }
 
@@ -129,6 +129,24 @@ function RouteComponent() {
     fetchTagsListFromIdsAsync();
   }, [draftPost.tagList])
 
+  const handleInput = () => {
+    const el = textareaRef.current
+    if (!el) return
+
+    el.style.height = "auto"
+
+    const lineHeight = parseFloat(getComputedStyle(el).lineHeight)
+    const maxHeight = lineHeight * MAX_LINES
+
+    if (el.scrollHeight > maxHeight) {
+      el.style.height = `${maxHeight}px`
+      el.style.overflowY = "auto"
+    } else {
+      el.style.height = `${el.scrollHeight}px`
+      el.style.overflowY = "hidden"
+    }
+  }
+
   useEffect(() => {
     handleInput()
   }, [draftPost?.title])
@@ -149,24 +167,6 @@ function RouteComponent() {
 
     setTagInput("")
     setSuggestions([])
-  }
-
-  const handleInput = () => {
-    const el = textareaRef.current
-    if (!el) return
-
-    el.style.height = "auto"
-
-    const lineHeight = parseFloat(getComputedStyle(el).lineHeight)
-    const maxHeight = lineHeight * MAX_LINES
-
-    if (el.scrollHeight > maxHeight) {
-      el.style.height = `${maxHeight}px`
-      el.style.overflowY = "auto"
-    } else {
-      el.style.height = `${el.scrollHeight}px`
-      el.style.overflowY = "hidden"
-    }
   }
 
   function removeTag(tagId: string) {
@@ -192,21 +192,32 @@ function RouteComponent() {
         coverImageUrl: draftPost.coverImageUrl,
       }
 
+      console.log("draftPostData", draftPostData)
+
+      localding.show();
       const res = await SaveDraftPost(draftPostData)
-      toast.success(res.data.value)
+      if (res.data.isSuccess) {
+        toast.success("Draft saved successfully")
+      }
+
+      if (res.data.isFailure) {
+        toast.error("Draft saved successfully")
+        return
+      }
+
       setDraftPost({
         title: "",
         content: "",
         tagList: [],
         coverImageUrl: "",
       })
-
+      localStorage.removeItem(DRAFT_POST_KEY)
+      // navigate({ to: "/" })
     } catch (error: any) {
       const data = error?.response?.data as ValidationErrorResponse | undefined
 
       if (data?.errors) {
         const messages = extractValidationMessages(data.errors)
-
         toast.error("Validation error", {
           description: (
             <ul className="list-disc pl-4">
@@ -223,6 +234,8 @@ function RouteComponent() {
           )
         }
       }
+    } finally {
+      localding.hide();
     }
   }
 
@@ -276,10 +289,8 @@ function RouteComponent() {
 
             <div className="col-span-4 flex items-center justify-end py-2">
               <Dialog>
-                <DialogTrigger>
-                  <Button variant="ghost" className="hover:text-primary">
-                    <XIcon className="w-5 h-5" />
-                  </Button>
+                <DialogTrigger className="cursor-pointer">
+                  <XIcon className="w-5 h-5" />
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
@@ -290,9 +301,9 @@ function RouteComponent() {
                     </DialogDescription>
                   </DialogHeader>
                   <DialogFooter>
-                    <Button type="submit">
-                      Yes, Leave the page
-                    </Button>
+                    <Link to="/">
+                      <Button>Yes, Leave page</Button>
+                    </Link>
                     <DialogClose asChild>
                       <Button variant="secondary">No, Keep editing</Button>
                     </DialogClose>
@@ -334,7 +345,7 @@ function RouteComponent() {
                         <div
                           className="bg-gray-100 rounded px-3 py-1 text-sm flex items-center"
                           style={{
-                            backgroundColor: `rgba(${hexToRgb(tag.color)}, 0.1)`,
+                            backgroundColor: `rgba(${hexToRgb(tag.color)}, 0.07)`,
                           }}
                         >
                           # {tag.name}
@@ -350,11 +361,9 @@ function RouteComponent() {
                         value={tagInput}
                         onBlur={() => onBlur()}
                         placeholder={
-                          isLoadingTag
-                            ? "Searching..."
-                            : selectedTags && selectedTags.length > 0
-                              ? "Add another..."
-                              : "Add up to 4 tags..."
+                          selectedTags && selectedTags.length > 0
+                            ? "Add another..."
+                            : "Add up to 4 tags..."
                         }
                         className="border-none outline-none font-light text-(--base-90) placeholder:text-(--link-color-secondary) focus:ring-0 bg-transparent"
                         onFocus={() => setIsFocused(true)}
@@ -405,6 +414,7 @@ function RouteComponent() {
               )}
             </div>
 
+            {/* Markdown instruction */}
             <div className="col-span-4">Writing a Great Post Title</div>
 
             <div className="mt-2 col-span-4 h-(--article-form-actions-height)">

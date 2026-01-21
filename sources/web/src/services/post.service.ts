@@ -12,7 +12,7 @@ export async function GetCurrentEditPost() {
 }
 
 export async function SaveDraftPost(data: SaveDraftPostCommand) {
-    return await commandApiV1.post(`/posts/save-draft`, data);
+    return await commandApiV1.post<ApiResponse<string>>(`/posts/save-draft`, data);
 }
 
 export async function UpdatePost(postId: string, data: UpdatePostCommand) {

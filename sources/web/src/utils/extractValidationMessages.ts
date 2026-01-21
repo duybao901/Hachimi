@@ -1,7 +1,7 @@
+import type { ValidationErrorItem } from "@/types/api";
+
 export function extractValidationMessages(
-  errors: Record<string, string[]>
+  errors: Record<string, ValidationErrorItem>
 ): string[] {
-  return Object.entries(errors).flatMap(([field, messages]) =>
-    messages.map((msg) => `${field}: ${msg}`)
-  )
+  return Object.values(errors).map((e) => e.message)
 }

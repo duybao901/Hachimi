@@ -1,6 +1,8 @@
 ﻿using Asp.Versioning;
 using Command.Presentation.Abstractions;
+using Contract.Abstractions.Shared;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using CommandV1 = Contract.Services.V1.Posts.Command;
 
@@ -17,38 +19,38 @@ public class PostsController : ApiController
     /// Create a post
     /// </summary>
     [HttpPost]
-    public async Task<IActionResult> CreatePost([FromBody] CommandV1.CreatePostCommand request)
+    public async Task<IResult> CreatePost([FromBody] CommandV1.CreatePostCommand request)
     {
         var result = await Sender.Send(request);
         if (result.IsFailure)
         {
-            HandlerFailure(result);
+            return HandlerFailure(result);
         }
 
-        return Ok(result);
+        return Results.Ok(result);
     }
 
     /// <summary>
     /// Update a post
     /// </summary>
     [HttpPut("{postId}")]
-    public async Task<IActionResult> UpdatePost(Guid postId, [FromBody] CommandV1.UpdatePostCommand request)
+    public async Task<IResult> UpdatePost(Guid postId, [FromBody] CommandV1.UpdatePostCommand request)
     {
         var result = await Sender.Send(request);
 
         if (result.IsFailure)
         {
-            HandlerFailure(result);
+            return HandlerFailure(result);
         }
 
-        return Ok(result);
+        return Results.Ok(result);
     }
 
     /// <summary>
     /// Delete a post
     /// </summary>
     [HttpDelete("{postId}")]
-    public async Task<IActionResult> DeletePost(Guid postId)
+    public async Task<IResult> DeletePost(Guid postId)
     {
         var command = new CommandV1.DeletePostCommand(postId);
 
@@ -56,17 +58,17 @@ public class PostsController : ApiController
 
         if (result.IsFailure)
         {
-            HandlerFailure(result);
+            return HandlerFailure(result);
         }
 
-        return Ok(result);
+        return Results.Ok(result);
     }
 
     /// <summary>
     /// Publish a post
     /// </summary>
     [HttpPut("{postId}/publish")]
-    public async Task<IActionResult> PublishPost(Guid postId)
+    public async Task<IResult> PublishPost(Guid postId)
     {
         var command = new CommandV1.PublishPostCommand(postId);
 
@@ -74,22 +76,22 @@ public class PostsController : ApiController
 
         if (result.IsFailure)
         {
-            HandlerFailure(result);
+            return HandlerFailure(result);
         }
 
-        return Ok(result);
+        return Results.Ok(result);
     }
 
     [HttpPost("save-draft")]
-    public async Task<IActionResult> SaveDraftPost([FromBody] Contract.Services.V1.Posts.Command.SaveDraftPostCommand request)
+    public async Task<IResult> SaveDraftPost([FromBody] Contract.Services.V1.Posts.Command.SaveDraftPostCommand request)
     {   
         var result = await Sender.Send(request);
 
         if (result.IsFailure)
         {
-            HandlerFailure(result);
+            return HandlerFailure(result);
         }
 
-        return Ok(result);
+        return Results.Ok(result);
     }
 }

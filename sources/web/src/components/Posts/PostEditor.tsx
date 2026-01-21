@@ -1,4 +1,5 @@
 import MDEditor from "@uiw/react-md-editor"
+import rehypeSanitize from "rehype-sanitize";
 
 type PostEditorProps = {
   value: string
@@ -14,6 +15,9 @@ function PostEditor({ value, onChange }: PostEditorProps) {
         preview="edit"
         visibleDragbar={false}
         height={500}
+        previewOptions={{
+          rehypePlugins: [[rehypeSanitize]],
+        }}
       />
     </div>
   )

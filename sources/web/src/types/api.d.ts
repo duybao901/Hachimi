@@ -12,10 +12,15 @@ export interface PagedResult {
     // TODO
 }
 
+type ValidationErrorItem = {
+  code: string
+  message: string
+}
+
 export interface ValidationErrorResponse {
   type: string
   title: string
   status: number
-  errors: Record<string, string[]>
+  errors: Record<string, ValidationErrorItem>
   traceId: string
 }

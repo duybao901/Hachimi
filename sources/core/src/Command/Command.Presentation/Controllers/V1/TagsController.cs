@@ -1,5 +1,6 @@
 ﻿using Command.Presentation.Abstractions;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using CommandV1 = Contract.Services.V1.Tags.Command;
 
@@ -14,22 +15,22 @@ public class TagsController : ApiController
     /// Create a tag
     /// </summary>
     [HttpPost]
-    public async Task<IActionResult> CreateTags([FromBody] CommandV1.CreateTagCommand request)
+    public async Task<IResult> CreateTags([FromBody] CommandV1.CreateTagCommand request)
     {
         var result = await Sender.Send(request);
         if (result.IsFailure)
         {
-            HandlerFailure(result);
+            return HandlerFailure(result);
         }
 
-        return Ok(result);
+        return Results.Ok(result);
     }
 
     /// <summary>
     /// Update a tag
     /// </summary>
     [HttpPut("{tagId}")]
-    public async Task<IActionResult> UpdateTags(Guid tagId, [FromBody] CommandV1.UpdateTagCommand request)
+    public async Task<IResult> UpdateTags(Guid tagId, [FromBody] CommandV1.UpdateTagCommand request)
     {
         var result = await Sender.Send(new CommandV1.UpdateTagCommand(tagId, request.Name, request.Description, request.Color));
         if (result.IsFailure)
@@ -37,14 +38,14 @@ public class TagsController : ApiController
             HandlerFailure(result);
         }
 
-        return Ok(result);
+        return Results.Ok(result);
     }
 
     /// <summary>
     /// Delete a tag
     /// </summary>
     [HttpDelete("{tagId}")]
-    public async Task<IActionResult> DeleteTags(Guid tagId)
+    public async Task<IResult> DeleteTags(Guid tagId)
     {
         var result = await Sender.Send(new CommandV1.DeleteTagCommand(tagId));
         if (result.IsFailure)
@@ -52,6 +53,6 @@ public class TagsController : ApiController
             HandlerFailure(result);
         }
 
-        return Ok(result);
+        return Results.Ok(result);
     }
 }
