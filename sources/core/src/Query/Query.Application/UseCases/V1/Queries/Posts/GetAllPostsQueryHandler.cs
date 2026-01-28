@@ -11,8 +11,10 @@ public sealed class GetAllPostsQueryHandler : IQueryHandler<Contract.Services.V1
 {
     private readonly IMongoRepository<Post> _postRepository;
     private readonly IMapper _mapper;
+    private readonly IMongoRepository<Author> _authorRepository;
 
-    public GetAllPostsQueryHandler(IMongoRepository<Post> postRepository, IMapper mapper)
+
+    public GetAllPostsQueryHandler(IMongoRepository<Post> postRepository, IMapper mapper, IMongoRepository<Author> _authorRepository)
     {
         _postRepository = postRepository;
         _mapper = mapper;

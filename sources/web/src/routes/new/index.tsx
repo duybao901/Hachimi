@@ -20,11 +20,12 @@ import {
 } from "@/components/ui/dialog"
 import { DialogClose } from "@radix-ui/react-dialog"
 import { toast } from "sonner"
-import { SaveDraftPost } from "@/services/post.service"
-import type { DraftPost, SaveDraftPostCommand } from "@/types/commands/Posts/posts"
+import { PublishPost, SaveDraftPost } from "@/services/post.service"
+import type { DraftPost, PublishPostCommand, SaveDraftPostCommand } from "@/types/commands/Posts/posts"
 import { extractValidationMessages } from "@/utils/extractValidationMessages"
 import type { ValidationErrorResponse } from "@/types/api"
 import { useGlobalLoading } from "@/store/globalLoading.store"
+import { useAuthStore } from "@/store/auth.store"
 
 export const Route = createFileRoute("/new/")({
   component: RouteComponent,
@@ -58,6 +59,7 @@ function RouteComponent() {
   const [draftPost, setDraftPost] = useState<DraftPost>(initialDraft)
 
   const localding = useGlobalLoading.getState()
+  const { currentUser } = useAuthStore.getState();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -126,8 +128,10 @@ function RouteComponent() {
       }
     }
 
-    fetchTagsListFromIdsAsync();
-  }, [draftPost.tagList])
+    if(currentUser?.id) {
+       fetchTagsListFromIdsAsync();
+    }
+  }, [draftPost.tagList, currentUser?.id])
 
   const handleInput = () => {
     const el = textareaRef.current
@@ -192,8 +196,6 @@ function RouteComponent() {
         coverImageUrl: draftPost.coverImageUrl,
       }
 
-      console.log("draftPostData", draftPostData)
-
       localding.show();
       const res = await SaveDraftPost(draftPostData)
       if (res.data.isSuccess) {
@@ -201,7 +203,7 @@ function RouteComponent() {
       }
 
       if (res.data.isFailure) {
-        toast.error("Draft saved successfully")
+        toast.error("Draft saved failed")
         return
       }
 
@@ -244,6 +246,60 @@ function RouteComponent() {
       ...prev,
       title: e.target.value
     }))
+  }
+
+  const publishPost = async () => {
+    try {
+      const draftPostData: PublishPostCommand = {
+        title: draftPost?.title || "",
+        content: draftPost?.content || "",
+        tagIds: selectedTags.map((tag) => tag.id),
+        coverImageUrl: draftPost.coverImageUrl,
+      }
+
+      localding.show();
+      const res = await PublishPost(draftPostData)
+      if (res.data.isSuccess) {
+        toast.success("Draft saved successfully")
+      }
+
+      if (res.data.isFailure) {
+        toast.error("Draft saved failed")
+        return
+      }
+
+      setDraftPost({
+        title: "",
+        content: "",
+        tagList: [],
+        coverImageUrl: "",
+      })
+      localStorage.removeItem(DRAFT_POST_KEY)
+      navigate({ to: "/" })
+    } catch (error: any) {
+      const data = error?.response?.data as ValidationErrorResponse | undefined
+
+      if (data?.errors) {
+        const messages = extractValidationMessages(data.errors)
+        toast.error("Validation error", {
+          description: (
+            <ul className="list-disc pl-4">
+              {messages.map((msg) => (
+                <li key={msg}>{msg}</li>
+              ))}
+            </ul>
+          ),
+        })
+      } else {
+        if (error.response) {
+          toast.error(
+            error.response?.data?.Detail || error.message || "Server error"
+          )
+        }
+      }
+    } finally {
+      localding.hide();
+    }
   }
 
   return (
@@ -419,7 +475,7 @@ function RouteComponent() {
 
             <div className="mt-2 col-span-4 h-(--article-form-actions-height)">
               <div className="flex items-center gap-4">
-                <Button>Publish</Button>
+                <Button onClick={publishPost}>Publish</Button>
                 <Button
                   variant="secondary"
                   className="font-normal bg-transparent"

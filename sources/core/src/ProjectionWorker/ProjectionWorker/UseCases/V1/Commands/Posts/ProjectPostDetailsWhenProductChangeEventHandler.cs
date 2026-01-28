@@ -13,6 +13,7 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
     ICommandHandler<DomainEvent.PostUpdatedContentEvent>,
     ICommandHandler<DomainEvent.PostUpdatedTagEvent>,
     ICommandHandler<DomainEvent.PostDeletedEvent>,
+    ICommandHandler<DomainEvent.PostDraftPublishedEvent>,
     ICommandHandler<DomainEvent.PostPublishedEvent>
 {
     private readonly IMongoRepository<PostProjection> _postMongoRepository;
@@ -106,7 +107,7 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
         return Result.Success();
     }
 
-    public async Task<Result> Handle(DomainEvent.PostPublishedEvent request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(DomainEvent.PostDraftPublishedEvent request, CancellationToken cancellationToken)
     {
         var post = await _postMongoRepository.FindOneAsync(p => p.DocumentId == request.Id);
         if (post is null)
@@ -121,6 +122,38 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
                 .Set(p => p.ModifiedOnUtc, DateTime.UtcNow)
                 .Set(p => p.PostStatus, Contract.Enumerations.PostStatus.Published)
         ).ConfigureAwait(true);
+
+        return Result.Success();
+    }
+
+    public async Task<Result> Handle(DomainEvent.PostPublishedEvent request, CancellationToken cancellationToken)
+    {
+        var tagIds = request.TagIds;
+        var tags = await _tagEfRepository.FindAll(t => tagIds.Contains(t.Id)).ToListAsync(cancellationToken: cancellationToken);
+
+        var tagProjections = tags.Select(t => new TagProjection
+        {
+            DocumentId = t.Id,
+            Name = t.Name,
+            Description = t.Description,
+            Color = t.Color
+        }).ToList();
+
+        AuthorProjection author = await _authorMongoRepository.FindOneAsync(a => a.UserId == request.UserId.ToString());
+
+        var post = new PostProjection
+        {
+            DocumentId = request.Id,
+            Title = request.Title,
+            Slug = request.Slug,
+            Content = request.Content,
+            Author = author,
+            Tags = tagProjections,
+            CoverImageUrl = request.CoverImgUrl,
+            PostStatus = Contract.Enumerations.PostStatus.Published,
+        };
+
+        await _postMongoRepository.InsertOneAsync(post);
 
         return Result.Success();
     }

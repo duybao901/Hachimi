@@ -84,6 +84,15 @@ public class ProcessOutboxMessagesJob : IJob
                                     });
                         await _publishEndpoint.Publish<DomainEvent.PostDeletedEvent>(message: postDeleted, context.CancellationToken);
                         break;
+                    case nameof(DomainEvent.PostDraftPublishedEvent):
+                        var postDraftPublished = JsonConvert.DeserializeObject<DomainEvent.PostDraftPublishedEvent>(
+                                    outboxMessage.Content,
+                                    new JsonSerializerSettings
+                                    {
+                                        TypeNameHandling = TypeNameHandling.All
+                                    });
+                        await _publishEndpoint.Publish<DomainEvent.PostDraftPublishedEvent>(message: postDraftPublished, context.CancellationToken);
+                        break;
                     case nameof(DomainEvent.PostPublishedEvent):
                         var postPublished = JsonConvert.DeserializeObject<DomainEvent.PostPublishedEvent>(
                                     outboxMessage.Content,

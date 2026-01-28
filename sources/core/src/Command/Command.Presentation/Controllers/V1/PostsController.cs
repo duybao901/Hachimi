@@ -65,12 +65,12 @@ public class PostsController : ApiController
     }
 
     /// <summary>
-    /// Publish a post
+    /// Publish draft post
     /// </summary>
     [HttpPut("{postId}/publish")]
-    public async Task<IResult> PublishPost(Guid postId)
+    public async Task<IResult> PublishDraftPost(Guid postId)
     {
-        var command = new CommandV1.PublishPostCommand(postId);
+        var command = new CommandV1.PublishDraftPostCommand(postId);
 
         var result = await Sender.Send(command);
 
@@ -85,6 +85,19 @@ public class PostsController : ApiController
     [HttpPost("save-draft")]
     public async Task<IResult> SaveDraftPost([FromBody] Contract.Services.V1.Posts.Command.SaveDraftPostCommand request)
     {   
+        var result = await Sender.Send(request);
+
+        if (result.IsFailure)
+        {
+            return HandlerFailure(result);
+        }
+
+        return Results.Ok(result);
+    }
+
+    [HttpPost("publish")]
+    public async Task<IResult> PublishPost([FromBody] Contract.Services.V1.Posts.Command.PublishPostCommand request)
+    {
         var result = await Sender.Send(request);
 
         if (result.IsFailure)

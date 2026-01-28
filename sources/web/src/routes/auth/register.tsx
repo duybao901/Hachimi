@@ -71,10 +71,10 @@ function Register() {
             <Link to='/' className="flex w-10 h-10"><img src={Logo} className="w-10 h-10"></img></Link>
           </div>
           <h1 className='text-3xl font-bold mb-2'>
-            Join the DEV Community
+            Join the Hachimi Community
           </h1>
           <p>
-            DEV Community is a community of 3,620,351 amazing developers
+            Hachimi Community is a community of 3,620,351 amazing developers
           </p>
         </div>
         <form id="register-form" onSubmit={form.handleSubmit(onSubmit)}>

@@ -42,6 +42,17 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
         return post;
     }
 
+    public static Posts PublishPost(Guid id, string title, string slug, string content, string CoverImageUrl, Guid UserId, List<Guid> tags)
+    {
+        var post = new Posts(id, title, slug, content, UserId);
+
+        post.SetTags(tags);
+
+        post.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostPublishedEvent(Guid.NewGuid(), id, title, slug, content, CoverImageUrl, UserId, tags));
+
+        return post;
+    }
+
     public static Posts CreateDraftPost(Guid UserId)
     {
         var postDraft = new Posts(Guid.NewGuid(), "", "", "", UserId);
@@ -106,6 +117,6 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
 
     public void PublishPost(Guid Id)
     {
-        RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostPublishedEvent(Guid.NewGuid(), Id));
+        RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostDraftPublishedEvent(Guid.NewGuid(), Id));
     }
 }

@@ -9,5 +9,7 @@ public static class DomainEvent
     public record PostSavedContentEvent(Guid IdEvent, Guid Id, string Title, string Content, string CoverImageUrl) : IDomainEvent, ICommand;
     public record PostSavedTagEvent(Guid IdEvent, Guid Id, ICollection<Guid> NewTagIds) : IDomainEvent, ICommand;
     public record PostDeletedEvent(Guid IdEvent, Guid Id) : IDomainEvent, ICommand;
-    public record PostPublishedEvent(Guid IdEvent, Guid Id) : IDomainEvent, ICommand;
+    public record PostDraftPublishedEvent(Guid IdEvent, Guid Id) : IDomainEvent, ICommand;
+    public record PostPublishedEvent(Guid IdEvent, Guid Id, string Title, string Slug, string Content, string CoverImgUrl, Guid UserId, ICollection<Guid> TagIds) : IDomainEvent, ICommand;
+
 }

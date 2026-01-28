@@ -20,6 +20,13 @@ export interface SaveDraftPostCommand {
     coverImageUrl: string;
 }
 
+export interface PublishPostCommand {
+    title: string;
+    content: string;
+    tagIds: string[];
+    coverImageUrl: string;
+}
+
 export interface UpdatePostCommand {
     id: string;
     title: string;

@@ -1,6 +1,6 @@
 import { queryApi } from '../api/query.api';
 import { commandApiV1 } from '../api/command.api';
-import type {CreatePostCommand, SaveDraftPostCommand, UpdatePostCommand} from '@/types/commands/Posts/posts'
+import type {CreatePostCommand, PublishPostCommand, SaveDraftPostCommand, UpdatePostCommand} from '@/types/commands/Posts/posts'
 import type { ApiResponse } from '@/types/api';
 
 export async function CreatePost(post: CreatePostCommand) {
@@ -17,4 +17,8 @@ export async function SaveDraftPost(data: SaveDraftPostCommand) {
 
 export async function UpdatePost(postId: string, data: UpdatePostCommand) {
     return await commandApiV1.post<ApiResponse<string>>(`/posts/${postId}`, data)
+}
+
+export async function PublishPost(data: PublishPostCommand){
+    return await commandApiV1.post<ApiResponse<string>>(`/posts/publish`, data);
 }

@@ -32,7 +32,6 @@ public sealed class CreatePostCommandHandler : ICommandHandler<Contract.Services
 
         var slug = SlugGenerator.Generate(request.Title);
 
-        var isPostEditing = true;
         var post = Posts.CreatePost(Guid.NewGuid(), request.Title, slug, request.Content, request.CoverImageUrl, userId, request.TagIds);
         _postRepositoryBase.Add(post);
 
