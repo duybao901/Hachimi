@@ -19,10 +19,13 @@ public class PostsController : ApiController
 
     [HttpGet]
     [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
-    public async Task<IResult> GetAllPosts()
+    public async Task<IResult> GetAllPosts(
+        int pageIndex = 1,
+        int pageSize = 10,
+        string? TypeOf = "discover")
     {
-        var query = new QueryV1.GetAllPostsQuery();
-        Result result = await Sender.Send(query);
+        var query = new QueryV1.GetPostsQuery(pageIndex, pageSize, TypeOf);
+        var result = await Sender.Send(query);
 
         if (result.IsFailure)
         {

@@ -16,20 +16,20 @@ public class PostsController : ApiController
     }
 
 
-    [HttpGet(Name = "GetPosts")]
-    [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
-    public async Task<IResult> GetAllPosts()
-    {
-        var query = new QueryV1.GetAllPostsQuery();
-        Result result = await Sender.Send(query);
+    //[HttpGet(Name = "GetPosts")]
+    //[ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
+    //public async Task<IResult> GetAllPosts()
+    //{
+    //    var query = new QueryV1.GetAllPostsQuery();
+    //    Result result = await Sender.Send(query);
 
-        if (result.IsFailure)
-        {
-            return HandlerFailure(result);
-        }
+    //    if (result.IsFailure)
+    //    {
+    //        return HandlerFailure(result);
+    //    }
 
-        return Results.Ok(result);
-    }
+    //    return Results.Ok(result);
+    //}
 
     [HttpGet("{postId}")]
     [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]

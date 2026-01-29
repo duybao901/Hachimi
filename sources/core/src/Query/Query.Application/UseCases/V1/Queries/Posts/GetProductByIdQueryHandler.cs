@@ -2,6 +2,7 @@
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 using Contract.Services.V1.Posts;
+using Contract.Services.V1.Posts.ViewModels;
 using Query.Domain.Abstractions.Repositories;
 using Query.Domain.Collections;
 using Query.Domain.Exceptions;
@@ -32,7 +33,17 @@ public sealed class GetProductByIdQueryHandler : IQueryHandler<Contract.Services
             {
                 Name = post.Author.Name,
                 Email = post.Author.Email,
-            });
+            },
+            PostTags: post.Tags
+                    .Select(t => new PostTagViewModel
+                    {
+                        Id = t.DocumentId,
+                        Name = t.Name,
+                        Description = t.Description,
+                        Color = t.Color
+                    })
+                    .ToList()
+            );
 
         return Result.Success(result);
     }
