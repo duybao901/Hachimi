@@ -17,7 +17,7 @@ public class PostsController : ApiController
     }
 
 
-    [HttpGet]
+    [HttpGet("public")]
     [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
     public async Task<IResult> GetAllPosts(
         int pageIndex = 1,

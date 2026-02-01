@@ -1,10 +1,10 @@
-import type { en } from "zod/v4/locales";
 import type { Author } from "../../author";
 
 export interface Tag {
     id: string;
     name: string;
-    color?: string;
+    description: string;
+    color: string;
 }
 
 export interface PostComment {
@@ -25,11 +25,11 @@ export interface PostView {
         username: string;
         avatarUrl: string;
     };
-    postStatus: PostStatus;
+    postStatus: "Published" | "Draft" | "Archived";
     coverImageUrl?: string;
     viewCount: number;
     readingTimeMinutes?: number;
-    tags: Tag[];
+    postTags: Tag[];
     createdOnUtc: string;
     modifiedOnUtc?: string;
     isFirstPost: boolean;

@@ -1,7 +1,8 @@
-import { queryApi } from '../api/query.api';
+import { queryApi, queryPublicApi } from '../api/query.api';
 import { commandApiV1 } from '../api/command.api';
 import type {CreatePostCommand, PublishPostCommand, SaveDraftPostCommand, UpdatePostCommand} from '@/types/commands/Posts/posts'
 import type { ApiResponse } from '@/types/api';
+import type { PostView } from '@/types/queries/Posts/post';
 
 export async function CreatePost(post: CreatePostCommand) {
     return await commandApiV1.post<ApiResponse<string>>(`/posts`, { post });
@@ -21,4 +22,8 @@ export async function UpdatePost(postId: string, data: UpdatePostCommand) {
 
 export async function PublishPost(data: PublishPostCommand){
     return await commandApiV1.post<ApiResponse<string>>(`/posts/publish`, data);
+}
+
+export async function GetPosts(pageIndex: number, pageSize: number, typeOf: string = "discover") {
+    return await queryPublicApi.get<ApiResponse<PostView>>(`/posts/public?pageIndex=${pageIndex}&pageSize=${pageSize}&typeOf=${typeOf}`);
 }

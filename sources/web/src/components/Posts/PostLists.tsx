@@ -1,5 +1,10 @@
 import type { PostView } from "@/types/queries/Posts/post"
 import PostCard from "./PostCard"
+import { useEffect } from "react"
+import type { ValidationErrorResponse } from "@/types/api"
+import { extractValidationMessages } from "@/utils/extractValidationMessages"
+import { toast } from "sonner"
+import { GetPosts } from "@/services/post.service"
 
 function PostLists() {
   const posts: PostView[] = [
@@ -16,9 +21,9 @@ function PostLists() {
       },
       content: "This is the content of the first post.",
       postStatus: "Published",
-      tags: [
-        { id: "t1", name: "discuss", color: "#2396F3" },
-        { id: "t2", name: "webdev", color: "#3396A3" },
+      postTags: [
+        { id: "t1", description: "", name: "discuss", color: "#2396F3" },
+        { id: "t2", description: "", name: "webdev", color: "#3396A3" },
       ],
       coverImageUrl:
         "https://res.cloudinary.com/dxnfxl89q/image/upload/v1765901290/Hachimi/facebook_1678938669867_7041979178780517777_tjvdnr.jpg",
@@ -52,9 +57,9 @@ function PostLists() {
       },
       content: "This is the content of the second post.",
       postStatus: "Published",
-      tags: [
-        { id: "t1", name: "discuss", color: "#2396F3" },
-        { id: "t2", name: "webdev", color: "#3396A3" },
+      postTags: [
+        { id: "t1", description: "", name: "discuss", color: "#2396F3" },
+        { id: "t2", description: "", name: "webdev", color: "#3396A3" },
       ],
       isFirstPost: false,
       comments: [],
@@ -75,9 +80,9 @@ function PostLists() {
       },
       content: "This is the content of the second post.",
       postStatus: "Published",
-      tags: [
-        { id: "t1", name: "discuss", color: "#2396F3" },
-        { id: "t2", name: "webdev", color: "#3396A3" },
+      postTags: [
+        { id: "t1", description: "", name: "discuss", color: "#2396F3" },
+        { id: "t2", description: "", name: "webdev", color: "#3396A3" },
       ],
       isFirstPost: false,
       comments: [],
@@ -85,6 +90,46 @@ function PostLists() {
       createdOnUtc: ""
     },
   ]
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+
+        const pageIndex = 1;
+        const pageSize = 10;
+        const typeOf = "discover";
+
+        const res = await GetPosts(pageIndex, pageSize, typeOf);
+
+        console.log("Fetched posts:", res.data.value);
+        
+      } catch (error: any) {
+        const data = error?.response?.data as ValidationErrorResponse | undefined
+
+        if (data?.errors) {
+          const messages = extractValidationMessages(data.errors)
+
+          toast.error("Validation error", {
+            description: (
+              <ul className="list-disc pl-4">
+                {messages.map((msg) => (
+                  <li key={msg}>{msg}</li>
+                ))}
+              </ul>
+            ),
+          })
+        } else {
+          if (error.response) {
+            toast.error(
+              error.response?.data?.Detail || error.message || "Server error"
+            )
+          }
+        }
+      }
+    }
+
+    fetchPosts()
+  }, []);
 
   return (
     <div>
