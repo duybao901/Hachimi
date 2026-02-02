@@ -6,7 +6,6 @@ import {
   Bookmark as BookmarkIcon,
   MessageCircle as MessageCircleIcon,
 } from "lucide-react"
-import type { Tag } from "@/types/tag"
 
 type PostCardProps = {
   post: PostView
@@ -29,7 +28,7 @@ function PostCard({ post }: PostCardProps) {
             to={"/"}
             className="min-w-8 h-8 rounded-full overflow-hidden"
             style={{
-              backgroundImage: `url(${post.author.avatarUrl})`,
+              backgroundImage: `url(${post.postAuthor.avatarUrl})`,
               backgroundSize: "cover",
             }}
           ></Link>
@@ -39,7 +38,7 @@ function PostCard({ post }: PostCardProps) {
                 to={"/"}
                 className="text-sm font-medium text-(--link-color)"
               >
-                {post.author.name}
+                {post.postAuthor.name}
               </Link>
               <div className="text-xs text-(--link-color-secondary)">
                 Dec 19 (3 days ago)
@@ -54,7 +53,7 @@ function PostCard({ post }: PostCardProps) {
                 {post.title}
               </Link>
               <div className="mt-2">
-                {post.tags?.map((tag: any) => {
+                {post.postTags.map((tag: any) => {
                   return (
                     <Link
                       to={`/tag/${tag.name}`}

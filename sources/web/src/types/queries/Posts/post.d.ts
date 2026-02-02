@@ -19,7 +19,7 @@ export interface PostView {
     title: string;
     slug: string;
     content: string;
-    author: {
+    postAuthor: {
         id: string;
         name: string;
         username: string;

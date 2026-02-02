@@ -8,8 +8,22 @@ export interface ApiResponse<T> {
   }
 }
 
-export interface PagedResult {
-    // TODO
+export interface PagedResult<T> {
+  value: {
+    items: T[]
+    pageSize: number
+    pageIndex: number
+    TotalCount: number
+    HasNextPage: boolean
+    HasPreviousPage: boolean
+  }
+  isSuccess: boolean
+  isFailure: boolean
+  error: {
+    code: string
+    message: string
+  }
+
 }
 
 type ValidationErrorItem = {

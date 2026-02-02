@@ -1,6 +1,6 @@
 import type { PostView } from "@/types/queries/Posts/post"
 import PostCard from "./PostCard"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import type { ValidationErrorResponse } from "@/types/api"
 import { extractValidationMessages } from "@/utils/extractValidationMessages"
 import { toast } from "sonner"
@@ -12,7 +12,7 @@ function PostLists() {
       id: "1",
       title: "5 Terminal Commands That Saved Me Hours of Clicking",
       slug: "5-terminal-commands-that-saved-me-hours-of-clicking",
-      author: {
+      postAuthor: {
         id: "a1",
         name: "John Doe",
         username: "johndoe",
@@ -48,7 +48,7 @@ function PostLists() {
       id: "2",
       title: "How to Become an AWS Community Builder",
       slug: "how-to-become-an-aws-community-builder",
-      author: {
+      postAuthor: {
         id: "a1",
         name: "Sarvar Nadaf",
         username: "SarvarNadaf",
@@ -71,7 +71,7 @@ function PostLists() {
       title:
         "Introducing ProXPL: A Modern Programming Language Built from Scratch",
       slug: "introducing-proxpl-a-modern-programming-language-built-from-scratch",
-      author: {
+      postAuthor: {
         id: "a1",
         name: "Prog. Kanishk Raj",
         username: "Prog. Kanishk Raj",
@@ -91,17 +91,24 @@ function PostLists() {
     },
   ]
 
+  const [postsData, setPostsData] = useState<PostView[]>([...posts]);
+
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
 
         const pageIndex = 1;
         const pageSize = 10;
-        const typeOf = "discover";
+        const feed = "relevant";
 
-        const res = await GetPosts(pageIndex, pageSize, typeOf);
+        const res = await GetPosts(pageIndex, pageSize, feed);
 
-        console.log("Fetched posts:", res.data.value);
+        console.log("Fetched posts:", res.data);
+
+        if (res.data && res.data.value && res.data.value.items) {
+          setPostsData([...posts, ...res.data.value.items]);
+        }
         
       } catch (error: any) {
         const data = error?.response?.data as ValidationErrorResponse | undefined
@@ -133,7 +140,7 @@ function PostLists() {
 
   return (
     <div>
-      {posts.map((post) => {
+      {postsData.map((post) => {
         return <PostCard post={post}></PostCard>
       })}
     </div>

@@ -22,9 +22,9 @@ public class PostsController : ApiController
     public async Task<IResult> GetAllPosts(
         int pageIndex = 1,
         int pageSize = 10,
-        string? TypeOf = "discover")
+        string? feed = "discover")
     {
-        var query = new QueryV1.GetPostsQuery(pageIndex, pageSize, TypeOf);
+        var query = new QueryV1.GetPostsQuery(pageIndex, pageSize, feed);
         var result = await Sender.Send(query);
 
         if (result.IsFailure)
