@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
+using Contract.Enumerations;
 using Contract.Services.V1.Posts;
 using Contract.Services.V1.Posts.ViewModels;
 using Query.Domain.Abstractions.Repositories;
 using Query.Domain.Collections;
+
 
 namespace Query.Application.UseCases.V1.Queries.Posts;
 public sealed class GetPostsQueryHandler : IQueryHandler<Contract.Services.V1.Posts.Query.GetPostsQuery, PageResult<Response.PostResponse>>
@@ -22,6 +24,18 @@ public sealed class GetPostsQueryHandler : IQueryHandler<Contract.Services.V1.Po
     {
         var queryable = _postRepository
             .AsQueryable(null);
+
+        // Base filter
+        queryable = queryable.Where(p =>
+            p.PostStatus == PostStatus.Published);
+
+        // Feed switch
+        //queryable = request.Feed switch
+        //{
+        //    "latest" => ApplyLatest(queryable),
+        //    "top" => ApplyTop(queryable),
+        //    _ => ApplyRelevant(queryable, request.UserId)
+        //};
 
         // Paging
         var queryResult = await MongoPagingExtensions.ToPageResultAsync(
@@ -56,4 +70,39 @@ public sealed class GetPostsQueryHandler : IQueryHandler<Contract.Services.V1.Po
 
         return Result.Success(result);
     }
+
+    //private static IQueryable<Post> ApplyLatest(IQueryable<Post> q)
+    //{
+    //    return q.OrderByDescending(p => p.PublishedAt);
+    //}
+
+    //private static IQueryable<Post> ApplyTop(IQueryable<Post> q)
+    //{
+    //    return q
+    //        .Where(p => p.PublishedAt >= DateTime.UtcNow.AddDays(-7))
+    //        .OrderByDescending(p =>
+    //            p.LikeCount * 1.0 +
+    //            p.CommentCount * 2.0
+    //        );
+    //}
+
+    //private IQueryable<Post> ApplyRelevant(
+    //IQueryable<Post> q,
+    //Guid? userId)
+    //{
+    //    if (userId == null)
+    //    {
+    //        return q.OrderByDescending(p =>
+    //            p.LikeCount +
+    //            p.CommentCount * 2 +
+    //            p.ViewCount * 0.1
+    //        );
+    //    }
+
+    //    return q
+    //        .OrderByDescending(p =>
+    //            p.Score +                  // score đã pre-calc
+    //            (p.AuthorFollowers.Contains(userId) ? 20 : 0)
+    //        );
+    //}
 }

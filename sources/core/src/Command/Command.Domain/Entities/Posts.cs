@@ -5,14 +5,28 @@ using Contract.Enumerations;
 namespace Command.Domain.Entities;
 public class Posts : AggregateRoot<Guid>, IAuditTableEntity
 {
-    public string Title { get; set; }
-    public string Content { get; set; }
-    public string Slug { get; set; }
+    public string Title { get; set; } = default!;
+    public string Slug { get; set; } = default!;
+    public string Content { get; set; } = default!;
+    //public string Excerpt { get; set; } = default!;
     public string? CoverImageUrl { get; set; }
-    public PostStatus PostStatus { get; set; } = PostStatus.Draft;
-    public int? ViewCount { get; set; }
-    public int? ReadingTimeMinutes { get; set; }
+
+    public PostStatus PostStatus { get; set; }
+    //public PostVisibility Visibility { get; set; }
+
+    public int ViewCount { get; set; }
+    public int CommentCount { get; set; }
+    public int LikeCount { get; set; }
+
+    public double FeedScore { get; set; }
+
+    public DateTimeOffset? PublishedAt { get; set; }
+    public int ReadingTimeMinutes { get; set; }
+
     public Guid AuthorId { get; set; }
+
+    public bool IsDeleted { get; set; }
+
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
 
@@ -29,6 +43,10 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
         Content = content;
         CoverImageUrl = CoverImageUrl;
         AuthorId = authorId;
+        ViewCount = 0;
+        CommentCount = 0;
+        LikeCount = 0;
+        FeedScore = 0;
     }
 
     public static Posts CreatePost(Guid id, string title, string slug, string content, string CoverImageUrl, Guid UserId, List<Guid> tags)
@@ -44,7 +62,11 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
 
     public static Posts PublishPost(Guid id, string title, string slug, string content, string CoverImageUrl, Guid UserId, List<Guid> tags)
     {
-        var post = new Posts(id, title, slug, content, UserId);
+        var post = new Posts(id, title, slug, content, UserId)
+        {
+            PublishedAt = DateTimeOffset.UtcNow,
+            PostStatus = PostStatus.Published
+        };
 
         post.SetTags(tags);
 

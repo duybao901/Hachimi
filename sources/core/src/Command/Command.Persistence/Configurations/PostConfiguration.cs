@@ -12,9 +12,42 @@ internal class PostConfiguration : IEntityTypeConfiguration<Posts>
         builder.ToTable(TableNames.Post);
 
         builder.HasKey(x => x.Id);
-        builder.Property(x => x.Title).HasMaxLength(200).IsRequired(true);
-        builder.Property(x => x.Content).IsRequired(true);
-        builder.Property(x => x.Slug).IsRequired(true);
-        builder.Property(x => x.PostStatus).IsRequired(true);
+
+        builder.Property(x => x.Title)
+            .HasMaxLength(200)
+            .IsRequired();
+
+        builder.Property(x => x.Slug)
+            .HasMaxLength(250)
+            .IsRequired();
+
+        builder.HasIndex(x => x.Slug)
+            .IsUnique();
+
+        builder.Property(x => x.Content)
+            .IsRequired();
+
+        builder.Property(x => x.PostStatus)
+            .IsRequired();
+
+        builder.Property(x => x.ViewCount)
+            .HasDefaultValue(0);
+
+        builder.Property(x => x.CommentCount)
+            .HasDefaultValue(0);
+
+        builder.Property(x => x.LikeCount)
+            .HasDefaultValue(0);
+
+        builder.Property(x => x.FeedScore)
+            .HasDefaultValue(0);
+
+        builder.Property(x => x.PublishedAt)
+            .HasPrecision(3);
+
+        // Feed indexes
+        builder.HasIndex(x => new { x.PostStatus, x.PublishedAt });
+        builder.HasIndex(x => new { x.PostStatus, x.FeedScore });
     }
+
 }

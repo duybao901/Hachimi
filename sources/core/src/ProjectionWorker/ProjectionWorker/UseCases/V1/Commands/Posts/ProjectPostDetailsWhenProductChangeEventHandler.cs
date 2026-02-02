@@ -58,6 +58,11 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             Tags = tagProjections,
             CoverImageUrl = request.CoverImgUrl,
             PostStatus = Contract.Enumerations.PostStatus.Draft,
+            ViewCount = 0,
+            ReadingTimeMinutes = 0,
+            CommentCount = 0,
+            LikeCount = 0,
+            FeedScore = 0,
         };
 
         await _postMongoRepository.InsertOneAsync(post);
@@ -151,6 +156,11 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             Tags = tagProjections,
             CoverImageUrl = request.CoverImgUrl,
             PostStatus = Contract.Enumerations.PostStatus.Published,
+            ViewCount = 0,
+            ReadingTimeMinutes = 0,
+            CommentCount = 0,
+            LikeCount = 0,
+            FeedScore = 0,
         };
 
         await _postMongoRepository.InsertOneAsync(post);
