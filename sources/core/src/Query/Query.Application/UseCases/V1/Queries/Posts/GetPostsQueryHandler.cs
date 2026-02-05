@@ -6,6 +6,7 @@ using Contract.Services.V1.Posts;
 using Contract.Services.V1.Posts.ViewModels;
 using Query.Domain.Abstractions.Repositories;
 using Query.Domain.Collections;
+using System.Linq;
 
 
 namespace Query.Application.UseCases.V1.Queries.Posts;
@@ -29,13 +30,14 @@ public sealed class GetPostsQueryHandler : IQueryHandler<Contract.Services.V1.Po
         queryable = queryable.Where(p =>
             p.PostStatus == PostStatus.Published);
 
-        // Feed switch
-        //queryable = request.Feed switch
-        //{
-        //    "latest" => ApplyLatest(queryable),
-        //    "top" => ApplyTop(queryable),
-        //    _ => ApplyRelevant(queryable, request.UserId)
-        //};
+       // Feed switch
+
+       queryable = request.Feed switch
+       {
+           "latest" => ApplyLatest(queryable),
+           "top" => ApplyTop(queryable),
+           _ => ApplyRelevant(queryable, null)
+       };
 
         // Paging
         var queryResult = await MongoPagingExtensions.ToPageResultAsync(
@@ -71,38 +73,39 @@ public sealed class GetPostsQueryHandler : IQueryHandler<Contract.Services.V1.Po
         return Result.Success(result);
     }
 
-    //private static IQueryable<Post> ApplyLatest(IQueryable<Post> q)
-    //{
-    //    return q.OrderByDescending(p => p.PublishedAt);
-    //}
+    private static IQueryable<Post> ApplyLatest(IQueryable<Post> q)
+    {
+        return q.OrderByDescending(p => p.PublishedAt);
+    }
 
-    //private static IQueryable<Post> ApplyTop(IQueryable<Post> q)
-    //{
-    //    return q
-    //        .Where(p => p.PublishedAt >= DateTime.UtcNow.AddDays(-7))
-    //        .OrderByDescending(p =>
-    //            p.LikeCount * 1.0 +
-    //            p.CommentCount * 2.0
-    //        );
-    //}
+    private static IQueryable<Post> ApplyTop(IQueryable<Post> q)
+    {
+        return q
+            .Where(p => p.PublishedAt >= DateTime.UtcNow.AddDays(-7))
+            .OrderByDescending(p =>
+                p.LikeCount * 1.0 +
+                p.CommentCount * 2.0
+            );
+    }
 
-    //private IQueryable<Post> ApplyRelevant(
-    //IQueryable<Post> q,
-    //Guid? userId)
-    //{
-    //    if (userId == null)
-    //    {
-    //        return q.OrderByDescending(p =>
-    //            p.LikeCount +
-    //            p.CommentCount * 2 +
-    //            p.ViewCount * 0.1
-    //        );
-    //    }
+    private IQueryable<Post> ApplyRelevant(
+    IQueryable<Post> query,
+    Guid? userId)
+    {
+        return query.OrderByDescending(p => p.PublishedAt);
+        //if (userId == null)
+        //{
+        //    return query.OrderByDescending(p =>
+        //        p.LikeCount +
+        //        p.CommentCount * 2 +
+        //        p.ViewCount * 0.1
+        //    );
+        //}
 
-    //    return q
-    //        .OrderByDescending(p =>
-    //            p.Score +                  // score đã pre-calc
-    //            (p.AuthorFollowers.Contains(userId) ? 20 : 0)
-    //        );
-    //}
+        //return query
+        //    .OrderByDescending(p =>
+        //        //p.Score +                  // score đã pre-calc
+        //        (p.AuthorFollowers.Contains(userId) ? 20 : 0)
+        //    );
+    }
 }

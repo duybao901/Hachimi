@@ -5,6 +5,7 @@ import type { ValidationErrorResponse } from "@/types/api"
 import { extractValidationMessages } from "@/utils/extractValidationMessages"
 import { toast } from "sonner"
 import { GetPosts } from "@/services/post.service"
+import { useAuthStore } from "@/store/auth.store"
 
 function PostLists() {
   const posts: PostView[] = [
@@ -93,6 +94,7 @@ function PostLists() {
 
   const [postsData, setPostsData] = useState<PostView[]>([...posts]);
 
+  const { currentUser } = useAuthStore.getState();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -109,7 +111,7 @@ function PostLists() {
         if (res.data && res.data.value && res.data.value.items) {
           setPostsData([...posts, ...res.data.value.items]);
         }
-        
+
       } catch (error: any) {
         const data = error?.response?.data as ValidationErrorResponse | undefined
 
@@ -135,8 +137,14 @@ function PostLists() {
       }
     }
 
-    fetchPosts()
-  }, []);
+    if(!currentUser) {
+      fetchPosts()
+    }else {
+      // If user is logged in, you can implement fetching personalized feed here
+      fetchPosts()
+    }
+
+  }, [currentUser]);
 
   return (
     <div>

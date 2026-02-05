@@ -27,5 +27,6 @@ public class Post : Document
     public bool IsDeleted { get; set; }
 
     public required Author Author { get; set; }
-    public required List<Tag> Tags { get; set; } = new();
+    public List<Guid> AuthorFollowers { get; set; } = new();
+    public List<Tag> Tags { get; set; } = new();
 }
