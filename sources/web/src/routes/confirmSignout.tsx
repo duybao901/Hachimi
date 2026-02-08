@@ -5,8 +5,9 @@ import { toast } from "sonner"
 import { useAuthStore } from "@/store/auth.store"
 import { useState } from "react"
 import { Spinner } from "@/components/ui/spinner"
+import Header from "@/components/Layout/Header/Header"
 
-export const Route = createFileRoute("/_app/confirmSignout")({
+export const Route = createFileRoute("/confirmSignout")({
   component: RouteComponent,
 })
 
@@ -34,13 +35,17 @@ function RouteComponent() {
   }
 
   return (
-    <div className="w-full h-80 flex flex-col items-center justify-center">
-      <h1 className="text-2xl font-semibold mb-4">
-        Are you sure you want to sign out?
-      </h1>
-      <Button disabled={!currentUser || isLoading} onClick={logoutUser}>
-        {isLoading && <Spinner></Spinner>} Yes, Sign out
-      </Button>
-    </div>
+    <>
+      <Header></Header>
+
+      <div className="w-full h-80 flex flex-col items-center justify-center">
+        <h1 className="text-2xl font-semibold mb-4">
+          Are you sure you want to sign out?
+        </h1>
+        <Button disabled={!currentUser || isLoading} onClick={logoutUser}>
+          {isLoading && <Spinner></Spinner>} Yes, Sign out
+        </Button>
+      </div>
+    </>
   )
 }

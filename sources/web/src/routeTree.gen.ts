@@ -9,18 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AppRouteImport } from './routes/_app'
+import { Route as ConfirmSignoutRouteImport } from './routes/confirmSignout'
 import { Route as R404RouteImport } from './routes/404'
+import { Route as feedRouteRouteImport } from './routes/(feed)/route'
 import { Route as NewIndexRouteImport } from './routes/new/index'
-import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as feedIndexRouteImport } from './routes/(feed)/index'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
-import { Route as AppConfirmSignoutRouteImport } from './routes/_app/confirmSignout'
-import { Route as authRegisterRouteImport } from './routes/(auth)/register'
-import { Route as AppPostsIndexRouteImport } from './routes/_app/posts/index'
+import { Route as feedYearIndexRouteImport } from './routes/(feed)/year/index'
+import { Route as feedTopIndexRouteImport } from './routes/(feed)/top/index'
+import { Route as feedLastestIndexRouteImport } from './routes/(feed)/lastest/index'
+import { Route as feedGoatIndexRouteImport } from './routes/(feed)/goat/index'
+import { Route as feedFollowingIndexRouteImport } from './routes/(feed)/following/index'
+import { Route as feedTopWeekIndexRouteImport } from './routes/(feed)/top/week/index'
+import { Route as feedTopMonthIndexRouteImport } from './routes/(feed)/top/month/index'
 
-const AppRoute = AppRouteImport.update({
-  id: '/_app',
+const ConfirmSignoutRoute = ConfirmSignoutRouteImport.update({
+  id: '/confirmSignout',
+  path: '/confirmSignout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const R404Route = R404RouteImport.update({
@@ -28,15 +34,19 @@ const R404Route = R404RouteImport.update({
   path: '/404',
   getParentRoute: () => rootRouteImport,
 } as any)
+const feedRouteRoute = feedRouteRouteImport.update({
+  id: '/(feed)',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NewIndexRoute = NewIndexRouteImport.update({
   id: '/new/',
   path: '/new/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppIndexRoute = AppIndexRouteImport.update({
+const feedIndexRoute = feedIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AppRoute,
+  getParentRoute: () => feedRouteRoute,
 } as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
   id: '/auth/register',
@@ -48,92 +58,142 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppConfirmSignoutRoute = AppConfirmSignoutRouteImport.update({
-  id: '/confirmSignout',
-  path: '/confirmSignout',
-  getParentRoute: () => AppRoute,
+const feedYearIndexRoute = feedYearIndexRouteImport.update({
+  id: '/year/',
+  path: '/year/',
+  getParentRoute: () => feedRouteRoute,
 } as any)
-const authRegisterRoute = authRegisterRouteImport.update({
-  id: '/(auth)/register',
-  path: '/register',
-  getParentRoute: () => rootRouteImport,
+const feedTopIndexRoute = feedTopIndexRouteImport.update({
+  id: '/top/',
+  path: '/top/',
+  getParentRoute: () => feedRouteRoute,
 } as any)
-const AppPostsIndexRoute = AppPostsIndexRouteImport.update({
-  id: '/posts/',
-  path: '/posts/',
-  getParentRoute: () => AppRoute,
+const feedLastestIndexRoute = feedLastestIndexRouteImport.update({
+  id: '/lastest/',
+  path: '/lastest/',
+  getParentRoute: () => feedRouteRoute,
+} as any)
+const feedGoatIndexRoute = feedGoatIndexRouteImport.update({
+  id: '/goat/',
+  path: '/goat/',
+  getParentRoute: () => feedRouteRoute,
+} as any)
+const feedFollowingIndexRoute = feedFollowingIndexRouteImport.update({
+  id: '/following/',
+  path: '/following/',
+  getParentRoute: () => feedRouteRoute,
+} as any)
+const feedTopWeekIndexRoute = feedTopWeekIndexRouteImport.update({
+  id: '/top/week/',
+  path: '/top/week/',
+  getParentRoute: () => feedRouteRoute,
+} as any)
+const feedTopMonthIndexRoute = feedTopMonthIndexRouteImport.update({
+  id: '/top/month/',
+  path: '/top/month/',
+  getParentRoute: () => feedRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/404': typeof R404Route
-  '/register': typeof authRegisterRoute
-  '/confirmSignout': typeof AppConfirmSignoutRoute
+  '/confirmSignout': typeof ConfirmSignoutRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
-  '/': typeof AppIndexRoute
+  '/': typeof feedIndexRoute
   '/new': typeof NewIndexRoute
-  '/posts': typeof AppPostsIndexRoute
+  '/following': typeof feedFollowingIndexRoute
+  '/goat': typeof feedGoatIndexRoute
+  '/lastest': typeof feedLastestIndexRoute
+  '/top': typeof feedTopIndexRoute
+  '/year': typeof feedYearIndexRoute
+  '/top/month': typeof feedTopMonthIndexRoute
+  '/top/week': typeof feedTopWeekIndexRoute
 }
 export interface FileRoutesByTo {
   '/404': typeof R404Route
-  '/register': typeof authRegisterRoute
-  '/confirmSignout': typeof AppConfirmSignoutRoute
+  '/confirmSignout': typeof ConfirmSignoutRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
-  '/': typeof AppIndexRoute
+  '/': typeof feedIndexRoute
   '/new': typeof NewIndexRoute
-  '/posts': typeof AppPostsIndexRoute
+  '/following': typeof feedFollowingIndexRoute
+  '/goat': typeof feedGoatIndexRoute
+  '/lastest': typeof feedLastestIndexRoute
+  '/top': typeof feedTopIndexRoute
+  '/year': typeof feedYearIndexRoute
+  '/top/month': typeof feedTopMonthIndexRoute
+  '/top/week': typeof feedTopWeekIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/(feed)': typeof feedRouteRouteWithChildren
   '/404': typeof R404Route
-  '/_app': typeof AppRouteWithChildren
-  '/(auth)/register': typeof authRegisterRoute
-  '/_app/confirmSignout': typeof AppConfirmSignoutRoute
+  '/confirmSignout': typeof ConfirmSignoutRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
-  '/_app/': typeof AppIndexRoute
+  '/(feed)/': typeof feedIndexRoute
   '/new/': typeof NewIndexRoute
-  '/_app/posts/': typeof AppPostsIndexRoute
+  '/(feed)/following/': typeof feedFollowingIndexRoute
+  '/(feed)/goat/': typeof feedGoatIndexRoute
+  '/(feed)/lastest/': typeof feedLastestIndexRoute
+  '/(feed)/top/': typeof feedTopIndexRoute
+  '/(feed)/year/': typeof feedYearIndexRoute
+  '/(feed)/top/month/': typeof feedTopMonthIndexRoute
+  '/(feed)/top/week/': typeof feedTopWeekIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/404'
-    | '/register'
     | '/confirmSignout'
     | '/auth/login'
     | '/auth/register'
     | '/'
     | '/new'
-    | '/posts'
+    | '/following'
+    | '/goat'
+    | '/lastest'
+    | '/top'
+    | '/year'
+    | '/top/month'
+    | '/top/week'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/404'
-    | '/register'
     | '/confirmSignout'
     | '/auth/login'
     | '/auth/register'
     | '/'
     | '/new'
-    | '/posts'
+    | '/following'
+    | '/goat'
+    | '/lastest'
+    | '/top'
+    | '/year'
+    | '/top/month'
+    | '/top/week'
   id:
     | '__root__'
+    | '/(feed)'
     | '/404'
-    | '/_app'
-    | '/(auth)/register'
-    | '/_app/confirmSignout'
+    | '/confirmSignout'
     | '/auth/login'
     | '/auth/register'
-    | '/_app/'
+    | '/(feed)/'
     | '/new/'
-    | '/_app/posts/'
+    | '/(feed)/following/'
+    | '/(feed)/goat/'
+    | '/(feed)/lastest/'
+    | '/(feed)/top/'
+    | '/(feed)/year/'
+    | '/(feed)/top/month/'
+    | '/(feed)/top/week/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  feedRouteRoute: typeof feedRouteRouteWithChildren
   R404Route: typeof R404Route
-  AppRoute: typeof AppRouteWithChildren
-  authRegisterRoute: typeof authRegisterRoute
+  ConfirmSignoutRoute: typeof ConfirmSignoutRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
   NewIndexRoute: typeof NewIndexRoute
@@ -141,11 +201,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_app': {
-      id: '/_app'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AppRouteImport
+    '/confirmSignout': {
+      id: '/confirmSignout'
+      path: '/confirmSignout'
+      fullPath: '/confirmSignout'
+      preLoaderRoute: typeof ConfirmSignoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/404': {
@@ -155,6 +215,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof R404RouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(feed)': {
+      id: '/(feed)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof feedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/new/': {
       id: '/new/'
       path: '/new'
@@ -162,12 +229,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NewIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_app/': {
-      id: '/_app/'
+    '/(feed)/': {
+      id: '/(feed)/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof AppIndexRouteImport
-      parentRoute: typeof AppRoute
+      preLoaderRoute: typeof feedIndexRouteImport
+      parentRoute: typeof feedRouteRoute
     }
     '/auth/register': {
       id: '/auth/register'
@@ -183,48 +250,88 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_app/confirmSignout': {
-      id: '/_app/confirmSignout'
-      path: '/confirmSignout'
-      fullPath: '/confirmSignout'
-      preLoaderRoute: typeof AppConfirmSignoutRouteImport
-      parentRoute: typeof AppRoute
+    '/(feed)/year/': {
+      id: '/(feed)/year/'
+      path: '/year'
+      fullPath: '/year'
+      preLoaderRoute: typeof feedYearIndexRouteImport
+      parentRoute: typeof feedRouteRoute
     }
-    '/(auth)/register': {
-      id: '/(auth)/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof authRegisterRouteImport
-      parentRoute: typeof rootRouteImport
+    '/(feed)/top/': {
+      id: '/(feed)/top/'
+      path: '/top'
+      fullPath: '/top'
+      preLoaderRoute: typeof feedTopIndexRouteImport
+      parentRoute: typeof feedRouteRoute
     }
-    '/_app/posts/': {
-      id: '/_app/posts/'
-      path: '/posts'
-      fullPath: '/posts'
-      preLoaderRoute: typeof AppPostsIndexRouteImport
-      parentRoute: typeof AppRoute
+    '/(feed)/lastest/': {
+      id: '/(feed)/lastest/'
+      path: '/lastest'
+      fullPath: '/lastest'
+      preLoaderRoute: typeof feedLastestIndexRouteImport
+      parentRoute: typeof feedRouteRoute
+    }
+    '/(feed)/goat/': {
+      id: '/(feed)/goat/'
+      path: '/goat'
+      fullPath: '/goat'
+      preLoaderRoute: typeof feedGoatIndexRouteImport
+      parentRoute: typeof feedRouteRoute
+    }
+    '/(feed)/following/': {
+      id: '/(feed)/following/'
+      path: '/following'
+      fullPath: '/following'
+      preLoaderRoute: typeof feedFollowingIndexRouteImport
+      parentRoute: typeof feedRouteRoute
+    }
+    '/(feed)/top/week/': {
+      id: '/(feed)/top/week/'
+      path: '/top/week'
+      fullPath: '/top/week'
+      preLoaderRoute: typeof feedTopWeekIndexRouteImport
+      parentRoute: typeof feedRouteRoute
+    }
+    '/(feed)/top/month/': {
+      id: '/(feed)/top/month/'
+      path: '/top/month'
+      fullPath: '/top/month'
+      preLoaderRoute: typeof feedTopMonthIndexRouteImport
+      parentRoute: typeof feedRouteRoute
     }
   }
 }
 
-interface AppRouteChildren {
-  AppConfirmSignoutRoute: typeof AppConfirmSignoutRoute
-  AppIndexRoute: typeof AppIndexRoute
-  AppPostsIndexRoute: typeof AppPostsIndexRoute
+interface feedRouteRouteChildren {
+  feedIndexRoute: typeof feedIndexRoute
+  feedFollowingIndexRoute: typeof feedFollowingIndexRoute
+  feedGoatIndexRoute: typeof feedGoatIndexRoute
+  feedLastestIndexRoute: typeof feedLastestIndexRoute
+  feedTopIndexRoute: typeof feedTopIndexRoute
+  feedYearIndexRoute: typeof feedYearIndexRoute
+  feedTopMonthIndexRoute: typeof feedTopMonthIndexRoute
+  feedTopWeekIndexRoute: typeof feedTopWeekIndexRoute
 }
 
-const AppRouteChildren: AppRouteChildren = {
-  AppConfirmSignoutRoute: AppConfirmSignoutRoute,
-  AppIndexRoute: AppIndexRoute,
-  AppPostsIndexRoute: AppPostsIndexRoute,
+const feedRouteRouteChildren: feedRouteRouteChildren = {
+  feedIndexRoute: feedIndexRoute,
+  feedFollowingIndexRoute: feedFollowingIndexRoute,
+  feedGoatIndexRoute: feedGoatIndexRoute,
+  feedLastestIndexRoute: feedLastestIndexRoute,
+  feedTopIndexRoute: feedTopIndexRoute,
+  feedYearIndexRoute: feedYearIndexRoute,
+  feedTopMonthIndexRoute: feedTopMonthIndexRoute,
+  feedTopWeekIndexRoute: feedTopWeekIndexRoute,
 }
 
-const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+const feedRouteRouteWithChildren = feedRouteRoute._addFileChildren(
+  feedRouteRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
+  feedRouteRoute: feedRouteRouteWithChildren,
   R404Route: R404Route,
-  AppRoute: AppRouteWithChildren,
-  authRegisterRoute: authRegisterRoute,
+  ConfirmSignoutRoute: ConfirmSignoutRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
   NewIndexRoute: NewIndexRoute,

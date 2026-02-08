@@ -19,7 +19,7 @@ function Header() {
 
   return (
     <header className="h-14 border-b flex items-center justify-center sticky z-50">
-      <div className="w-6xl flex items-center justify-between px-4">
+      <div className="w-7xl flex items-center justify-between px-4">
         <div className="basis-2/3">
           <div className="flex items-center">
             <Link to="/">
