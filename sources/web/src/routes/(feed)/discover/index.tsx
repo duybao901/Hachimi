@@ -1,12 +1,10 @@
 import PostFeeds from '@/components/Posts/PostFeeds';
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/(feed)/following/')({
+export const Route = createFileRoute('/(feed)/discover/')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  return <PostFeeds typeOf="following" >
-
-  </PostFeeds>;
+  return <PostFeeds typeOf="discover" />
 }

@@ -12,17 +12,21 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ConfirmSignoutRouteImport } from './routes/confirmSignout'
 import { Route as R404RouteImport } from './routes/404'
 import { Route as feedRouteRouteImport } from './routes/(feed)/route'
+import { Route as UserIdRouteRouteImport } from './routes/$userId/route'
 import { Route as NewIndexRouteImport } from './routes/new/index'
 import { Route as feedIndexRouteImport } from './routes/(feed)/index'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as UserIdPostSlugRouteImport } from './routes/$userId/$postSlug'
 import { Route as feedYearIndexRouteImport } from './routes/(feed)/year/index'
 import { Route as feedTopIndexRouteImport } from './routes/(feed)/top/index'
-import { Route as feedLastestIndexRouteImport } from './routes/(feed)/lastest/index'
-import { Route as feedGoatIndexRouteImport } from './routes/(feed)/goat/index'
+import { Route as feedLatestIndexRouteImport } from './routes/(feed)/latest/index'
 import { Route as feedFollowingIndexRouteImport } from './routes/(feed)/following/index'
+import { Route as feedDiscoverIndexRouteImport } from './routes/(feed)/discover/index'
+import { Route as feedFollowingLatestRouteImport } from './routes/(feed)/following/latest'
 import { Route as feedTopWeekIndexRouteImport } from './routes/(feed)/top/week/index'
 import { Route as feedTopMonthIndexRouteImport } from './routes/(feed)/top/month/index'
+import { Route as feedTopInfinityIndexRouteImport } from './routes/(feed)/top/infinity/index'
 
 const ConfirmSignoutRoute = ConfirmSignoutRouteImport.update({
   id: '/confirmSignout',
@@ -36,6 +40,11 @@ const R404Route = R404RouteImport.update({
 } as any)
 const feedRouteRoute = feedRouteRouteImport.update({
   id: '/(feed)',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UserIdRouteRoute = UserIdRouteRouteImport.update({
+  id: '/$userId',
+  path: '/$userId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NewIndexRoute = NewIndexRouteImport.update({
@@ -58,6 +67,11 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UserIdPostSlugRoute = UserIdPostSlugRouteImport.update({
+  id: '/$postSlug',
+  path: '/$postSlug',
+  getParentRoute: () => UserIdRouteRoute,
+} as any)
 const feedYearIndexRoute = feedYearIndexRouteImport.update({
   id: '/year/',
   path: '/year/',
@@ -68,19 +82,24 @@ const feedTopIndexRoute = feedTopIndexRouteImport.update({
   path: '/top/',
   getParentRoute: () => feedRouteRoute,
 } as any)
-const feedLastestIndexRoute = feedLastestIndexRouteImport.update({
-  id: '/lastest/',
-  path: '/lastest/',
-  getParentRoute: () => feedRouteRoute,
-} as any)
-const feedGoatIndexRoute = feedGoatIndexRouteImport.update({
-  id: '/goat/',
-  path: '/goat/',
+const feedLatestIndexRoute = feedLatestIndexRouteImport.update({
+  id: '/latest/',
+  path: '/latest/',
   getParentRoute: () => feedRouteRoute,
 } as any)
 const feedFollowingIndexRoute = feedFollowingIndexRouteImport.update({
   id: '/following/',
   path: '/following/',
+  getParentRoute: () => feedRouteRoute,
+} as any)
+const feedDiscoverIndexRoute = feedDiscoverIndexRouteImport.update({
+  id: '/discover/',
+  path: '/discover/',
+  getParentRoute: () => feedRouteRoute,
+} as any)
+const feedFollowingLatestRoute = feedFollowingLatestRouteImport.update({
+  id: '/following/latest',
+  path: '/following/latest',
   getParentRoute: () => feedRouteRoute,
 } as any)
 const feedTopWeekIndexRoute = feedTopWeekIndexRouteImport.update({
@@ -93,104 +112,134 @@ const feedTopMonthIndexRoute = feedTopMonthIndexRouteImport.update({
   path: '/top/month/',
   getParentRoute: () => feedRouteRoute,
 } as any)
+const feedTopInfinityIndexRoute = feedTopInfinityIndexRouteImport.update({
+  id: '/top/infinity/',
+  path: '/top/infinity/',
+  getParentRoute: () => feedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
+  '/$userId': typeof UserIdRouteRouteWithChildren
   '/404': typeof R404Route
   '/confirmSignout': typeof ConfirmSignoutRoute
+  '/$userId/$postSlug': typeof UserIdPostSlugRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/': typeof feedIndexRoute
   '/new': typeof NewIndexRoute
+  '/following/latest': typeof feedFollowingLatestRoute
+  '/discover': typeof feedDiscoverIndexRoute
   '/following': typeof feedFollowingIndexRoute
-  '/goat': typeof feedGoatIndexRoute
-  '/lastest': typeof feedLastestIndexRoute
+  '/latest': typeof feedLatestIndexRoute
   '/top': typeof feedTopIndexRoute
   '/year': typeof feedYearIndexRoute
+  '/top/infinity': typeof feedTopInfinityIndexRoute
   '/top/month': typeof feedTopMonthIndexRoute
   '/top/week': typeof feedTopWeekIndexRoute
 }
 export interface FileRoutesByTo {
+  '/$userId': typeof UserIdRouteRouteWithChildren
   '/404': typeof R404Route
   '/confirmSignout': typeof ConfirmSignoutRoute
+  '/$userId/$postSlug': typeof UserIdPostSlugRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/': typeof feedIndexRoute
   '/new': typeof NewIndexRoute
+  '/following/latest': typeof feedFollowingLatestRoute
+  '/discover': typeof feedDiscoverIndexRoute
   '/following': typeof feedFollowingIndexRoute
-  '/goat': typeof feedGoatIndexRoute
-  '/lastest': typeof feedLastestIndexRoute
+  '/latest': typeof feedLatestIndexRoute
   '/top': typeof feedTopIndexRoute
   '/year': typeof feedYearIndexRoute
+  '/top/infinity': typeof feedTopInfinityIndexRoute
   '/top/month': typeof feedTopMonthIndexRoute
   '/top/week': typeof feedTopWeekIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/$userId': typeof UserIdRouteRouteWithChildren
   '/(feed)': typeof feedRouteRouteWithChildren
   '/404': typeof R404Route
   '/confirmSignout': typeof ConfirmSignoutRoute
+  '/$userId/$postSlug': typeof UserIdPostSlugRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/(feed)/': typeof feedIndexRoute
   '/new/': typeof NewIndexRoute
+  '/(feed)/following/latest': typeof feedFollowingLatestRoute
+  '/(feed)/discover/': typeof feedDiscoverIndexRoute
   '/(feed)/following/': typeof feedFollowingIndexRoute
-  '/(feed)/goat/': typeof feedGoatIndexRoute
-  '/(feed)/lastest/': typeof feedLastestIndexRoute
+  '/(feed)/latest/': typeof feedLatestIndexRoute
   '/(feed)/top/': typeof feedTopIndexRoute
   '/(feed)/year/': typeof feedYearIndexRoute
+  '/(feed)/top/infinity/': typeof feedTopInfinityIndexRoute
   '/(feed)/top/month/': typeof feedTopMonthIndexRoute
   '/(feed)/top/week/': typeof feedTopWeekIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/$userId'
     | '/404'
     | '/confirmSignout'
+    | '/$userId/$postSlug'
     | '/auth/login'
     | '/auth/register'
     | '/'
     | '/new'
+    | '/following/latest'
+    | '/discover'
     | '/following'
-    | '/goat'
-    | '/lastest'
+    | '/latest'
     | '/top'
     | '/year'
+    | '/top/infinity'
     | '/top/month'
     | '/top/week'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/$userId'
     | '/404'
     | '/confirmSignout'
+    | '/$userId/$postSlug'
     | '/auth/login'
     | '/auth/register'
     | '/'
     | '/new'
+    | '/following/latest'
+    | '/discover'
     | '/following'
-    | '/goat'
-    | '/lastest'
+    | '/latest'
     | '/top'
     | '/year'
+    | '/top/infinity'
     | '/top/month'
     | '/top/week'
   id:
     | '__root__'
+    | '/$userId'
     | '/(feed)'
     | '/404'
     | '/confirmSignout'
+    | '/$userId/$postSlug'
     | '/auth/login'
     | '/auth/register'
     | '/(feed)/'
     | '/new/'
+    | '/(feed)/following/latest'
+    | '/(feed)/discover/'
     | '/(feed)/following/'
-    | '/(feed)/goat/'
-    | '/(feed)/lastest/'
+    | '/(feed)/latest/'
     | '/(feed)/top/'
     | '/(feed)/year/'
+    | '/(feed)/top/infinity/'
     | '/(feed)/top/month/'
     | '/(feed)/top/week/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  UserIdRouteRoute: typeof UserIdRouteRouteWithChildren
   feedRouteRoute: typeof feedRouteRouteWithChildren
   R404Route: typeof R404Route
   ConfirmSignoutRoute: typeof ConfirmSignoutRoute
@@ -222,6 +271,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof feedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$userId': {
+      id: '/$userId'
+      path: '/$userId'
+      fullPath: '/$userId'
+      preLoaderRoute: typeof UserIdRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/new/': {
       id: '/new/'
       path: '/new'
@@ -250,6 +306,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$userId/$postSlug': {
+      id: '/$userId/$postSlug'
+      path: '/$postSlug'
+      fullPath: '/$userId/$postSlug'
+      preLoaderRoute: typeof UserIdPostSlugRouteImport
+      parentRoute: typeof UserIdRouteRoute
+    }
     '/(feed)/year/': {
       id: '/(feed)/year/'
       path: '/year'
@@ -264,18 +327,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof feedTopIndexRouteImport
       parentRoute: typeof feedRouteRoute
     }
-    '/(feed)/lastest/': {
-      id: '/(feed)/lastest/'
-      path: '/lastest'
-      fullPath: '/lastest'
-      preLoaderRoute: typeof feedLastestIndexRouteImport
-      parentRoute: typeof feedRouteRoute
-    }
-    '/(feed)/goat/': {
-      id: '/(feed)/goat/'
-      path: '/goat'
-      fullPath: '/goat'
-      preLoaderRoute: typeof feedGoatIndexRouteImport
+    '/(feed)/latest/': {
+      id: '/(feed)/latest/'
+      path: '/latest'
+      fullPath: '/latest'
+      preLoaderRoute: typeof feedLatestIndexRouteImport
       parentRoute: typeof feedRouteRoute
     }
     '/(feed)/following/': {
@@ -283,6 +339,20 @@ declare module '@tanstack/react-router' {
       path: '/following'
       fullPath: '/following'
       preLoaderRoute: typeof feedFollowingIndexRouteImport
+      parentRoute: typeof feedRouteRoute
+    }
+    '/(feed)/discover/': {
+      id: '/(feed)/discover/'
+      path: '/discover'
+      fullPath: '/discover'
+      preLoaderRoute: typeof feedDiscoverIndexRouteImport
+      parentRoute: typeof feedRouteRoute
+    }
+    '/(feed)/following/latest': {
+      id: '/(feed)/following/latest'
+      path: '/following/latest'
+      fullPath: '/following/latest'
+      preLoaderRoute: typeof feedFollowingLatestRouteImport
       parentRoute: typeof feedRouteRoute
     }
     '/(feed)/top/week/': {
@@ -299,27 +369,50 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof feedTopMonthIndexRouteImport
       parentRoute: typeof feedRouteRoute
     }
+    '/(feed)/top/infinity/': {
+      id: '/(feed)/top/infinity/'
+      path: '/top/infinity'
+      fullPath: '/top/infinity'
+      preLoaderRoute: typeof feedTopInfinityIndexRouteImport
+      parentRoute: typeof feedRouteRoute
+    }
   }
 }
 
+interface UserIdRouteRouteChildren {
+  UserIdPostSlugRoute: typeof UserIdPostSlugRoute
+}
+
+const UserIdRouteRouteChildren: UserIdRouteRouteChildren = {
+  UserIdPostSlugRoute: UserIdPostSlugRoute,
+}
+
+const UserIdRouteRouteWithChildren = UserIdRouteRoute._addFileChildren(
+  UserIdRouteRouteChildren,
+)
+
 interface feedRouteRouteChildren {
   feedIndexRoute: typeof feedIndexRoute
+  feedFollowingLatestRoute: typeof feedFollowingLatestRoute
+  feedDiscoverIndexRoute: typeof feedDiscoverIndexRoute
   feedFollowingIndexRoute: typeof feedFollowingIndexRoute
-  feedGoatIndexRoute: typeof feedGoatIndexRoute
-  feedLastestIndexRoute: typeof feedLastestIndexRoute
+  feedLatestIndexRoute: typeof feedLatestIndexRoute
   feedTopIndexRoute: typeof feedTopIndexRoute
   feedYearIndexRoute: typeof feedYearIndexRoute
+  feedTopInfinityIndexRoute: typeof feedTopInfinityIndexRoute
   feedTopMonthIndexRoute: typeof feedTopMonthIndexRoute
   feedTopWeekIndexRoute: typeof feedTopWeekIndexRoute
 }
 
 const feedRouteRouteChildren: feedRouteRouteChildren = {
   feedIndexRoute: feedIndexRoute,
+  feedFollowingLatestRoute: feedFollowingLatestRoute,
+  feedDiscoverIndexRoute: feedDiscoverIndexRoute,
   feedFollowingIndexRoute: feedFollowingIndexRoute,
-  feedGoatIndexRoute: feedGoatIndexRoute,
-  feedLastestIndexRoute: feedLastestIndexRoute,
+  feedLatestIndexRoute: feedLatestIndexRoute,
   feedTopIndexRoute: feedTopIndexRoute,
   feedYearIndexRoute: feedYearIndexRoute,
+  feedTopInfinityIndexRoute: feedTopInfinityIndexRoute,
   feedTopMonthIndexRoute: feedTopMonthIndexRoute,
   feedTopWeekIndexRoute: feedTopWeekIndexRoute,
 }
@@ -329,6 +422,7 @@ const feedRouteRouteWithChildren = feedRouteRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
+  UserIdRouteRoute: UserIdRouteRouteWithChildren,
   feedRouteRoute: feedRouteRouteWithChildren,
   R404Route: R404Route,
   ConfirmSignoutRoute: ConfirmSignoutRoute,

@@ -6,7 +6,8 @@ using Contract.Services.V1.Posts;
 using Contract.Services.V1.Posts.ViewModels;
 using Query.Domain.Abstractions.Repositories;
 using Query.Domain.Collections;
-using System.Linq;
+using ICurrentUser = Query.Application.Abstraction.ICurrentUser;
+
 
 
 namespace Query.Application.UseCases.V1.Queries.Posts;
@@ -14,11 +15,13 @@ public sealed class GetPostsQueryHandler : IQueryHandler<Contract.Services.V1.Po
 {
     private readonly IMongoRepository<Post> _postRepository;
     private readonly IMapper _mapper;
+    private readonly ICurrentUser _currentUser;
 
-    public GetPostsQueryHandler(IMongoRepository<Post> postRepository, IMapper mapper)
+    public GetPostsQueryHandler(IMongoRepository<Post> postRepository, IMapper mapper, ICurrentUser currentUser)
     {
         _postRepository = postRepository;
         _mapper = mapper;
+        _currentUser = currentUser;
     }
 
     public async Task<Result<PageResult<Response.PostResponse>>> Handle(Contract.Services.V1.Posts.Query.GetPostsQuery request, CancellationToken cancellationToken)
@@ -30,14 +33,16 @@ public sealed class GetPostsQueryHandler : IQueryHandler<Contract.Services.V1.Po
         queryable = queryable.Where(p =>
             p.PostStatus == PostStatus.Published);
 
-       // Feed switch
+        // Feed switch
 
-       queryable = request.Feed switch
-       {
-           "latest" => ApplyLatest(queryable),
-           "top" => ApplyTop(queryable),
-           _ => ApplyRelevant(queryable, null)
-       };
+        queryable = request.Feed switch
+        {
+            "latest" => ApplyLatest(queryable),
+            "top" => ApplyTop(queryable),
+            "discover" => ApplyRelevant(queryable, _currentUser.UserId),
+            "following" => ApplyRelevant(queryable, _currentUser.UserId),
+            _ => ApplyRelevant(queryable, null)
+        };
 
         // Paging
         var queryResult = await MongoPagingExtensions.ToPageResultAsync(
@@ -90,7 +95,7 @@ public sealed class GetPostsQueryHandler : IQueryHandler<Contract.Services.V1.Po
 
     private IQueryable<Post> ApplyRelevant(
     IQueryable<Post> query,
-    Guid? userId)
+    string? userId)
     {
         return query.OrderByDescending(p => p.PublishedAt);
         //if (userId == null)

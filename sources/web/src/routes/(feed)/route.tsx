@@ -124,7 +124,6 @@ function RouteComponent() {
                 </div>
               </div>
 
-              {/* Posts list */}
               {/* <PostFeeds></PostFeeds> */}
               <Outlet></Outlet>
 
