@@ -7,6 +7,11 @@ public class PostException
             : base($"The post with the id {id} was not found")
         {
         }
+
+        public PostNotFoundException(string slug)
+            : base($"The post with the slug {slug} was not found")
+        {
+        }
     }
 
     public class PostNameWrongFormat : BadRequestException

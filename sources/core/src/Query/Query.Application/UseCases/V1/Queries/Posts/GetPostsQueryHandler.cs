@@ -6,7 +6,6 @@ using Contract.Services.V1.Posts;
 using Contract.Services.V1.Posts.ViewModels;
 using Query.Domain.Abstractions.Repositories;
 using Query.Domain.Collections;
-using ICurrentUser = Query.Application.Abstraction.ICurrentUser;
 
 
 
@@ -15,13 +14,11 @@ public sealed class GetPostsQueryHandler : IQueryHandler<Contract.Services.V1.Po
 {
     private readonly IMongoRepository<Post> _postRepository;
     private readonly IMapper _mapper;
-    private readonly ICurrentUser _currentUser;
 
-    public GetPostsQueryHandler(IMongoRepository<Post> postRepository, IMapper mapper, ICurrentUser currentUser)
+    public GetPostsQueryHandler(IMongoRepository<Post> postRepository, IMapper mapper)
     {
         _postRepository = postRepository;
         _mapper = mapper;
-        _currentUser = currentUser;
     }
 
     public async Task<Result<PageResult<Response.PostResponse>>> Handle(Contract.Services.V1.Posts.Query.GetPostsQuery request, CancellationToken cancellationToken)
@@ -39,9 +36,7 @@ public sealed class GetPostsQueryHandler : IQueryHandler<Contract.Services.V1.Po
         {
             "latest" => ApplyLatest(queryable),
             "top" => ApplyTop(queryable),
-            "discover" => ApplyRelevant(queryable, _currentUser.UserId),
-            "following" => ApplyRelevant(queryable, _currentUser.UserId),
-            _ => ApplyRelevant(queryable, null)
+            _ => ApplyRelevant(queryable)
         };
 
         // Paging
@@ -94,8 +89,7 @@ public sealed class GetPostsQueryHandler : IQueryHandler<Contract.Services.V1.Po
     }
 
     private IQueryable<Post> ApplyRelevant(
-    IQueryable<Post> query,
-    string? userId)
+    IQueryable<Post> query)
     {
         return query.OrderByDescending(p => p.PublishedAt);
         //if (userId == null)

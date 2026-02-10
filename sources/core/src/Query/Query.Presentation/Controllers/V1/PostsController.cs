@@ -86,4 +86,19 @@ public class PostsController : ApiController
 
         return Results.Ok(result);
     }
+
+    [HttpGet("public/{slug}")]
+    [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
+    public async Task<IResult> GetPostBySlug([FromRoute] string slug)
+    {
+        var query = new QueryV1.GetPostBySlug(slug);
+        Result result = await Sender.Send(query);
+
+        if (result.IsFailure)
+        {
+            return HandlerFailure(result);
+        }
+
+        return Results.Ok(result);
+    }
 }

@@ -27,3 +27,7 @@ export async function PublishPost(data: PublishPostCommand){
 export async function GetPosts(pageIndex: number, pageSize: number, feed: string = "relevant") {
     return await queryPublicApi.get<PagedResult<PostView>>(`/posts/public?pageIndex=${pageIndex}&pageSize=${pageSize}&feed=${feed}`);
 }
+
+export async function GetPostBySlug(postSlug: string) {
+    return await queryPublicApi.get<ApiResponse<PostView>>(`/posts/public/${postSlug}`);
+}

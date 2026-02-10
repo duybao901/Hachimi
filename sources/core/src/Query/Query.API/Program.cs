@@ -1,6 +1,7 @@
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Query.API.DependencyInjection.Extentions;
+using Query.API.Middleware;
 using Query.Application.DependencyInjection.Extensions;
 using Query.Infrastructure.DependencyInjection.Extensions;
 using Query.Persistence.DependencyInjection.Extensions;
@@ -29,6 +30,9 @@ builder.Services.AddServiceIdentityInfrastructure();
 builder.Services.AddMediatRApplication();
 builder.Services.AddConfigurationAutoMapper();
 
+// Middleware 
+builder.Services.AddTransient<ExceptionHandlingMiddleware>();
+
 // Swagger + Versioning
 builder.Services
         .AddSwaggerGenNewtonsoftSupport()
@@ -52,6 +56,8 @@ builder.Services.AddControllers(options =>
     .AddApplicationPart(Query.Presentation.AssemblyReference.Assembly);
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

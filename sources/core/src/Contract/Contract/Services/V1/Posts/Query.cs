@@ -8,5 +8,6 @@ public static class Query
     public record GetListPostsQuery(string? SearchTerm, string? SortColumn, string? SortOrder, string? SortColumnAndOrder, int PageIndex, int PageSize) : IQuery<PageResult<Response.PostListResponse>>;
     public record GetPostByIdQuery(Guid PostId) : IQuery<Response.PostResponse>;
     public record GetCurrentEditPost() : IQuery<Response.PostDraftReponse>;
+    public record GetPostBySlug(string Slug) : IQuery<Response.PostResponse>;
 }
 

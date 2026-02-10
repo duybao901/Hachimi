@@ -94,7 +94,7 @@ function PostCard({ post }: PostCardProps) {
                       </div>
                       <div className="-mr-2.5 rounded-full border-2 border-white bg-gray-100 p-1">
                         <img
-                          src="https://assets.dev.to/assets/raised-hands-74b2099fd66a39f2d7eed9305ee0f4553df0eb7b4f11b01b6b1b499973048fe5.svg"
+                          src="https://assets.dev.to/assets/exploding-head-daceb38d627e6ae9b730f36a1e390fca556a4289d5a41abb2c35068ad3e2c4b5.svg"
                           width="18"
                           height="18"
                           alt="Raised Hands"
