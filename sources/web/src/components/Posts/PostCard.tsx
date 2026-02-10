@@ -47,7 +47,7 @@ function PostCard({ post }: PostCardProps) {
 
             <div>
               <Link
-                to={`/${post.postAuthor.username}/${post.slug}`}
+                to={`/${post.postAuthor.userName}/${post.slug}`}
                 className="text-2xl font-extrabold mb-3 mt-3 block hover:text-primary"
               >
                 {post.title}

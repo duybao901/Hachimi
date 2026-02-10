@@ -22,7 +22,7 @@ export interface PostView {
     postAuthor: {
         id: string;
         name: string;
-        username: string;
+        userName: string;
         avatarUrl: string;
     };
     postStatus: "Published" | "Draft" | "Archived";

@@ -19,7 +19,7 @@ const postsMock: PostView[] = [
     postAuthor: {
       id: "a1",
       name: "John Doe",
-      username: "johndoe",
+      userName: "johndoe",
       avatarUrl:
         "https://res.cloudinary.com/dxnfxl89q/image/upload/v1766509116/Hachimi/GFaSsnub0AAXCNS_syuddp.jpg",
     },
@@ -55,7 +55,7 @@ const postsMock: PostView[] = [
     postAuthor: {
       id: "a1",
       name: "Sarvar Nadaf",
-      username: "SarvarNadaf",
+      userName: "SarvarNadaf",
       avatarUrl:
         "https://res.cloudinary.com/dxnfxl89q/image/upload/v1766509112/Hachimi/Screenshot_2025-05-16_210725_xghzr8.png",
     },
@@ -78,7 +78,7 @@ const postsMock: PostView[] = [
     postAuthor: {
       id: "a1",
       name: "Prog. Kanishk Raj",
-      username: "Prog. Kanishk Raj",
+      userName: "Prog. Kanishk Raj",
       avatarUrl:
         "https://res.cloudinary.com/dxnfxl89q/image/upload/v1766509107/Hachimi/Screenshot_2025-10-25_015739_et58i0.png",
     },

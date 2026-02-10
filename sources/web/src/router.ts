@@ -7,6 +7,7 @@ await loadSessionOnInit()
 
 export const router = createRouter({
   routeTree,
+  scrollRestoration: true,
   context: {
     auth: useAuthStore.getState(),
   },
