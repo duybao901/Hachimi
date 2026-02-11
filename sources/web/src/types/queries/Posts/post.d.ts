@@ -26,6 +26,7 @@ export interface PostView {
         avatarUrl: string;
     };
     postStatus: "Published" | "Draft" | "Archived";
+    PublishedAt?: Date;
     coverImageUrl?: string;
     viewCount: number;
     readingTimeMinutes?: number;

@@ -119,25 +119,25 @@ function PostFeeds({ typeOf }: PostFeedsProps) {
       } catch (error: any) {
         const data = error?.response?.data as ValidationErrorResponse | undefined
 
-        if (data?.errors) {
-          const messages = extractValidationMessages(data.errors)
+        // if (data?.errors) {
+        //   const messages = extractValidationMessages(data.errors)
 
-          toast.error("Validation error", {
-            description: (
-              <ul className="list-disc pl-4">
-                {messages.map((msg) => (
-                  <li key={msg}>{msg}</li>
-                ))}
-              </ul>
-            ),
-          })
-        } else {
-          if (error.response) {
-            toast.error(
-              error.response?.data?.Detail || error.message || "Server error"
-            )
-          }
-        }
+        //   toast.error("Validation error", {
+        //     description: (
+        //       <ul className="list-disc pl-4">
+        //         {messages.map((msg) => (
+        //           <li key={msg}>{msg}</li>
+        //         ))}
+        //       </ul>
+        //     ),
+        //   })
+        // } else {
+        //   if (error.response) {
+        //     toast.error(
+        //       error.response?.data?.Detail || error.message || "Server error"
+        //     )
+        //   }
+        // }
       }
     }
 

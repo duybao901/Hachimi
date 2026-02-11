@@ -26,10 +26,11 @@ public sealed class GetPostDetailBySlug : IQueryHandler<Contract.Services.V1.Pos
             post.Title,
             post.Content,
             post.Slug,
-            new Contract.Services.V1.Posts.ViewModels.PostAuthorViewModel()
+            new PostAuthorViewModel()
             {
                 Name = post.Author.Name,
                 Email = post.Author.Email,
+                AvatarUrl = post.Author.AvatarUrl
             },
             PostTags: post.Tags
                     .Select(t => new PostTagViewModel
