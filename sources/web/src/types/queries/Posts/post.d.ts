@@ -12,6 +12,8 @@ export interface PostComment {
     content: string;
     author: Author;
     CreatedOnUtc?: Date;
+    likes?: any[];
+    replies?: PostComment[];
 }
 
 export interface PostView {
@@ -26,6 +28,7 @@ export interface PostView {
         avatarUrl: string;
     };
     postStatus: "Published" | "Draft" | "Archived";
+    publishedAt?: string;
     coverImageUrl?: string;
     viewCount: number;
     readingTimeMinutes?: number;
@@ -34,6 +37,7 @@ export interface PostView {
     modifiedOnUtc?: string;
     isFirstPost: boolean;
     comments: PostComment[] | []
+    likes?: any[];
 }
 
 
