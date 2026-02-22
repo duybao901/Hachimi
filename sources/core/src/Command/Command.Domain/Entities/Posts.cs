@@ -5,15 +5,11 @@ using Contract.Enumerations;
 namespace Command.Domain.Entities;
 public class Posts : AggregateRoot<Guid>, IAuditTableEntity
 {
-    public string Title { get; set; } = default!;
-    public string Slug { get; set; } = default!;
-    public string Content { get; set; } = default!;
-    //public string Excerpt { get; set; } = default!;
-    public string? CoverImageUrl { get; set; }
-
+    public string Title { get; set; }
+    public string Slug { get; set; }
+    public string Content { get; set; }
+    public string CoverImageUrl { get; set; }
     public PostStatus PostStatus { get; set; }
-    //public PostVisibility Visibility { get; set; }
-
     public int ViewCount { get; set; }
     public int CommentCount { get; set; }
     public int LikeCount { get; set; }
@@ -25,8 +21,6 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
 
     public Guid AuthorId { get; set; }
 
-    public bool IsDeleted { get; set; }
-
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
 
@@ -35,13 +29,13 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
     public IReadOnlyCollection<PostTags> PostTags => _postTags.AsReadOnly();
 
 
-    public Posts(Guid id, string title, string slug, string content, Guid authorId, string CoverImageUrl = null)
+    public Posts(Guid id, string title, string slug, string content, Guid authorId, string coverImageUrl = "")
     {
         Id = id;
         Title = title;
         Slug = slug;
         Content = content;
-        CoverImageUrl = CoverImageUrl;
+        CoverImageUrl = coverImageUrl;
         AuthorId = authorId;
         ViewCount = 0;
         CommentCount = 0;
@@ -140,5 +134,17 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
     public void PublishPost(Guid Id)
     {
         RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostDraftPublishedEvent(Guid.NewGuid(), Id));
+    }
+
+    public void AddReaction(Guid UserId, ReactionType Reaction)
+    {
+        LikeCount++;
+        //RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostLikedEvent(Guid.NewGuid(), Id, LikeCount));
+    }
+
+    public void AddComment(Guid commentId, Guid userId, string content)
+    {
+        CommentCount++;
+        RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostCommentedEvent(Guid.NewGuid(), Id, commentId, userId, content, CommentCount));
     }
 }

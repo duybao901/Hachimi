@@ -4,6 +4,7 @@ using Command.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Command.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260222091017_AddReactionTable")]
+    partial class AddReactionTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,39 +24,6 @@ namespace Command.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Command.Domain.Entities.PostReaction", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOnUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("PostId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ReactionTypeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostId");
-
-                    b.HasIndex("ReactionTypeId");
-
-                    b.HasIndex("PostId", "UserId")
-                        .IsUnique();
-
-                    b.ToTable("PostReactions", (string)null);
-                });
 
             modelBuilder.Entity("Command.Domain.Entities.Posts", b =>
                 {
@@ -74,7 +44,6 @@ namespace Command.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CoverImageUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("CreatedOnUtc")
@@ -131,65 +100,6 @@ namespace Command.Persistence.Migrations
                     b.HasIndex("PostStatus", "PublishedAt");
 
                     b.ToTable("Post", (string)null);
-                });
-
-            modelBuilder.Entity("Command.Domain.Entities.ReactionType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Icon")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ReactionTypes", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("ea58565b-1456-4169-bb47-37102c635710"),
-                            Icon = "heart",
-                            IsDeleted = false,
-                            Name = "Like"
-                        },
-                        new
-                        {
-                            Id = new Guid("72b5c96b-4859-40e7-b87f-210440e629fd"),
-                            Icon = "unicorn",
-                            IsDeleted = false,
-                            Name = "Unicorn"
-                        },
-                        new
-                        {
-                            Id = new Guid("31574891-5b59-49bd-a697-eca5b6b5dc94"),
-                            Icon = "exploding",
-                            IsDeleted = false,
-                            Name = "ExplodingHead"
-                        },
-                        new
-                        {
-                            Id = new Guid("904d8bed-c0b6-4d28-90bb-b539d3074bc7"),
-                            Icon = "hands",
-                            IsDeleted = false,
-                            Name = "RaisedHands"
-                        },
-                        new
-                        {
-                            Id = new Guid("97de8548-8026-4a6a-a1c7-c4b25a4e6e2e"),
-                            Icon = "fire",
-                            IsDeleted = false,
-                            Name = "Fire"
-                        });
                 });
 
             modelBuilder.Entity("Command.Domain.Entities.Tags", b =>
@@ -254,6 +164,36 @@ namespace Command.Persistence.Migrations
                     b.ToTable("OutboxMessages", (string)null);
                 });
 
+            modelBuilder.Entity("PostReaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ReactionTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("ReactionTypeId");
+
+                    b.HasIndex("PostId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("PostReactions", (string)null);
+                });
+
             modelBuilder.Entity("PostTags", b =>
                 {
                     b.Property<Guid>("PostId")
@@ -275,7 +215,58 @@ namespace Command.Persistence.Migrations
                     b.ToTable("PostTags", (string)null);
                 });
 
-            modelBuilder.Entity("Command.Domain.Entities.PostReaction", b =>
+            modelBuilder.Entity("ReactionType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Icon")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ReactionTypes", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("c4fc3cef-434e-44b0-8871-9ad46d689424"),
+                            Icon = "heart",
+                            Name = "Like"
+                        },
+                        new
+                        {
+                            Id = new Guid("8bb5b7c9-06e7-4c1e-9101-c146228e3e48"),
+                            Icon = "unicorn",
+                            Name = "Unicorn"
+                        },
+                        new
+                        {
+                            Id = new Guid("cd8c5ca0-b7ef-4a0f-8e9f-44fcaef4225d"),
+                            Icon = "exploding",
+                            Name = "ExplodingHead"
+                        },
+                        new
+                        {
+                            Id = new Guid("5b80034d-997d-409b-b6fb-4520fb531fa7"),
+                            Icon = "hands",
+                            Name = "RaisedHands"
+                        },
+                        new
+                        {
+                            Id = new Guid("e06b741b-d1a2-4dbe-ae33-d2ee1ca6901b"),
+                            Icon = "fire",
+                            Name = "Fire"
+                        });
+                });
+
+            modelBuilder.Entity("PostReaction", b =>
                 {
                     b.HasOne("Command.Domain.Entities.Posts", null)
                         .WithMany()
@@ -283,7 +274,7 @@ namespace Command.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Command.Domain.Entities.ReactionType", "ReactionType")
+                    b.HasOne("ReactionType", "ReactionType")
                         .WithMany()
                         .HasForeignKey("ReactionTypeId")
                         .OnDelete(DeleteBehavior.Restrict)

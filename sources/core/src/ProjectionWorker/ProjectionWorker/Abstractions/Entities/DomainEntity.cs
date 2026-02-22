@@ -3,5 +3,5 @@ public abstract class DomainEntity<Tkey> : IDomainEntity<Tkey>
 {
     public virtual Tkey Id { get; set; }
 
-    public bool IsDelete { get; protected set; }
+    public bool IsDeleted { get; protected set; }
 }

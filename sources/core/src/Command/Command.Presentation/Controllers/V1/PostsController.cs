@@ -1,9 +1,11 @@
 ﻿using Asp.Versioning;
 using Command.Presentation.Abstractions;
 using Contract.Abstractions.Shared;
+using MassTransit.Mediator;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static Contract.Services.V1.Posts.Command;
 using CommandV1 = Contract.Services.V1.Posts.Command;
 
 namespace Command.Presentation.Controllers.V1;
@@ -99,6 +101,32 @@ public class PostsController : ApiController
     public async Task<IResult> PublishPost([FromBody] Contract.Services.V1.Posts.Command.PublishPostCommand request)
     {
         var result = await Sender.Send(request);
+
+        if (result.IsFailure)
+        {
+            return HandlerFailure(result);
+        }
+
+        return Results.Ok(result);
+    }
+
+    //[HttpPost("{postId}/like")]
+    //public async Task<IActionResult> LikePost(Guid postId, [FromBody] Contract.Services.V1.Posts.Command.AddCommentCommand request)
+    //{
+    //    var result = await Sender.Send(request);
+
+    //    if (result.IsFailure)
+    //    {
+    //        return HandlerFailure(result);
+    //    }
+
+    //    return Results.Ok(result);
+    //}
+
+    [HttpPost("{postId}/like")]
+    public async Task<IResult> LikePost(Guid postId, [FromBody] Contract.Services.V1.Posts.Command.AddReactionCommand request)
+    {
+        var result = await Sender.Send(new AddReactionCommand(postId, request.UserId, request.ReactionTypeId));
 
         if (result.IsFailure)
         {
