@@ -12,7 +12,7 @@ public class ReactionsController : ApiController
     {
     }
 
-    [HttpGet]
+    [HttpGet("public")]
     [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
     public async Task<IResult> SearchTags()
     {

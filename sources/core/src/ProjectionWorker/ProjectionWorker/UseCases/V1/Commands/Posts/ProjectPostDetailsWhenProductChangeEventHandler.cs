@@ -144,6 +144,13 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             Color = t.Color
         }).ToList();
 
+        var reactionProjections = request.Reactions.Select(r => new ReactionProjection
+        {
+            DocumentId = r.Id,
+            Name = r.Name,
+            Icon = r.Icon,
+        }).ToList();
+
         AuthorProjection author = await _authorMongoRepository.FindOneAsync(a => a.UserId == request.UserId.ToString());
 
         var post = new PostProjection
@@ -160,7 +167,8 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             ReadingTimeMinutes = 0,
             CommentCount = 0,
             LikeCount = 0,
-            FeedScore = 0,
+            FeedScore = 0,       
+            Reactions = reactionProjections
         };
 
         await _postMongoRepository.InsertOneAsync(post);

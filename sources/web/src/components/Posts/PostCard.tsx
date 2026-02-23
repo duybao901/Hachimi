@@ -115,7 +115,7 @@ function PostCard({ post }: PostCardProps) {
                     </div> : <div className="text-[13px] text-(--link-color)">
                       Add comment
                     </div>}
-                    
+
                   </Link>
                 </div>
                 <div className="flex justify-between items-center">

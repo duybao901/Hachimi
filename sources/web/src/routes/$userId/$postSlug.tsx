@@ -8,6 +8,7 @@ import { useParams } from '@tanstack/react-router'
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { BookmarkIcon, HeartPlus as HeartPlusIcon, MessageCircleIcon, ShareIcon } from 'lucide-react'
+import { ReactionSelector } from '@/components/Posts/ReactionSelector';
 
 export const Route = createFileRoute('/$userId/$postSlug')({
   component: RouteComponent,
@@ -73,10 +74,15 @@ function RouteComponent() {
                 <div className="hidden lg:block w-16">
                   <div className="sticky top-24 flex flex-col items-center gap-6 text-gray-500">
 
-                    <button className="flex flex-col items-center hover:text-red-500 transition cursor-pointer">
-                      <HeartPlusIcon className="w-6 h-6" />
-                      <span className="text-sm mt-1">12</span>
-                    </button>
+                    <ReactionSelector
+                      postId={post.id}
+                      side="right"
+                      showCount={false}
+                      initialReactions={[
+                        { icon: "https://assets.dev.to/assets/fire-f60e7a582391810302117f987b22a8ef04a2fe0df7e3258a5f49332df1cec71e.svg" }
+                      ]}
+                    />
+                    <span className="text-sm -mt-4">12</span>
 
                     <button className="flex flex-col items-center hover:text-blue-500 transition cursor-pointer">
                       <MessageCircleIcon className="w-6 h-6" />
@@ -112,33 +118,11 @@ function RouteComponent() {
                           {post.postAuthor.name}
                         </div>
                         <div className="text-sm text-gray-500">
-                          Posted on 
+                          Posted on
                         </div>
                       </div>
                     </div>
 
-                    <div className='flex gap-2'>
-                      <div>
-                        <span>💖</span>
-                        <span>35</span>
-                      </div>
-                      <div>
-                        <span>💖</span>
-                        <span>35</span>
-                      </div>
-                      <div>
-                        <span>💖</span>
-                        <span>35</span>
-                      </div>
-                      <div>
-                        <span>💖</span>
-                        <span>35</span>
-                      </div>
-                      <div>
-                        <span>💖</span>
-                        <span>35</span>
-                      </div>
-                    </div>
 
                     {/* Title */}
                     <h1 className="text-4xl font-extrabold mb-6">

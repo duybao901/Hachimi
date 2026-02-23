@@ -1,6 +1,7 @@
 ﻿using Command.Domain.Abstractions.Aggregates;
 using Command.Domain.Abstractions.Entities;
 using Contract.Enumerations;
+using Contract.Services.V1.Reaction.ViewModels;
 
 namespace Command.Domain.Entities;
 public class Posts : AggregateRoot<Guid>, IAuditTableEntity
@@ -54,7 +55,7 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
         return post;
     }
 
-    public static Posts PublishPost(Guid id, string title, string slug, string content, string CoverImageUrl, Guid UserId, List<Guid> tags)
+    public static Posts PublishPost(Guid id, string title, string slug, string content, string CoverImageUrl, Guid UserId, List<Guid> tags, List<ReactionViewModel> reactions)
     {
         var post = new Posts(id, title, slug, content, UserId)
         {
@@ -64,7 +65,7 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
 
         post.SetTags(tags);
 
-        post.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostPublishedEvent(Guid.NewGuid(), id, title, slug, content, CoverImageUrl, UserId, tags));
+        post.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostPublishedEvent(Guid.NewGuid(), id, title, slug, content, CoverImageUrl, UserId, tags, reactions));
 
         return post;
     }
