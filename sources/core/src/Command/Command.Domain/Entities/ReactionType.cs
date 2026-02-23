@@ -12,9 +12,9 @@ public sealed class ReactionType: DomainEntity<Guid>
 
     private ReactionType() { }
 
-    public ReactionType(string name, string icon)
+    public ReactionType(Guid id, string name, string icon)
     {
-        Id = Guid.NewGuid();
+        Id = id;
         Name = name;
         Icon = icon;
     }

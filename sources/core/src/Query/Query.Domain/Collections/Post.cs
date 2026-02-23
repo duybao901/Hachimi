@@ -12,21 +12,16 @@ public class Post : Document
     public string Content { get; set; } = default!;
     public string Excerpt { get; set; } = default!;
     public string CoverImageUrl { get; set; }
-
     public PostStatus PostStatus { get; set; }
-    //public PostVisibility Visibility { get; set; }
-
+    public DateTimeOffset? PublishedAt { get; set; }
     public int ViewCount { get; set; }
     public int CommentCount { get; set; }
     public int LikeCount { get; set; }
-
     public double FeedScore { get; set; }
-
-    public DateTimeOffset? PublishedAt { get; set; }
     public int ReadingTimeMinutes { get; set; }
     public bool IsDeleted { get; set; }
-
     public required Author Author { get; set; }
     public List<Guid> AuthorFollowers { get; set; } = new();
     public List<Tag> Tags { get; set; } = new();
+    public List<Reaction> Reactions { get; set; } = new();
 }

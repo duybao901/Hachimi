@@ -4,6 +4,7 @@ using Query.API.DependencyInjection.Extentions;
 using Query.API.Middleware;
 using Query.Application.DependencyInjection.Extensions;
 using Query.Infrastructure.DependencyInjection.Extensions;
+using Query.Persistence;
 using Query.Persistence.DependencyInjection.Extensions;
 using Serilog;
 
@@ -56,6 +57,10 @@ builder.Services.AddControllers(options =>
     .AddApplicationPart(Query.Presentation.AssemblyReference.Assembly);
 
 var app = builder.Build();
+
+// Data Seeder
+await app.Services.SeedDatabaseAsync();
+
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
