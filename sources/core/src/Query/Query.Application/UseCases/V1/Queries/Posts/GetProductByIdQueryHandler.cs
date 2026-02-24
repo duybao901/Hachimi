@@ -29,11 +29,11 @@ public sealed class GetProductByIdQueryHandler : IQueryHandler<Contract.Services
             post.Title,
             post.Content, 
             post.Slug,
-            new Contract.Services.V1.Posts.ViewModels.PostAuthorViewModel()
-            {
-                Name = post.Author.Name,
-                Email = post.Author.Email,
-            },
+            PostAuthor: new PostAuthorViewModel()
+                    {
+                        Name = post.Author.Name,
+                        Email = post.Author.Email,
+                    },
             PostTags: post.Tags
                     .Select(t => new PostTagViewModel
                     {
@@ -42,7 +42,16 @@ public sealed class GetProductByIdQueryHandler : IQueryHandler<Contract.Services
                         Description = t.Description,
                         Color = t.Color
                     })
-                    .ToList()
+                    .ToList(),
+            Reactions: post.Reactions.Select(r => new Contract.Services.V1.Reaction.ViewModels.ReactionViewModel
+                    {
+                        Id = r.DocumentId,
+                        Name = r.Name,
+                        Icon = r.Icon,
+                        Url = r.Url,
+                        Count = r.Count,
+                        IsReactionByCurrentUser = r.IsReactionByCurrentUser
+                    }).ToList()
             );
 
         return Result.Success(result);

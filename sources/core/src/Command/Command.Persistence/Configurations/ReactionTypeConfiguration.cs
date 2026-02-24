@@ -14,27 +14,32 @@ internal sealed class ReactionTypeConfiguration : IEntityTypeConfiguration<React
                 new ReactionType(
                     Guid.Parse("72B5C96B-4859-40E7-B87F-210440E629FD"),
                     "Like",
-                    "heart"),
+                    "heart",
+                    "/icons/reactions/like.svg"),
 
                 new ReactionType(
                     Guid.Parse("EA58565B-1456-4169-BB47-37102C635710"),
                     "Unicorn",
-                    "unicorn"),
+                    "unicorn",
+                    "/icons/reactions/unicorn.svg"),
 
                 new ReactionType(
                     Guid.Parse("904D8BED-C0B6-4D28-90BB-B539D3074BC7"),
                     "ExplodingHead",
-                    "exploding"),
+                    "exploding",
+                    "/icons/reactions/exploding-head.svg"),
 
                 new ReactionType(
                     Guid.Parse("97DE8548-8026-4A6A-A1C7-C4B25A4E6E2E"),
                     "RaisedHands",
-                    "hands"),
+                    "hands",
+                    "/icons/reactions/raised-hands.svg"),
 
                 new ReactionType(
                     Guid.Parse("31574891-5B59-49BD-A697-ECA5B6B5DC94"),
                     "Fire",
-                    "fire")
+                    "fire", 
+                    "/icons/reactions/fire.svg")
             );
     }
 }

@@ -2,6 +2,7 @@
 using Contract.Abstractions.Shared;
 using Contract.Services.V1.Posts;
 using Contract.Services.V1.Posts.ViewModels;
+using Contract.Services.V1.Reaction.ViewModels;
 using Query.Domain.Abstractions.Repositories;
 using Query.Domain.Collections;
 using Query.Domain.Exceptions;
@@ -26,10 +27,11 @@ public sealed class GetPostDetailBySlug : IQueryHandler<Contract.Services.V1.Pos
             post.Title,
             post.Slug,
             post.Content.ToString(),
-            new PostAuthorViewModel()
+            PostAuthor: new PostAuthorViewModel()
             {
                 Name = post.Author.Name,
                 Email = post.Author.Email,
+                AvatarUrl = post.Author.AvatarUrl
             },
             PostTags: post.Tags
                     .Select(t => new PostTagViewModel
@@ -38,6 +40,17 @@ public sealed class GetPostDetailBySlug : IQueryHandler<Contract.Services.V1.Pos
                         Name = t.Name,
                         Description = t.Description,
                         Color = t.Color
+                    })
+                    .ToList(),
+            Reactions: post.Reactions
+                    .Select(r => new ReactionViewModel
+                    {
+                        Id = r.DocumentId,
+                        Name = r.Name,
+                        Icon = r.Icon,
+                        Url = r.Url,
+                        Count = r.Count,
+                        IsReactionByCurrentUser = r.IsReactionByCurrentUser
                     })
                     .ToList()
         ));

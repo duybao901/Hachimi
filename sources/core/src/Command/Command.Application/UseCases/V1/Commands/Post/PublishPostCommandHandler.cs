@@ -40,13 +40,14 @@ public sealed class PublishPostCommandHandler : ICommandHandler<Contract.Service
         var slug = SlugGenerator.Generate(request.Title);
 
         var postId = Guid.NewGuid();
-        var reactionTypes = await _reactionTypeRepository.FindAll().Take(5).ToListAsync(cancellationToken);
+        var reactionTypes = await _reactionTypeRepository.FindAll().ToListAsync(cancellationToken);
 
         var reactions = reactionTypes.Select(r => new ReactionViewModel
         {
             Id = r.Id,
             Name = r.Name,
-            Icon = r.Icon
+            Icon = r.Icon,
+            Url = r.Url
         }).ToList();
 
         var post = Posts.PublishPost(postId, request.Title, slug, request.Content, request.CoverImageUrl, userId, request.TagIds, reactions);

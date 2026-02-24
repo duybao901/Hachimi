@@ -67,7 +67,16 @@ public sealed class GetPostsQueryHandler : IQueryHandler<Contract.Services.V1.Po
                         Description = t.Description,
                         Color = t.Color
                     })
-                    .ToList()
+                    .ToList(),
+                Reactions: p.Reactions.Select(r => new Contract.Services.V1.Reaction.ViewModels.ReactionViewModel
+                    {
+                        Id = r.DocumentId,
+                        Name = r.Name,
+                        Icon = r.Icon,
+                        Url = r.Url,
+                        Count = r.Count,
+                        IsReactionByCurrentUser = r.IsReactionByCurrentUser
+                }).ToList()
             ));
 
         return Result.Success(result);

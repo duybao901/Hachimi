@@ -47,6 +47,15 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
         }).ToList();
 
         AuthorProjection author = await _authorMongoRepository.FindOneAsync(a => a.UserId == request.UserId.ToString());
+        var reactionProjections = request.Reactions.Select(r => new ReactionProjection
+        {
+            DocumentId = r.Id,
+            Name = r.Name,
+            Icon = r.Icon,
+            Url = r.Url,
+            Count = 0,
+            IsReactionByCurrentUser = false
+        }).ToList();
 
         var post = new PostProjection
         {
@@ -63,6 +72,7 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             CommentCount = 0,
             LikeCount = 0,
             FeedScore = 0,
+            Reactions = reactionProjections
         };
 
         await _postMongoRepository.InsertOneAsync(post);
@@ -149,6 +159,9 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             DocumentId = r.Id,
             Name = r.Name,
             Icon = r.Icon,
+            Url = r.Url,
+            Count = 0,
+            IsReactionByCurrentUser = false
         }).ToList();
 
         AuthorProjection author = await _authorMongoRepository.FindOneAsync(a => a.UserId == request.UserId.ToString());

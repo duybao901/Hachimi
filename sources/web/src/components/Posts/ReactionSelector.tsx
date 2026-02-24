@@ -103,7 +103,9 @@ export function ReactionSelector({
                                     // Logic to send reaction would go here (Command side)
                                 }}
                             >
-                                <img src={reaction.icon} width="24" height="24" alt={reaction.name} />
+                                {/* {"query-api"/} */}
+                                <img src={reaction.url} width="24" height="24" alt={reaction.name} />
+                                <p>{reaction.count}</p>
                             </button>
                         ))
                     ) : (

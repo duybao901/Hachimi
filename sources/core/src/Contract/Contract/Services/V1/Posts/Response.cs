@@ -1,10 +1,11 @@
 ﻿using Contract.Enumerations;
 using Contract.Services.V1.Posts.ViewModels;
+using Contract.Services.V1.Reaction.ViewModels;
 
 namespace Contract.Services.V1.Posts;
 public static class Response
 {
-    public record PostResponse(Guid Id, string Title, string Slug, string Content, PostAuthorViewModel PostAuthor, ICollection<PostTagViewModel> PostTags);
+    public record PostResponse(Guid Id, string Title, string Slug, string Content, PostAuthorViewModel PostAuthor, ICollection<PostTagViewModel> PostTags, ICollection<ReactionViewModel> Reactions);
     public record PostListResponse(Guid Id, string Title, string Slug, string Content, PostAuthorViewModel PostAuthor);
     public record PostDraftReponse(Guid? Id, string Title, string Content, string UserId, ICollection<Guid> TagIds, PostStatus PostStatus);
 }

@@ -61,7 +61,6 @@ var app = builder.Build();
 // Data Seeder
 await app.Services.SeedDatabaseAsync();
 
-
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
@@ -69,6 +68,8 @@ if (app.Environment.IsDevelopment())
 {
     app.ConfigureSwaggerApi();
 }
+
+app.UseStaticFiles();
 
 //app.UseHttpsRedirection();
 app.MapControllers();

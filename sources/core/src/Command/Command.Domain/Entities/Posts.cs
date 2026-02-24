@@ -44,13 +44,13 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
         FeedScore = 0;
     }
 
-    public static Posts CreatePost(Guid id, string title, string slug, string content, string CoverImageUrl, Guid UserId, List<Guid> tags)
+    public static Posts CreatePost(Guid id, string title, string slug, string content, string CoverImageUrl, Guid UserId, List<Guid> tags, List<ReactionViewModel> reactions)
     {
         var post = new Posts(id, title, slug, content, UserId);
 
         post.SetTags(tags);
 
-        post.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostCreatedEvent(Guid.NewGuid(), id, title, slug, content, CoverImageUrl, UserId, tags));
+        post.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostCreatedEvent(Guid.NewGuid(), id, title, slug, content, CoverImageUrl, UserId, tags, reactions));
 
         return post;
     }
@@ -70,10 +70,10 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
         return post;
     }
 
-    public static Posts CreateDraftPost(Guid UserId)
+    public static Posts CreateDraftPost(Guid UserId, List<ReactionViewModel> reactions)
     {
         var postDraft = new Posts(Guid.NewGuid(), "", "", "", UserId);
-        postDraft.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostCreatedEvent(Guid.NewGuid(), postDraft.Id, postDraft.Title, postDraft.Slug, postDraft.Content, postDraft.CoverImageUrl, UserId, []));
+        postDraft.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostCreatedEvent(Guid.NewGuid(), postDraft.Id, postDraft.Title, postDraft.Slug, postDraft.Content, postDraft.CoverImageUrl, UserId, [], reactions));
 
         return postDraft;
     }

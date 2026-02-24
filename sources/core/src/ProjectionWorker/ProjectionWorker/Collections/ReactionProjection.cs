@@ -1,14 +1,10 @@
-﻿using ProjectionWorker.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ProjectionWorker.Collections;
-public class ReactionProjection : Document
+﻿namespace ProjectionWorker.Collections;
+public class ReactionProjection
 {
+    public Guid DocumentId { get; set; }
     public string Name { get; set; }
     public string Icon { get; set; }
-
+    public string Url { get; set; }
+    public int Count { get; set; }
+    public bool IsReactionByCurrentUser { get; set; }
 }

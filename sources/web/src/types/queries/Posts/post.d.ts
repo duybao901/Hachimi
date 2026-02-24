@@ -1,4 +1,5 @@
 import type { Author } from "../../author";
+import type { Reaction } from "../Reactions/reaction";
 
 export interface Tag {
     id: string;
@@ -37,7 +38,7 @@ export interface PostView {
     modifiedOnUtc?: string;
     isFirstPost: boolean;
     comments: PostComment[] | []
-    likes?: any[];
+    postReactions: Reaction[] | []    
 }
 
 

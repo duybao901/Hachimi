@@ -9,4 +9,9 @@ public class Reaction : Document
     public string Name { get; set; } = default!;
 
     public string Icon { get; set; } = default!;
+
+    public string Url { get; set; } = default!;
+
+    public int Count { get; set; }
+    public bool IsReactionByCurrentUser { get; set; }
 }
