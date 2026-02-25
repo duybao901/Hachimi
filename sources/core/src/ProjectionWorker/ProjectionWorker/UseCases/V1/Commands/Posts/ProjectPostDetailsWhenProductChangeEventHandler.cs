@@ -34,7 +34,7 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
     }
 
     public async Task<Result> Handle(DomainEvent.PostCreatedEvent request, CancellationToken cancellationToken)
-    {
+     {
         var tagIds = request.TagIds;
         var tags = await _tagEfRepository.FindAll(t => tagIds.Contains(t.Id)).ToListAsync(cancellationToken: cancellationToken);
 

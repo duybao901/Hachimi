@@ -1,32 +1,26 @@
 import { useState } from "react"
-import { useQuery } from "@tanstack/react-query"
-import { GetPublicReactions } from "@/services/reaction.service"
 import { cn } from "@/lib/utils"
 import { Button } from "../ui/button"
+import type { Reaction } from "@/types/queries/Reactions/reaction"
 
 interface ReactionSelectorProps {
     postId: string
-    initialReactionCount?: number
-    initialReactions?: { icon: string }[]
+    reactions: Reaction[]
     side?: "top" | "right" | "bottom" | "left"
     showCount?: boolean
+    onReact?: (reactionTypeId: string) => void
 }
 
 export function ReactionSelector({
-    initialReactionCount = 0,
-    initialReactions = [],
+    reactions = [],
     side = "top",
-    showCount = true
+    showCount = true,
+    onReact
 }: ReactionSelectorProps) {
     const [isHovered, setIsHovered] = useState(false)
 
-    const { data: reactionsResponse } = useQuery({
-        queryKey: ["public-reactions"],
-        queryFn: () => GetPublicReactions(),
-        staleTime: 1000 * 60 * 60, // 1 hour
-    })
-
-    const availableReactions = reactionsResponse?.data?.value || []
+    const totalReactionCount = reactions.reduce((acc, curr) => acc + curr.count, 0)
+    const hasAnyReaction = reactions.some(r => r.isReactionByCurrentUser)
 
     const popoverVariants = {
         top: "bottom-full left-0 pb-2 origin-bottom-left",
@@ -53,32 +47,36 @@ export function ReactionSelector({
                 variant="ghost"
                 className={cn(
                     "flex items-center px-2 py-1 h-auto rounded-sm hover:bg-gray-100",
-                    !showCount && "flex-col gap-1 p-2 h-12 w-12"
+                    !showCount && "flex-col gap-1 p-2 h-12 w-12",
+                    hasAnyReaction && "bg-gray-50 text-primary" // Highlight if user has reacted
                 )}
             >
                 <div className="flex">
-                    {initialReactions.length > 0 ? (
-                        initialReactions.map((r, i) => (
-                            <div
-                                key={i}
-                                className={cn(
-                                    "rounded-full border-2 border-white bg-gray-100 p-1 flex items-center justify-center",
-                                    i > 0 && "-ml-2.5",
-                                    !showCount && i > 0 && "hidden" // Only show first icon in tiny sidebar if count is hidden
-                                )}
-                            >
-                                <img src={r.icon} width={!showCount ? "24" : "18"} height={!showCount ? "24" : "18"} alt="Reaction" />
-                            </div>
-                        ))
+                    {reactions.length > 0 && reactions.some(r => r.count > 0 || r.isReactionByCurrentUser) ? (
+                        reactions
+                            .filter(r => r.count > 0 || r.isReactionByCurrentUser)
+                            .slice(0, 3)
+                            .map((r, i) => (
+                                <div
+                                    key={r.id}
+                                    className={cn(
+                                        "rounded-full border-2 border-white bg-gray-100 p-1 flex items-center justify-center transition-transform",
+                                        i > 0 && "-ml-2.5",
+                                        !showCount && i > 0 && "hidden"
+                                    )}
+                                >
+                                    <img src={r.url} width={!showCount ? "24" : "18"} height={!showCount ? "24" : "18"} alt={r.name} />
+                                </div>
+                            ))
                     ) : (
                         <div className="rounded-full border-2 border-white bg-gray-100 p-1 flex items-center justify-center">
-                            <img src="https://assets.dev.to/assets/fire-f60e7a582391810302117f987b22a8ef04a2fe0df7e3258a5f49332df1cec71e.svg" width={!showCount ? "24" : "18"} height={!showCount ? "24" : "18"} alt="Fire" />
+                            <img src={reactions[0]?.url || "https://assets.dev.to/assets/fire-f60e7a582391810302117f987b22a8ef04a2fe0df7e3258a5f49332df1cec71e.svg"} width={!showCount ? "24" : "18"} height={!showCount ? "24" : "18"} alt="Default" />
                         </div>
                     )}
                 </div>
                 {showCount && (
-                    <div className="ml-2 text-[13px] text-(--link-color)">
-                        {initialReactionCount} <span className="hidden sm:inline">Reactions</span>
+                    <div className="ml-2 text-[13px] text-inherit">
+                        {totalReactionCount} <span className="hidden sm:inline">Reactions</span>
                     </div>
                 )}
             </Button>
@@ -92,24 +90,23 @@ export function ReactionSelector({
                 )}
             >
                 <div className="p-1.5 bg-white border border-gray-200 rounded-lg shadow-xl flex gap-1">
-                    {availableReactions.length > 0 ? (
-                        availableReactions.map((reaction) => (
+                    {reactions.length > 0 ? (
+                        reactions.map((reaction) => (
                             <button
                                 key={reaction.id}
-                                className="p-2 hover:bg-gray-100 rounded-md transition-transform hover:scale-125"
+                                className={cn(
+                                    "p-2 hover:bg-gray-100 rounded-md transition-all hover:scale-110 flex flex-col items-center gap-1 group",
+                                    reaction.isReactionByCurrentUser && "bg-primary/10" // Highlight specific reaction
+                                )}
                                 title={reaction.name}
-                                onClick={() => {
-                                    console.log(`Reacted with ${reaction.name} to post`)
-                                    // Logic to send reaction would go here (Command side)
-                                }}
+                                onClick={() => onReact?.(reaction.id)}
                             >
-                                {/* {"query-api"/} */}
-                                <img src={reaction.url} width="24" height="24" alt={reaction.name} />
-                                <p>{reaction.count}</p>
+                                <img src={reaction.url} width="24" height="24" alt={reaction.name} className="transition-transform group-hover:scale-125" />
+                                <span className="text-[10px] text-gray-500">{reaction.count}</span>
                             </button>
                         ))
                     ) : (
-                        <div className="px-3 py-1 text-xs text-gray-500">Loading...</div>
+                        <div className="px-3 py-1 text-xs text-gray-500">No reactions available</div>
                     )}
                 </div>
             </div>

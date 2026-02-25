@@ -25,15 +25,18 @@ public sealed class GetProductByIdQueryHandler : IQueryHandler<Contract.Services
             ?? throw new PostException.PostNotFoundException(request.PostId);
 
         var result = new Response.PostResponse(
-            post.DocumentId, 
+            post.DocumentId,
             post.Title,
-            post.Content, 
             post.Slug,
-            PostAuthor: new PostAuthorViewModel()
-                    {
-                        Name = post.Author.Name,
-                        Email = post.Author.Email,
-                    },
+            post.Content.ToString(),
+            new PostAuthorViewModel()
+            {
+                Id = post.Author.DocumentId,
+                Name = post.Author.Name,
+                UserName = post.Author.UserName,
+                Email = post.Author.Email,
+                AvatarUrl = post.Author.AvatarUrl
+            },
             PostTags: post.Tags
                     .Select(t => new PostTagViewModel
                     {

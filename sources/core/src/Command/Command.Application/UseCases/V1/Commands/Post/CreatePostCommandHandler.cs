@@ -5,6 +5,7 @@ using Command.Domain.Exceptions;
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 using Contract.Services.V1.Reaction.ViewModels;
+using Contract.Services.V1.Reaction.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace Command.Application.UseCases.V1.Commands.Post;
@@ -35,6 +36,7 @@ public sealed class CreatePostCommandHandler : ICommandHandler<Contract.Services
         }
 
         var tags = await _tagRepositoryBase.FindAll(tag => request.TagIds.Contains(tag.Id)).ToListAsync(cancellationToken);
+        var reactionsAsync = await _reactionTypeRepository.FindAll().ToListAsync();
 
         var slug = SlugGenerator.Generate(request.Title);
         var reactionTypes = await _reactionTypeRepository.FindAll().ToListAsync(cancellationToken);

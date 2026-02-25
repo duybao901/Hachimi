@@ -5,6 +5,7 @@ using Command.Domain.Exceptions;
 using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 using Contract.Services.V1.Reaction.ViewModels;
+using Contract.Services.V1.Reaction.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace Command.Application.UseCases.V1.Commands.Post;
@@ -29,12 +30,10 @@ public sealed class SaveDraftCommandHandler : ICommandHandler<Contract.Services.
     public async Task<Result> Handle(Contract.Services.V1.Posts.Command.SaveDraftPostCommand request, CancellationToken cancellationToken)
     {
         var userId = _currentUser.UserId;
-        if (request.TagIds.Count() < 4)
+        if (request.TagIds != null && request.TagIds.Count() < 4)
         {
             throw new PostException.MinimumTagsRequiredException(4);
         }
-
-        var tags = await _tagRepository.FindAll(tag => request.TagIds.Contains(tag.Id)).ToListAsync(cancellationToken);
 
         var slug = SlugGenerator.Generate(request.Title);
         var reactionTypes = await _reactionTypeRepository.FindAll().ToListAsync(cancellationToken);
@@ -47,7 +46,6 @@ public sealed class SaveDraftCommandHandler : ICommandHandler<Contract.Services.
             Url = r.Url
         }).ToList();
 
-        var isPostEditing = true;
         var post = Posts.CreatePost(Guid.NewGuid(), request.Title, slug, request.Content, request.CoverImageUrl, userId, request.TagIds, reactions);
         _postRepository.Add(post);
 

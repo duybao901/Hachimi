@@ -31,10 +31,10 @@ public sealed class PublishPostCommandHandler : ICommandHandler<Contract.Service
     public async Task<Result> Handle(Contract.Services.V1.Posts.Command.PublishPostCommand request, CancellationToken cancellationToken)
     {
         var userId = _currentUser.UserId;
-        if (request.TagIds.Count() < 4)
-        {
-            throw new PostException.MinimumTagsRequiredException(4);
-        }
+        //if (request.TagIds.Count() < 4)
+        //{
+        //    throw new PostException.MinimumTagsRequiredException(4);
+        //}
 
         var tags = await _tagRepositoryBase.FindAll(tag => request.TagIds.Contains(tag.Id)).ToListAsync(cancellationToken);
         var slug = SlugGenerator.Generate(request.Title);

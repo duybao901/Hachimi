@@ -44,3 +44,9 @@ export interface GetOrCreateDraftPostResponse {
     coverImageUrl: string
     postStatus: PostStatus
 }
+
+export interface AddReactionCommand {
+    postId: string;
+    userId: string;
+    reactionTypeId: string;
+}

@@ -4,4 +4,5 @@ export interface Reaction {
   icon: string;
   url: string;
   count: number;
+  isReactionByCurrentUser: boolean;
 }

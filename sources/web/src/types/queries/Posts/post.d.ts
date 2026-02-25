@@ -17,6 +17,13 @@ export interface PostComment {
     replies?: PostComment[];
 }
 
+export interface PostReaction {
+    id: string;
+    name: string;
+    icon: string;
+    count: number;
+}
+
 export interface PostView {
     id: string;
     title: string;
@@ -38,7 +45,7 @@ export interface PostView {
     modifiedOnUtc?: string;
     isFirstPost: boolean;
     comments: PostComment[] | []
-    postReactions: Reaction[] | []    
+    reactions: Reaction[];
 }
 
 

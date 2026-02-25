@@ -6,6 +6,7 @@ import {
   Bookmark as BookmarkIcon,
   MessageCircle as MessageCircleIcon,
 } from "lucide-react"
+import { ReactionSelector } from "./ReactionSelector"
 
 type PostCardProps = {
   post: PostView
@@ -71,40 +72,10 @@ function PostCard({ post }: PostCardProps) {
               </div>
               <div className="mt-2 w-full flex justify-between items-center -ml-2">
                 <div className="flex justify-between items-center">
-                  <Link
-                    to={"/"}
-                    className="mr-2 flex items-center px-2 py-1 rounded-sm hover:bg-gray-100"
-                  >
-                    <div className="flex">
-                      <div className="-mr-2.5 rounded-full border-2 border-white bg-gray-100 p-1">
-                        <img
-                          src="https://assets.dev.to/assets/fire-f60e7a582391810302117f987b22a8ef04a2fe0df7e3258a5f49332df1cec71e.svg"
-                          width="18"
-                          height="18"
-                          alt="Fire"
-                        />
-                      </div>
-                      <div className="-mr-2.5 rounded-full border-2 border-white bg-gray-100 p-1">
-                        <img
-                          src="https://assets.dev.to/assets/exploding-head-daceb38d627e6ae9b730f36a1e390fca556a4289d5a41abb2c35068ad3e2c4b5.svg"
-                          width="18"
-                          height="18"
-                          alt="Exploding Head"
-                        />
-                      </div>
-                      <div className="-mr-2.5 rounded-full border-2 border-white bg-gray-100 p-1">
-                        <img
-                          src="https://assets.dev.to/assets/exploding-head-daceb38d627e6ae9b730f36a1e390fca556a4289d5a41abb2c35068ad3e2c4b5.svg"
-                          width="18"
-                          height="18"
-                          alt="Raised Hands"
-                        />
-                      </div>
-                    </div>
-                    <div className="ml-4 text-[13px] text-(--link-color)">
-                      25 Reactions
-                    </div>
-                  </Link>
+                  <ReactionSelector
+                    postId={post.id}
+                    reactions={post.reactions}
+                  />
                   <Link
                     to={"/"}
                     className="flex justify-between items-center px-2 py-1 rounded-sm hover:bg-gray-100"

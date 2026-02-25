@@ -29,7 +29,9 @@ public sealed class GetPostDetailBySlug : IQueryHandler<Contract.Services.V1.Pos
             post.Content.ToString(),
             PostAuthor: new PostAuthorViewModel()
             {
+                Id = post.Author.DocumentId,
                 Name = post.Author.Name,
+                UserName = post.Author.UserName,
                 Email = post.Author.Email,
                 AvatarUrl = post.Author.AvatarUrl
             },

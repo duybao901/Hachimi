@@ -1,5 +1,5 @@
 import Header from '@/components/Layout/Header/Header'
-import { GetPostBySlug } from '@/services/post.service';
+import { GetPostBySlug, ReactToPost } from '@/services/post.service';
 import type { ValidationErrorResponse } from '@/types/api';
 import type { PostView } from '@/types/queries/Posts/post';
 import { extractValidationMessages } from '@/utils/extractValidationMessages';
@@ -78,11 +78,44 @@ function RouteComponent() {
                       postId={post.id}
                       side="right"
                       showCount={false}
-                      initialReactions={[
-                        { icon: "https://assets.dev.to/assets/fire-f60e7a582391810302117f987b22a8ef04a2fe0df7e3258a5f49332df1cec71e.svg" }
-                      ]}
+                      reactions={post.reactions}
+                      onReact={async (reactionTypeId) => {
+                        try {
+                          // Optimistic Update
+                          const updatedReactions = post.reactions.map(r => {
+                            if (r.id === reactionTypeId) {
+                              const wasAlreadyCurrent = r.isReactionByCurrentUser;
+                              return {
+                                ...r,
+                                count: wasAlreadyCurrent ? r.count : r.count + 1,
+                                isReactionByCurrentUser: true
+                              };
+                            }
+                            if (r.isReactionByCurrentUser) {
+                              return {
+                                ...r,
+                                count: Math.max(0, r.count - 1),
+                                isReactionByCurrentUser: false
+                              };
+                            }
+                            return r;
+                          });
+
+                          setPost(prev => prev ? { ...prev, reactions: updatedReactions } : prev)
+
+                          await ReactToPost(post.id, reactionTypeId)
+                          toast.success("Reaction updated!")
+                        } catch (error) {
+                          toast.error("Failed to add reaction")
+                          // Rollback (simplified)
+                          const res = await GetPostBySlug(params.postSlug);
+                          if (res.data?.value) setPost(res.data.value);
+                        }
+                      }}
                     />
-                    <span className="text-sm -mt-4">12</span>
+                    <span className="text-sm -mt-4">
+                      {post.reactions.reduce((acc, curr) => acc + curr.count, 0)}
+                    </span>
 
                     <button className="flex flex-col items-center hover:text-blue-500 transition cursor-pointer">
                       <MessageCircleIcon className="w-6 h-6" />

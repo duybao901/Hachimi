@@ -31,3 +31,7 @@ export async function GetPosts(pageIndex: number, pageSize: number, feed: string
 export async function GetPostBySlug(postSlug: string) {
     return await queryPublicApi.get<ApiResponse<PostView>>(`/posts/public/${postSlug}`);
 }
+
+export async function ReactToPost(postId: string, reactionTypeId: string) {
+    return await commandApiV1.post<ApiResponse<string>>(`/posts/react`, { postId, reactionTypeId });
+}
