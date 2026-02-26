@@ -38,6 +38,7 @@ public sealed class AddReactionCommandHandler : ICommandHandler<Contract.Service
         if (existingReaction != null)
         {
             _postReactionRepositoryBase.Remove(existingReaction);
+            post.RemoveReaction(request.UserId, reactionType.Id);
 
             return Result.Success("Reaction removed");
         }

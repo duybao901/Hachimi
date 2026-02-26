@@ -6,6 +6,7 @@ using Contract.Services.V1.Posts;
 using Contract.Services.V1.Posts.ViewModels;
 using Query.Domain.Abstractions.Repositories;
 using Query.Domain.Collections;
+using Query.Application.Abstraction;
 
 
 
@@ -14,11 +15,13 @@ public sealed class GetPostsQueryHandler : IQueryHandler<Contract.Services.V1.Po
 {
     private readonly IMongoRepository<Post> _postRepository;
     private readonly IMapper _mapper;
+    private readonly ICurrentUser _currentUser;
 
-    public GetPostsQueryHandler(IMongoRepository<Post> postRepository, IMapper mapper)
+    public GetPostsQueryHandler(IMongoRepository<Post> postRepository, IMapper mapper, ICurrentUser currentUser)
     {
         _postRepository = postRepository;
         _mapper = mapper;
+        _currentUser = currentUser;
     }
 
     public async Task<Result<PageResult<Response.PostResponse>>> Handle(Contract.Services.V1.Posts.Query.GetPostsQuery request, CancellationToken cancellationToken)
@@ -75,7 +78,7 @@ public sealed class GetPostsQueryHandler : IQueryHandler<Contract.Services.V1.Po
                         Icon = r.Icon,
                         Url = r.Url,
                         Count = r.Count,
-                        IsReactionByCurrentUser = r.IsReactionByCurrentUser
+                        IsReactionByCurrentUser = !string.IsNullOrEmpty(_currentUser?.UserId) && r.UserIds.Contains(_currentUser.UserId)
                 }).ToList()
             ));
 

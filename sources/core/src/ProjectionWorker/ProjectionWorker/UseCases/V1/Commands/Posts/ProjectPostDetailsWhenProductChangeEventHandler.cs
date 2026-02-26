@@ -207,6 +207,7 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
                   && p.Reactions.Any(r => r.DocumentId == request.ReactionTypeId),
                 Builders<PostProjection>.Update
                     .Inc("Reactions.$.Count", 1)
+                    .AddToSet("Reactions.$.UserIds", request.UserId.ToString())
             );
         }
         else
@@ -216,6 +217,7 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
                   && p.Reactions.Any(r => r.DocumentId == request.ReactionTypeId),
                 Builders<PostProjection>.Update
                     .Inc("Reactions.$.Count", -1)
+                    .Pull("Reactions.$.UserIds", request.UserId.ToString())
             );
         }
 
