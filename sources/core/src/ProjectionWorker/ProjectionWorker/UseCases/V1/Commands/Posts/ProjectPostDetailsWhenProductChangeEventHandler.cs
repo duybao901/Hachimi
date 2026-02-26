@@ -1,6 +1,7 @@
 ﻿using Contract.Abstractions.Message;
 using Contract.Abstractions.Shared;
 using Contract.Services.V1.Posts;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using ProjectionWorker.Abstractions.Repositories;
@@ -14,7 +15,8 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
     ICommandHandler<DomainEvent.PostUpdatedTagEvent>,
     ICommandHandler<DomainEvent.PostDeletedEvent>,
     ICommandHandler<DomainEvent.PostDraftPublishedEvent>,
-    ICommandHandler<DomainEvent.PostPublishedEvent>
+    ICommandHandler<DomainEvent.PostPublishedEvent>,
+    ICommandHandler<DomainEvent.PostReactionToggledEvent>
 {
     private readonly IMongoRepository<PostProjection> _postMongoRepository;
     private readonly IMongoRepository<AuthorProjection> _authorMongoRepository;
@@ -185,6 +187,37 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
         };
 
         await _postMongoRepository.InsertOneAsync(post);
+
+        return Result.Success();
+    }
+
+    public async Task<Result> Handle(DomainEvent.PostReactionToggledEvent request, CancellationToken cancellationToken)
+    {
+        var post = await _postMongoRepository.FindOneAsync(p => p.DocumentId == request.Id);
+        if (post is null)
+        {
+            // In case the post projection does not exist, we just skip updating tags
+            return Result.Success();
+        }
+
+        if (request.IsAdded)
+        {
+            await _postMongoRepository.UpdateOneAsync(
+                p => p.DocumentId == request.Id
+                  && p.Reactions.Any(r => r.DocumentId == request.ReactionTypeId),
+                Builders<PostProjection>.Update
+                    .Inc("Reactions.$.Count", 1)
+            );
+        }
+        else
+        {
+            await _postMongoRepository.UpdateOneAsync(
+                p => p.DocumentId == request.Id
+                  && p.Reactions.Any(r => r.DocumentId == request.ReactionTypeId),
+                Builders<PostProjection>.Update
+                    .Inc("Reactions.$.Count", -1)
+            );
+        }
 
         return Result.Success();
     }

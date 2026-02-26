@@ -33,8 +33,7 @@ internal class PostReactionConfiguration : IEntityTypeConfiguration<PostReaction
                .HasForeignKey(x => x.PostId)
                .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasIndex(x => new { x.PostId, x.UserId })
-               .IsUnique();
+        builder.HasIndex(x => new { x.PostId, x.UserId });
 
 
         builder.HasIndex(x => x.PostId);

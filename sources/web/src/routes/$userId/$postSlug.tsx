@@ -9,6 +9,8 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { BookmarkIcon, HeartPlus as HeartPlusIcon, MessageCircleIcon, ShareIcon } from 'lucide-react'
 import { ReactionSelector } from '@/components/Posts/ReactionSelector';
+import { useAuthStore } from '@/store/auth.store';
+import { Button } from '@/components/ui/button';
 
 export const Route = createFileRoute('/$userId/$postSlug')({
   component: RouteComponent,
@@ -17,6 +19,7 @@ export const Route = createFileRoute('/$userId/$postSlug')({
 function RouteComponent() {
 
   const [post, setPost] = useState<PostView>();
+  const { currentUser } = useAuthStore.getState();
 
   const params = useParams({
     from: '/$userId/$postSlug',
@@ -61,6 +64,46 @@ function RouteComponent() {
     fetchPostBySlug();
   }, [params.postSlug]);
 
+  const handleReact = async (
+    postId: string,
+    userId: string,
+    reactionTypeId: string
+  ) => {
+    if (!post) return;
+
+    try {
+      const updatedReactions = post.reactions.map(r => {
+        if (r.id === reactionTypeId) {
+          const wasAlreadyCurrent = r.isReactionByCurrentUser;
+
+          return {
+            ...r,
+            count: wasAlreadyCurrent
+              ? Math.max(0, r.count - 1)
+              : r.count + 1,
+            isReactionByCurrentUser: !wasAlreadyCurrent
+          };
+        }
+
+        return r;
+      });
+
+
+      setPost(prev =>
+        prev ? { ...prev, reactions: updatedReactions } : prev
+      );
+
+      await ReactToPost(postId, userId, reactionTypeId);
+
+    } catch (error) {
+      toast.error("Failed to add reaction");
+
+      const res = await GetPostBySlug(params.postSlug);
+      if (res.data?.value) setPost(res.data.value);
+    }
+  };
+
+
   return <div>
     <Header></Header>
     <div className="bg-gray-50 py-2 min-h-screen">
@@ -79,39 +122,7 @@ function RouteComponent() {
                       side="right"
                       showCount={false}
                       reactions={post.reactions}
-                      onReact={async (reactionTypeId) => {
-                        try {
-                          // Optimistic Update
-                          const updatedReactions = post.reactions.map(r => {
-                            if (r.id === reactionTypeId) {
-                              const wasAlreadyCurrent = r.isReactionByCurrentUser;
-                              return {
-                                ...r,
-                                count: wasAlreadyCurrent ? r.count : r.count + 1,
-                                isReactionByCurrentUser: true
-                              };
-                            }
-                            if (r.isReactionByCurrentUser) {
-                              return {
-                                ...r,
-                                count: Math.max(0, r.count - 1),
-                                isReactionByCurrentUser: false
-                              };
-                            }
-                            return r;
-                          });
-
-                          setPost(prev => prev ? { ...prev, reactions: updatedReactions } : prev)
-
-                          await ReactToPost(post.id, reactionTypeId)
-                          toast.success("Reaction updated!")
-                        } catch (error) {
-                          toast.error("Failed to add reaction")
-                          // Rollback (simplified)
-                          const res = await GetPostBySlug(params.postSlug);
-                          if (res.data?.value) setPost(res.data.value);
-                        }
-                      }}
+                      onReact={handleReact}
                     />
                     <span className="text-sm -mt-4">
                       {post.reactions.reduce((acc, curr) => acc + curr.count, 0)}
@@ -136,7 +147,6 @@ function RouteComponent() {
 
                 {/* MAIN CONTENT */}
                 <div className="flex-1 max-w-3xl">
-
                   <article className="bg-white rounded-lg shadow-sm p-8">
 
                     {/* Author */}
@@ -161,6 +171,19 @@ function RouteComponent() {
                     <h1 className="text-4xl font-extrabold mb-6">
                       {post.title}
                     </h1>
+
+                    {/* Reactions */}
+                    {
+                      post.reactions.length > 0 && <div className="flex items-center gap-4 mb-6">
+                        {post.reactions.map(r => (
+                          <Button variant={"ghost"} key={r.id} className="flex items-center gap-2" onClick={() => handleReact(post.id, currentUser?.id ?? "", r.id)}>
+                            <img src={r.url} alt={r.name} className="w-8 h-8" />
+                            <span className="text-sm text-gray-500">{r.count}</span>
+                          </Button>
+                        ))}
+                      </div>
+                    }
+
 
                     {/* Tags */}
                     <div className="flex flex-wrap gap-2 mb-6">

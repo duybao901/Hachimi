@@ -72,12 +72,15 @@ function PostCard({ post }: PostCardProps) {
               </div>
               <div className="mt-2 w-full flex justify-between items-center -ml-2">
                 <div className="flex justify-between items-center">
-                  <ReactionSelector
-                    postId={post.id}
-                    reactions={post.reactions}
-                  />
+                  <Link to={`/${post.postAuthor.userName}/${post.slug}`}>
+                    <ReactionSelector
+                      postId={post.id}
+                      reactions={post.reactions}
+                      showHoverEffect={false}
+                    />
+                  </Link>
                   <Link
-                    to={"/"}
+                    to={`/${post.postAuthor.userName}/${post.slug}`}
                     className="flex justify-between items-center px-2 py-1 rounded-sm hover:bg-gray-100"
                   >
                     <MessageCircleIcon className="w-4 mr-1" />

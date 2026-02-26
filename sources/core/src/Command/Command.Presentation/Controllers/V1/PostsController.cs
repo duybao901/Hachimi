@@ -123,7 +123,7 @@ public class PostsController : ApiController
     //    return Results.Ok(result);
     //}
 
-    [HttpPost("{postId}/like")]
+    [HttpPost("{postId}/react")]
     public async Task<IResult> LikePost(Guid postId, [FromBody] Contract.Services.V1.Posts.Command.AddReactionCommand request)
     {
         var result = await Sender.Send(new AddReactionCommand(postId, request.UserId, request.ReactionTypeId));

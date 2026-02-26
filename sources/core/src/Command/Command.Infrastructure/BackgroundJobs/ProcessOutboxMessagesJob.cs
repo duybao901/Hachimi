@@ -102,6 +102,15 @@ public class ProcessOutboxMessagesJob : IJob
                                     });
                         await _publishEndpoint.Publish<DomainEvent.PostPublishedEvent>(message: postPublished, context.CancellationToken);
                         break;
+                    case nameof(DomainEvent.PostReactionToggledEvent):
+                        var postReactionToggled = JsonConvert.DeserializeObject<DomainEvent.PostReactionToggledEvent>(
+                                    outboxMessage.Content,
+                                    new JsonSerializerSettings
+                                    {
+                                        TypeNameHandling = TypeNameHandling.All
+                                    });
+                        await _publishEndpoint.Publish<DomainEvent.PostReactionToggledEvent>(message: postReactionToggled, context.CancellationToken);
+                        break;
 
                     // Tags
                     case nameof(Contract.Services.V1.Tags.DomainEvent.TagCreatedEvent):

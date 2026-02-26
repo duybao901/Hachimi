@@ -137,10 +137,16 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
         RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostDraftPublishedEvent(Guid.NewGuid(), Id));
     }
 
-    public void AddReaction(Guid UserId, ReactionType Reaction)
+    public void AddReaction(Guid UserId, Guid ReactionTypeId)
     {
         LikeCount++;
-        //RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostLikedEvent(Guid.NewGuid(), Id, LikeCount));
+        RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostReactionToggledEvent(Guid.NewGuid(), Id, UserId, ReactionTypeId, true));
+    }
+
+    public void RemoveReaction(Guid UserId, Guid ReactionTypeId)
+    {
+        LikeCount--;
+        RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostReactionToggledEvent(Guid.NewGuid(), Id, UserId, ReactionTypeId, false));
     }
 
     public void AddComment(Guid commentId, Guid userId, string content)

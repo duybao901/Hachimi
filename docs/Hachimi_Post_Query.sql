@@ -66,3 +66,19 @@ FROM [HachimiDatabase].[dbo].[Tags]
 DELETE FROM [HachimiDatabase].[dbo].[Tags] WHERE [ID] = 'B58E9E07-64E9-453A-BD7E-541CC1F33E88'
 
 -- Post Tags
+
+
+-- Post Reactions
+SELECT TOP (1000) [Id]
+      ,[PostId]
+      ,[UserId]
+      ,[ReactionTypeId]
+      ,[CreatedOnUtc]
+      ,[IsDeleted]
+  FROM [HachimiDatabase].[dbo].[PostReactions]
+SELECT TOP (1000) [Id]
+      ,[Name]
+      ,[Icon]
+      ,[IsDeleted]
+      ,[Url]
+  FROM [HachimiDatabase].[dbo].[ReactionTypes]

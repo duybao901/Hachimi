@@ -46,4 +46,12 @@ public static class PostConsumer
         {
         }
     }
+
+    public class PostReactedEvent : Consumer<DomainEvent.PostReactionToggledEvent>
+    {
+        public PostReactedEvent(ISender sender, IMongoRepository<EventProjection> eventRepository)
+            : base(sender, eventRepository)
+        {
+        }
+    }
 }
