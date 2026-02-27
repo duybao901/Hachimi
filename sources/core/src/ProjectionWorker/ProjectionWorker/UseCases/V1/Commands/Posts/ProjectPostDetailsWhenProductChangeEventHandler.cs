@@ -56,7 +56,7 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             Icon = r.Icon,
             Url = r.Url,
             Count = 0,
-            IsReactionByCurrentUser = false
+            UserIds = [],
         }).ToList();
 
         var post = new PostProjection
@@ -163,7 +163,7 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             Icon = r.Icon,
             Url = r.Url,
             Count = 0,
-            IsReactionByCurrentUser = false
+            UserIds = []
         }).ToList();
 
         AuthorProjection author = await _authorMongoRepository.FindOneAsync(a => a.UserId == request.UserId.ToString());

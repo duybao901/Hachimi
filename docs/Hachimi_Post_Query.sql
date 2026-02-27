@@ -82,3 +82,6 @@ SELECT TOP (1000) [Id]
       ,[IsDeleted]
       ,[Url]
   FROM [HachimiDatabase].[dbo].[ReactionTypes]
+
+-- Clear [PostReactions]
+TRUNCATE TABLE [HachimiDatabase].[dbo].[PostReactions]

@@ -13,6 +13,5 @@ public class Reaction : Document
     public string Url { get; set; } = default!;
 
     public int Count { get; set; }
-    public bool IsReactionByCurrentUser { get; set; }
     public List<string> UserIds { get; set; } = new();
 }

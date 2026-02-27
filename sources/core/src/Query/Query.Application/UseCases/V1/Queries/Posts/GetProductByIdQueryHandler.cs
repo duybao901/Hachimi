@@ -56,7 +56,7 @@ public sealed class GetProductByIdQueryHandler : IQueryHandler<Contract.Services
                         Icon = r.Icon,
                         Url = r.Url,
                         Count = r.Count,
-                        IsReactionByCurrentUser = !string.IsNullOrEmpty(_currentUser?.UserId) && r.UserIds.Contains(_currentUser.UserId)
+                        IsReactionByCurrentUser = !string.IsNullOrEmpty(_currentUser?.UserId) && r.UserIds != null && r.UserIds.Contains(_currentUser.UserId)
                     }).ToList()
             );
 
