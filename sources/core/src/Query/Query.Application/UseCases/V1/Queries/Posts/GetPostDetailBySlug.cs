@@ -57,7 +57,9 @@ public sealed class GetPostDetailBySlug : IQueryHandler<Contract.Services.V1.Pos
                         Count = r.Count,
                         IsReactionByCurrentUser = !string.IsNullOrEmpty(_currentUser?.UserId) && r.UserIds != null && r.UserIds.Contains(_currentUser.UserId)
                     })
-                    .ToList()
+                    .ToList(),
+            CoverImageUrl: post.CoverImageUrl,
+            PublishedAt: post.PublishedAt
         ));
     }
 }

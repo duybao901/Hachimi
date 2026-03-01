@@ -138,6 +138,7 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             Builders<PostProjection>.Update
                 .Set(p => p.ModifiedOnUtc, DateTime.UtcNow)
                 .Set(p => p.PostStatus, Contract.Enumerations.PostStatus.Published)
+                .Set(p => p.PublishedAt, request.PublishedAt)
         ).ConfigureAwait(true);
 
         return Result.Success();
@@ -183,7 +184,8 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             CommentCount = 0,
             LikeCount = 0,
             FeedScore = 0,       
-            Reactions = reactionProjections
+            Reactions = reactionProjections,
+            PublishedAt = request.PublishedAt
         };
 
         await _postMongoRepository.InsertOneAsync(post);

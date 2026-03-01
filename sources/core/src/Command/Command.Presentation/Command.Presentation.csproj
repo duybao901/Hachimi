@@ -22,8 +22,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Contract\Contract\Contract.csproj" />
-    <ProjectReference Include="..\..\Query\Query.Application\Query.Application.csproj" />
-    <ProjectReference Include="..\..\Query\Query.Infrastructure\Query.Infrastructure.csproj" />
+    <ProjectReference Include="..\Command.Application\Command.Application.csproj" />
+    <ProjectReference Include="..\Command.Infrastructure\Command.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

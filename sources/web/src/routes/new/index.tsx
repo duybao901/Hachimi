@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea"
 import type { Tag } from "@/types/tag"
 import { hexToRgb } from "@/utils/hexToRgb"
 import { fetchSearchTags, getTagListFromIds } from "@/services/tag.service"
+import { UploadImage } from "@/services/file.service"
 import PostEditor from "@/components/Posts/PostEditor"
 import {
   Dialog,
@@ -42,6 +43,8 @@ function RouteComponent() {
   const [selectedTags, setSelectedTags] = useState<Tag[] | []>([])
   const [suggestions, setSuggestions] = useState<Tag[] | []>([])
   const [isFocused, setIsFocused] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
 
   const initialDraft = (() => {
@@ -128,8 +131,8 @@ function RouteComponent() {
       }
     }
 
-    if(currentUser?.id) {
-       fetchTagsListFromIdsAsync();
+    if (currentUser?.id) {
+      fetchTagsListFromIdsAsync();
     }
   }, [draftPost.tagList, currentUser?.id])
 
@@ -186,6 +189,39 @@ function RouteComponent() {
     setIsFocused(false)
     setSuggestions([])
   }
+
+  const handleUploadCoverImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error("Please upload a valid image file.");
+      return;
+    }
+
+    setIsUploading(true);
+    localding.show();
+
+    try {
+      const response = await UploadImage(file);
+
+      if (response.data && response.data.secure_url) {
+        setDraftPost(prev => ({ ...prev, coverImageUrl: response.data.secure_url }));
+        toast.success("Cover image uploaded successfully!");
+      } else {
+        throw new Error("Failed to get image URL from server.");
+      }
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.message || "An error occurred during upload.");
+    } finally {
+      setIsUploading(false);
+      localding.hide();
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
 
   const saveDraftPost = async () => {
     try {
@@ -373,11 +409,42 @@ function RouteComponent() {
               {editMode ? (
                 <div className="h-[calc(100vh-var(--header-height) - var(--article-form-actions-height))] flex flex-col overflow-y-auto">
                   {/* Post Actions */}
-                  <div className="flex items-center gap-2 p-8">
-                    <Button variant="border">Upload Cover Image</Button>
+                  <div className="flex items-center gap-2 p-8 pb-4">
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleUploadCoverImage}
+                      accept="image/*"
+                      className="hidden"
+                    />
+                    <Button
+                      variant="border"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isUploading}
+                    >
+                      {isUploading ? "Uploading..." : "Upload Cover Image"}
+                    </Button>
                     <Button variant="border">🍌 Generate Image</Button>
                     <Button variant="border">Cover Video Link</Button>
                   </div>
+
+                  {/* Cover Image Preview */}
+                  {draftPost.coverImageUrl && (
+                    <div className="px-8 mt-4 relative group w-max">
+                      <img
+                        src={draftPost.coverImageUrl}
+                        alt="Cover"
+                        className="h-48 object-cover rounded-md border shadow-sm"
+                      />
+                      <button
+                        onClick={() => setDraftPost(prev => ({ ...prev, coverImageUrl: "" }))}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                        title="Remove cover image"
+                      >
+                        <XIcon className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )}
 
                   {/* Post Title */}
                   <div className="w-full h-auto mt-4 p-0 px-8">

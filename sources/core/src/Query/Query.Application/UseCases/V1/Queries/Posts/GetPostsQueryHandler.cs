@@ -79,7 +79,9 @@ public sealed class GetPostsQueryHandler : IQueryHandler<Contract.Services.V1.Po
                         Url = r.Url,
                         Count = r.Count,
                         IsReactionByCurrentUser = !string.IsNullOrEmpty(_currentUser?.UserId) && r.UserIds != null && r.UserIds.Contains(_currentUser.UserId)
-                }).ToList()
+                }).ToList(),
+                CoverImageUrl: p.CoverImageUrl,
+                PublishedAt: p.PublishedAt
             ));
 
         return Result.Success(result);

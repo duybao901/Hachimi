@@ -65,7 +65,8 @@ public class GetListPostsQueryHandler : IQueryHandler<Contract.Services.V1.Posts
                     UserName = p.Author.UserName,
                     Email = p.Author.Email,
                     AvatarUrl = p.Author.AvatarUrl
-                }
+                },
+                PublishedAt: p.PublishedAt
                 //PostTags: p.Tags.Select(t => new PostTagViewModel
                 //{
                 //    //Id = t.Id,

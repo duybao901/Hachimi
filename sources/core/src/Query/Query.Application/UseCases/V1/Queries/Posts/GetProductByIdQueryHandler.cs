@@ -57,7 +57,9 @@ public sealed class GetProductByIdQueryHandler : IQueryHandler<Contract.Services
                         Url = r.Url,
                         Count = r.Count,
                         IsReactionByCurrentUser = !string.IsNullOrEmpty(_currentUser?.UserId) && r.UserIds != null && r.UserIds.Contains(_currentUser.UserId)
-                    }).ToList()
+                    }).ToList(),
+            CoverImageUrl: post.CoverImageUrl,
+            PublishedAt: post.PublishedAt
             );
 
         return Result.Success(result);

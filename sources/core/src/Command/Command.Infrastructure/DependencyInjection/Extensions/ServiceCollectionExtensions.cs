@@ -4,6 +4,7 @@ using Command.Infrastructure.BackgroundJobs;
 using Command.Infrastructure.DependencyInjection.Options;
 using Command.Infrastructure.Identity;
 using Command.Infrastructure.PipelineObservers;
+using Command.Infrastructure.Services;
 using Contract.JsonConverters;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
@@ -15,9 +16,12 @@ using Quartz.Simpl;
 namespace Command.Infrastructure.DependencyInjection.Extensions;
 public static class ServiceCollectionExtensions
 {
-    public static void AddServiceInfrastructure(this IServiceCollection services)
+    public static void AddServiceInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<ICurrentUser, Infrastructure.Identity.CurrentUser>();
+        
+        services.Configure<CloudinaryOptions>(configuration.GetSection(nameof(CloudinaryOptions)));
+        services.AddScoped<IImageService, CloudinaryService>();
     }
 
     public static IServiceCollection AddMasstransitRabbitMQInfrastructure(this IServiceCollection services, IConfiguration configuration)

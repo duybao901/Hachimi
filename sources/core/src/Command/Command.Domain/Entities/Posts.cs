@@ -65,7 +65,7 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
 
         post.SetTags(tags);
 
-        post.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostPublishedEvent(Guid.NewGuid(), id, title, slug, content, CoverImageUrl, UserId, tags, reactions));
+        post.RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostPublishedEvent(Guid.NewGuid(), id, title, slug, content, CoverImageUrl, UserId, tags, reactions, post.PublishedAt));
 
         return post;
     }
@@ -134,7 +134,9 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
 
     public void PublishPost(Guid Id)
     {
-        RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostDraftPublishedEvent(Guid.NewGuid(), Id));
+        PublishedAt = DateTimeOffset.UtcNow;
+        PostStatus = PostStatus.Published;
+        RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostDraftPublishedEvent(Guid.NewGuid(), Id, PublishedAt));
     }
 
     public void AddReaction(Guid UserId, Guid ReactionTypeId)

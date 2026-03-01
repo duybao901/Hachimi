@@ -7,6 +7,7 @@ import {
   MessageCircle as MessageCircleIcon,
 } from "lucide-react"
 import { ReactionSelector } from "./ReactionSelector"
+import { formatPostDate } from "@/utils/dateUtils"
 
 type PostCardProps = {
   post: PostView
@@ -16,7 +17,7 @@ function PostCard({ post }: PostCardProps) {
   return (
     <div className="bg-white rounded-sm border border-gray-200 mb-2 overflow-hidden">
       <div className="w-full">
-        {post.isFirstPost && (
+        {post.isFirstPost && post.coverImageUrl && (
           <Link to={"/"}>
             <div
               className="w-full h-[250px] bg-cover bg-center"
@@ -42,7 +43,7 @@ function PostCard({ post }: PostCardProps) {
                 {post.postAuthor.name}
               </Link>
               <div className="text-xs text-(--link-color-secondary)">
-                Dec 19 (3 days ago)
+                {post.publishedAt ? formatPostDate(post.publishedAt) : "Draft"}
               </div>
             </div>
 

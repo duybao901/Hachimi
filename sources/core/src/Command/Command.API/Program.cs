@@ -33,7 +33,7 @@ builder.Services.AddConfigurationAutoMapperApplication();
 builder.Services.AddMasstransitRabbitMQInfrastructure(builder.Configuration);
 builder.Services.AddQuartzInfrastructure();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddServiceInfrastructure();
+builder.Services.AddServiceInfrastructure(builder.Configuration);
 
 // Middleware 
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();

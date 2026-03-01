@@ -1,20 +1,12 @@
-import React, { FC } from "react"
-import ReactMarkdown, { MarkdownAsync } from "react-markdown"
+import type { FC } from "react"
+import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
-import rehypePrettyCode from "rehype-pretty-code"
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize"
 
 interface MarkdownRendererProps {
   content: string
 }
 
-/* ---------------------------------- */
-/* Pretty Code Configuration (Shiki)  */
-/* ---------------------------------- */
-const prettyCodeOptions = {
-  theme: "github-dark",
-  keepBackground: false
-}
 
 /* ---------------------------------- */
 /* Sanitize Schema Extension          */
@@ -153,15 +145,14 @@ const markdownComponents = {
 export const MarkdownRenderer: FC<MarkdownRendererProps> = ({ content }) => {
   return (
     <div className="prose prose-lg max-w-none dark:prose-invert">
-      <ReactMarkdown 
+      <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[
-          [rehypePrettyCode, prettyCodeOptions],
           [rehypeSanitize, sanitizeSchema]
         ]}
-        components={markdownComponents}
+        components={markdownComponents as any}
       >
-        {content}
+        {content as any}
       </ReactMarkdown>
     </div>
   )
