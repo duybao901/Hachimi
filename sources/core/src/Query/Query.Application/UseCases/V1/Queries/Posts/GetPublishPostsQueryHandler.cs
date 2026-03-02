@@ -11,20 +11,18 @@ using Query.Application.Abstraction;
 
 
 namespace Query.Application.UseCases.V1.Queries.Posts;
-public sealed class GetPostsQueryHandler : IQueryHandler<Contract.Services.V1.Posts.Query.GetPostsQuery, PageResult<Response.PostResponse>>
+public sealed class GetPublishPostsQueryHandler : IQueryHandler<Contract.Services.V1.Posts.Query.GetPublicPostsQuery, PageResult<Response.PostResponse>>
 {
     private readonly IMongoRepository<Post> _postRepository;
     private readonly IMapper _mapper;
-    private readonly ICurrentUser _currentUser;
 
-    public GetPostsQueryHandler(IMongoRepository<Post> postRepository, IMapper mapper, ICurrentUser currentUser)
+    public GetPublishPostsQueryHandler(IMongoRepository<Post> postRepository, IMapper mapper, ICurrentUser currentUser)
     {
         _postRepository = postRepository;
         _mapper = mapper;
-        _currentUser = currentUser;
     }
 
-    public async Task<Result<PageResult<Response.PostResponse>>> Handle(Contract.Services.V1.Posts.Query.GetPostsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PageResult<Response.PostResponse>>> Handle(Contract.Services.V1.Posts.Query.GetPublicPostsQuery request, CancellationToken cancellationToken)
     {
         var queryable = _postRepository
             .AsQueryable(null);
@@ -38,7 +36,12 @@ public sealed class GetPostsQueryHandler : IQueryHandler<Contract.Services.V1.Po
         queryable = request.Feed switch
         {
             "latest" => ApplyLatest(queryable),
-            "top" => ApplyTop(queryable),
+            "top_day" => ApplyTop(queryable, 1),
+            "top_week" => ApplyTop(queryable, 7),
+            "top_month" => ApplyTop(queryable, 30),
+            "top_year" => ApplyTop(queryable, 365),
+            "top_all" => ApplyTop(queryable, null),
+            "top" => ApplyTop(queryable, 7), // Legacy fallback
             _ => ApplyRelevant(queryable)
         };
 
@@ -78,7 +81,6 @@ public sealed class GetPostsQueryHandler : IQueryHandler<Contract.Services.V1.Po
                         Icon = r.Icon,
                         Url = r.Url,
                         Count = r.Count,
-                        IsReactionByCurrentUser = !string.IsNullOrEmpty(_currentUser?.UserId) && r.UserIds != null && r.UserIds.Contains(_currentUser.UserId)
                 }).ToList(),
                 CoverImageUrl: p.CoverImageUrl,
                 PublishedAt: p.PublishedAt
@@ -92,33 +94,23 @@ public sealed class GetPostsQueryHandler : IQueryHandler<Contract.Services.V1.Po
         return q.OrderByDescending(p => p.PublishedAt);
     }
 
-    private static IQueryable<Post> ApplyTop(IQueryable<Post> q)
+    private static IQueryable<Post> ApplyTop(IQueryable<Post> q, int? days)
     {
-        return q
-            .Where(p => p.PublishedAt >= DateTime.UtcNow.AddDays(-7))
-            .OrderByDescending(p =>
-                p.LikeCount * 1.0 +
-                p.CommentCount * 2.0
-            );
+        if (days.HasValue)
+        {
+            var cutoffDate = DateTimeOffset.UtcNow.AddDays(-days.Value);
+            q = q.Where(p => p.PublishedAt >= cutoffDate);
+        }
+
+        return q.OrderByDescending(p =>
+            p.LikeCount * 1.0 +
+            p.CommentCount * 2.0 +
+            p.ViewCount * 0.1
+        );
     }
 
-    private IQueryable<Post> ApplyRelevant(
-    IQueryable<Post> query)
+    private static IQueryable<Post> ApplyRelevant(IQueryable<Post> query)
     {
-        return query.OrderByDescending(p => p.PublishedAt);
-        //if (userId == null)
-        //{
-        //    return query.OrderByDescending(p =>
-        //        p.LikeCount +
-        //        p.CommentCount * 2 +
-        //        p.ViewCount * 0.1
-        //    );
-        //}
-
-        //return query
-        //    .OrderByDescending(p =>
-        //        //p.Score +                  // score đã pre-calc
-        //        (p.AuthorFollowers.Contains(userId) ? 20 : 0)
-        //    );
+        return query.OrderByDescending(p => p.FeedScore);     
     }
 }

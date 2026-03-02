@@ -24,7 +24,7 @@ public class PostsController : ApiController
         int pageSize = 10,
         string? feed = "")
     {
-        var query = new QueryV1.GetPostsQuery(pageIndex, pageSize, feed);
+        var query = new QueryV1.GetPublicPostsQuery(pageIndex, pageSize, feed);
         var result = await Sender.Send(query);
 
         if (result.IsFailure)

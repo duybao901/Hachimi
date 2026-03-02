@@ -17,7 +17,8 @@ public class Post : Document
     public int ViewCount { get; set; }
     public int CommentCount { get; set; }
     public int LikeCount { get; set; }
-    public double FeedScore { get; set; }
+    public int ShareCount { get; set; }
+    public double TrendingScore { get; set; }
     public int ReadingTimeMinutes { get; set; }
     public bool IsDeleted { get; set; }
     public required Author Author { get; set; }
