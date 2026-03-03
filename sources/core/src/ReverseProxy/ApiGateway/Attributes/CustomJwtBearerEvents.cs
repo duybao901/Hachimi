@@ -1,5 +1,7 @@
 ﻿using ApiGateway.Abstractions;
+using Contract.Services.V1.Identitys;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace ApiGateway.Attributes;
 
@@ -14,28 +16,28 @@ public class CustomJwtBearerEvents : JwtBearerEvents
         _logger = logger;
     }
 
-    //public override async Task TokenValidated(TokenValidatedContext context)
-    //{
-    //    // JsonWebToken accessToken = context.SecurityToken as JsonWebToken;
-    //    // ✅ Kiểm tra và ép kiểu trong 1 bước: Down-cast the property to JsonWebToken
-    //    if (context.SecurityToken is JsonWebToken accessToken)
-    //    {
-    //        var requestToken = accessToken.EncodedToken;
+    public override async Task TokenValidated(TokenValidatedContext context)
+    {
+        // JsonWebToken accessToken = context.SecurityToken as JsonWebToken;
+        // ✅ Kiểm tra và ép kiểu trong 1 bước: Down-cast the property to JsonWebToken
+        if (context.SecurityToken is JsonWebToken accessToken)
+        {
+            var requestToken = accessToken.EncodedToken;
 
-    //        var emailKey = accessToken.Claims.FirstOrDefault(p => p.Type == ClaimTypes.Email)?.Value;
-    //        var authenticated = await _cacheService.GetAsync<Response.Authenticated>(emailKey);
+            var emailKey = accessToken.Claims.FirstOrDefault(p => p.Type == "Email")?.Value;
+            var authenticated = await _cacheService.GetAsync<Response.Authenticated>("refresh:" + emailKey);
 
-    //        if (authenticated is null || authenticated.AccessToken != requestToken)
-    //        {
-    //            context.Response.Headers.Add("IS-TOKEN-REVOKED", "true");
-    //            context.Fail("Authentication fail. Token has been revoked!");
-    //        }
-    //    }
-    //    else
-    //    {
-    //        context.Fail("Authentication fail.");
-    //    }
-    //}
+            if (authenticated is null || authenticated.AccessToken != requestToken)
+            {
+                context.Response.Headers.Add("IS-TOKEN-REVOKED", "true");
+                context.Fail("Authentication fail. Token has been revoked!");
+            }
+        }
+        else
+        {
+            context.Fail("Authentication fail.");
+        }
+    }
 
     public override Task Challenge(JwtBearerChallengeContext context)
     {

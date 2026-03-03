@@ -11,5 +11,5 @@ public static class Command
     ) : ICommand;
 
     public record RevokeToken(string? AccessToken) : ICommand;
-    public record Logout(string RefreshToken) : ICommand;
+    public record Logout(string? RefreshToken, string Email) : ICommand;
 }

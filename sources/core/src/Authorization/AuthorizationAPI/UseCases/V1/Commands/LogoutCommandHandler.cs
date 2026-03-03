@@ -23,15 +23,17 @@ public class LogoutCommandHandler : ICommandHandler<Command.Logout>
     {
         var refreshToken = request.RefreshToken;
         var hashRefreshToken = _jwtTokenService.HashToken(refreshToken);
+        var email = request.Email;
 
-        var authenticated = await _cacheService.GetAsync<Response.Authenticated>(hashRefreshToken);
+        //var authenticated = await _cacheService.GetAsync<Response.Authenticated>(email + ":" + hashRefreshToken);
+        var authenticated = await _cacheService.GetAsync<Response.Authenticated>("refresh:" + email);
 
         if (authenticated == null)
         {
             throw new IdentityException.TokenException("Request Token Invalid");
         }
 
-        await _cacheService.RemoveAsync(hashRefreshToken);
+        await _cacheService.RemoveAsync("refresh:" + email);
 
         var cookieOptions = new CookieOptions
         {

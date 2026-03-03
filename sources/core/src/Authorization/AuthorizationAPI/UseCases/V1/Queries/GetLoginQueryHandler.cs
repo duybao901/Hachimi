@@ -65,9 +65,7 @@ public class GetLoginQueryHandler : IQueryHandler<Query.Login, Response.LoginTok
 
         var accessToken = _jwtTokenService.GenerateAccessToken(claims);
         var refreshToken = _jwtTokenService.GenerateRefreshToken();
-        var hashRefreshToken = _jwtTokenService.HashToken(refreshToken);
-
-        //var userEmailKey = "refresh:" + user.Email;
+        //var hashRefreshToken = _jwtTokenService.HashToken(refreshToken);
 
         var cookieOptions = new CookieOptions
         {
@@ -89,8 +87,8 @@ public class GetLoginQueryHandler : IQueryHandler<Query.Login, Response.LoginTok
         };
 
         // key is refreshToken
-        await _cacheService.SetAsync(hashRefreshToken, authenticated, cancellationToken);
-        //await _cacheService.SetAsync(userEmailKey, authenticated, cancellationToken);
+        //await _cacheService.SetAsync(user.Email + ":" + hashRefreshToken, authenticated, cancellationToken);
+        await _cacheService.SetAsync("refresh:" + user.Email, authenticated, cancellationToken);
 
 
         var userProfile = await _userProfileRepositoryBase.FindSingleAsync(u => u.UserId == user.Id);

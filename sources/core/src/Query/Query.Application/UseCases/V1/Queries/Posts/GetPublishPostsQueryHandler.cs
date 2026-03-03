@@ -111,6 +111,6 @@ public sealed class GetPublishPostsQueryHandler : IQueryHandler<Contract.Service
 
     private static IQueryable<Post> ApplyRelevant(IQueryable<Post> query)
     {
-        return query.OrderByDescending(p => p.FeedScore);     
+        return query.OrderByDescending(p => p.TrendingScore);     
     }
 }

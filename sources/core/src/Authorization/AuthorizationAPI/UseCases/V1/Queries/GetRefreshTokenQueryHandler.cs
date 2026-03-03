@@ -34,13 +34,16 @@ public class GetRefreshTokenQueryHandler : IQueryHandler<Query.Refresh, Response
     public async Task<Result<Response.RefreshTokenResponse>> Handle(Query.Refresh request, CancellationToken cancellationToken)
     {
         var refreshToken = request.RefreshToken;
-        var hashRefreshToken = _jwtTokenService.HashToken(refreshToken);
+        //var hashRefreshToken = _jwtTokenService.HashToken(refreshToken);
+        var email = request.Email;
+
         if (refreshToken is null)
         {
             throw new IdentityException.TokenException("Request Token Invalid");
         }
 
-        var authenticated = await _cacheService.GetAsync<Response.Authenticated>(hashRefreshToken);
+        //var authenticated = await _cacheService.GetAsync<Response.Authenticated>(email + ":" + hashRefreshToken);
+        var authenticated = await _cacheService.GetAsync<Response.Authenticated>("refresh:" + email);
 
         if (authenticated is null || authenticated.RefreshToken != refreshToken || authenticated.RefreshTokenExpiryTime <= DateTime.Now)
         {
@@ -48,13 +51,13 @@ public class GetRefreshTokenQueryHandler : IQueryHandler<Query.Refresh, Response
         }
 
         // Rotate refresh token
-        await _cacheService.RemoveAsync(hashRefreshToken, cancellationToken);
+        //await _cacheService.RemoveAsync(email + ":" + hashRefreshToken, cancellationToken);
 
         // Refresh token is valid -> Get old access token info -> get principal
         var principal = _jwtTokenService.GetPrincipalFromExpiredToken(authenticated.AccessToken);
         var newAccessToken = _jwtTokenService.GenerateAccessToken(principal.Claims);
         var newRefreshToken = _jwtTokenService.GenerateRefreshToken();
-        var hashNewRefreshToken = _jwtTokenService.HashToken(newRefreshToken);
+        //var hashNewRefreshToken = _jwtTokenService.HashToken(newRefreshToken);
 
         // Set new refresh token in cookie
         var cookieOptions = new CookieOptions
@@ -74,7 +77,7 @@ public class GetRefreshTokenQueryHandler : IQueryHandler<Query.Refresh, Response
             RefreshToken = newRefreshToken,
             RefreshTokenExpiryTime = DateTime.Now.AddDays(7)
         };
-        await _cacheService.SetAsync(hashNewRefreshToken, newAuthenticated, cancellationToken).ConfigureAwait(true);
+        await _cacheService.SetAsync("refresh:" + email, newAuthenticated, cancellationToken).ConfigureAwait(true);
 
         var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier).ToString();
 

@@ -5,6 +5,6 @@ public static class Query
 {
     public record Login(string Email, string Password) : IQuery<Response.LoginTokenResponse>;
 
-    public record Refresh(string RefreshToken) : IQuery<Response.RefreshTokenResponse>;
+    public record Refresh(string? RefreshToken, string Email) : IQuery<Response.RefreshTokenResponse>;
 }
 
