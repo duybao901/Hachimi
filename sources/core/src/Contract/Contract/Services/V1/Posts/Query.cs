@@ -9,6 +9,6 @@ public static class Query
     public record GetPostByIdQuery(Guid PostId) : IQuery<Response.PostResponse>;
     public record GetCurrentEditPost() : IQuery<Response.PostDraftReponse>;
     public record GetPostBySlug(string Slug) : IQuery<Response.PostResponse>;
-    public record GetAuthorUnPublishPostsQuery(string AuthorId) : IQuery<List<Response.PostResponse>>;
+    public record GetAuthorDraftPostsQuery(string AuthorId) : IQuery<List<Response.PostResponse>>;
 }
 

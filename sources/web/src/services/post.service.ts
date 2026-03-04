@@ -37,5 +37,5 @@ export async function ReactToPost(postId: string, userId: string, reactionTypeId
 }
 
 export async function GetAuthorUnpublishedPosts(authorId: string) {
-    return await queryApi.get<ApiResponse<PostView[]>>(`/posts/${authorId}/unpublish`);
+    return await queryApi.get<ApiResponse<PostView[]>>(`/posts/${authorId}/dashboard/draft`);
 }

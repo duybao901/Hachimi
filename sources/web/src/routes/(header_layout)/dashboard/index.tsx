@@ -6,7 +6,12 @@ import { MoreHorizontal } from "lucide-react"
 import { useAuthStore } from "@/store/auth.store"
 import { useEffect, useState } from "react"
 import { GetAuthorUnpublishedPosts } from "@/services/post.service"
+import { GetAuthorStats } from "@/services/author.service"
 import type { PostView } from "@/types/queries/Posts/post"
+import type { AuthorStats } from "@/types/author"
+import { extractValidationMessages } from "@/utils/extractValidationMessages"
+import { toast } from "sonner"
+import type { ValidationErrorResponse } from "@/types/api"
 
 export const Route = createFileRoute("/(header_layout)/dashboard/")({
     component: RouteComponent,
@@ -15,25 +20,62 @@ export const Route = createFileRoute("/(header_layout)/dashboard/")({
 function RouteComponent() {
 
     const [unpublishedPosts, setUnpublishedPosts] = useState<PostView[]>([]);
+    const [stats, setStats] = useState<AuthorStats | null>(null);
 
     const { currentUser } = useAuthStore.getState();
 
     useEffect(() => {
-        const fetchUnpublishedPosts = async () => {
-            if (currentUser) {
-                try {
-                    const res = await GetAuthorUnpublishedPosts(currentUser.id);
-                    if(res.data.isSuccess){
-                        setUnpublishedPosts(res.data.value);
-                    }
-                } catch (error) {
+        if (!currentUser) return;
 
-                }
+        const handleError = (error: any) => {
+            const data = error?.response?.data as ValidationErrorResponse | undefined;
+
+            if (data?.errors) {
+                const messages = extractValidationMessages(data.errors);
+
+                toast.error("Validation error", {
+                    description: (
+                        <ul className="list-disc pl-4">
+                            {messages.map((msg) => (
+                                <li key={msg}>{msg}</li>
+                            ))}
+                        </ul>
+                    ),
+                });
+            } else if (error.response) {
+                toast.error(
+                    error.response?.data?.Detail || error.message || "Server error"
+                );
             }
-        }
+        };
+
+        const fetchUnpublishedPosts = async () => {
+            try {
+                const res = await GetAuthorUnpublishedPosts(currentUser.id);
+
+                if (res.data.isSuccess) {
+                    setUnpublishedPosts(res.data.value);
+                }
+            } catch (error) {
+                handleError(error);
+            }
+        };
+
+        const fetchStats = async () => {
+            try {
+                const res = await GetAuthorStats(currentUser.id);
+
+                if (res.data.isSuccess) {
+                    setStats(res.data.value);
+                }
+            } catch (error) {
+                handleError(error);
+            }
+        };
 
         fetchUnpublishedPosts();
-    }, [currentUser])
+        fetchStats();
+    }, [currentUser]);
 
     return (
         <div className="p-6 space-y-6">
@@ -49,21 +91,21 @@ function RouteComponent() {
                 <Card className="rounded-2xl shadow-sm">
                     <CardContent className="p-6">
                         <p className="text-muted-foreground text-sm">Total Reactions</p>
-                        <h2 className="text-3xl font-bold mt-2">0</h2>
+                        <h2 className="text-3xl font-bold mt-2">{stats?.totalReactions ?? 0}</h2>
                     </CardContent>
                 </Card>
 
                 <Card className="rounded-2xl shadow-sm">
                     <CardContent className="p-6">
                         <p className="text-muted-foreground text-sm">Total Comments</p>
-                        <h2 className="text-3xl font-bold mt-2">0</h2>
+                        <h2 className="text-3xl font-bold mt-2">{stats?.totalComments ?? 0}</h2>
                     </CardContent>
                 </Card>
 
                 <Card className="rounded-2xl shadow-sm">
                     <CardContent className="p-6">
                         <p className="text-muted-foreground text-sm">Total Views</p>
-                        <h2 className="text-3xl font-bold mt-2">500</h2>
+                        <h2 className="text-3xl font-bold mt-2">{stats?.totalViews ?? 0}</h2>
                     </CardContent>
                 </Card>
             </div>
@@ -73,7 +115,7 @@ function RouteComponent() {
 
                 {/* Sidebar */}
                 <div className="space-y-2">
-                    <SidebarItem label="Posts" count={2} active />
+                    <SidebarItem label="Posts" count={stats?.totalPosts ?? 0} active />
                     <SidebarItem label="Series" count={0} />
                     <SidebarItem label="Followers" count={0} />
                     <SidebarItem label="Following Tags" count={0} />
@@ -84,7 +126,7 @@ function RouteComponent() {
                 <div className="md:col-span-3 space-y-4">
 
                     <div className="flex items-center justify-between">
-                        <h2 className="text-xl font-semibold">Posts</h2>
+                        <h2 className="text-xl font-semibold">Draft Posts</h2>
                         <Button variant="outline">Recently Created</Button>
                     </div>
 
@@ -92,13 +134,13 @@ function RouteComponent() {
                         unpublishedPosts.length !== 0 ? <>
                             {
                                 unpublishedPosts.map((post) => (
-                                    <PostRow key={post.id} title={post.title} slug={post.slug} userName={post.postAuthor.userName}/>
+                                    <PostRow key={post.id} title={post.title} slug={post.slug} userName={post.postAuthor.userName} />
                                 ))
                             }
-                        </> : 
-                        <div className="text-center py-8 text-muted-foreground">
-                            No unpublished posts yet.
-                        </div>
+                        </> :
+                            <div className="text-center py-8 text-muted-foreground">
+                                No unpublished posts yet.
+                            </div>
                     }
                 </div>
             </div>
@@ -132,7 +174,7 @@ function SidebarItem({
     )
 }
 
-function PostRow({ title,slug, userName }: { title: string; slug: string; userName: string }) {
+function PostRow({ title, slug, userName }: { title: string; slug: string; userName: string }) {
     return (
         <Card className="rounded-2xl shadow-sm p-4">
             <CardContent className="flex items-center justify-between">

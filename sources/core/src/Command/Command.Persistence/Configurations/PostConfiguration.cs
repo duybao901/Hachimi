@@ -39,7 +39,7 @@ internal class PostConfiguration : IEntityTypeConfiguration<Posts>
         builder.Property(x => x.LikeCount)
             .HasDefaultValue(0);
 
-        builder.Property(x => x.FeedScore)
+        builder.Property(x => x.TrendingScore)
             .HasDefaultValue(0);
 
         builder.Property(x => x.PublishedAt)
@@ -47,7 +47,7 @@ internal class PostConfiguration : IEntityTypeConfiguration<Posts>
 
         // Feed indexes
         builder.HasIndex(x => new { x.PostStatus, x.PublishedAt });
-        builder.HasIndex(x => new { x.PostStatus, x.FeedScore });
+        builder.HasIndex(x => new { x.PostStatus, x.TrendingScore });
     }
 
 }

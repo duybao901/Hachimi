@@ -15,7 +15,7 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
     public int CommentCount { get; set; }
     public int LikeCount { get; set; }
 
-    public double FeedScore { get; set; }
+    public double TrendingScore { get; set; }
 
     public DateTimeOffset? PublishedAt { get; set; }
     public int ReadingTimeMinutes { get; set; }
@@ -41,7 +41,7 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
         ViewCount = 0;
         CommentCount = 0;
         LikeCount = 0;
-        FeedScore = 0;
+        TrendingScore = 0;
     }
 
     public static Posts CreatePost(Guid id, string title, string slug, string content, string CoverImageUrl, Guid UserId, List<Guid> tags, List<ReactionViewModel> reactions)

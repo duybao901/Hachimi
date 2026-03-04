@@ -7,16 +7,16 @@ using Contract.Services.V1.Reaction.ViewModels;
 using Query.Domain.Collections;
 
 namespace Query.Application.UseCases.V1.Queries.Posts;
-public sealed class GetAuthorUnPublishPostsQueryHandler : IQueryHandler<Contract.Services.V1.Posts.Query.GetAuthorUnPublishPostsQuery, List<Response.PostResponse>>
+public sealed class GetAuthorDraftPostsQueryHandler : IQueryHandler<Contract.Services.V1.Posts.Query.GetAuthorDraftPostsQuery, List<Response.PostResponse>>
 {
     private readonly IMongoRepository<Domain.Collections.Post> _postMongoRepository;
 
-    public GetAuthorUnPublishPostsQueryHandler(IMongoRepository<Domain.Collections.Post> postMongoRepository)
+    public GetAuthorDraftPostsQueryHandler(IMongoRepository<Domain.Collections.Post> postMongoRepository)
     {
         _postMongoRepository = postMongoRepository;
     }
 
-    public async Task<Result<List<Response.PostResponse>>> Handle(Contract.Services.V1.Posts.Query.GetAuthorUnPublishPostsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<Response.PostResponse>>> Handle(Contract.Services.V1.Posts.Query.GetAuthorDraftPostsQuery request, CancellationToken cancellationToken)
     {
         var posts = await _postMongoRepository.FindAll(p => p.Author.UserId == request.AuthorId && p.PostStatus != Contract.Enumerations.PostStatus.Published);
         var result = posts.Select(p => new Response.PostResponse(

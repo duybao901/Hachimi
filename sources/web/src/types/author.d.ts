@@ -5,3 +5,11 @@ export interface Author {
     avatarUrl?: string; 
     Bio?: string;    
 }
+
+export interface AuthorStats {
+    totalReactions: number;
+    totalComments: number;
+    totalViews: number;
+    totalPosts: number;
+    totalDrafts: number;
+}

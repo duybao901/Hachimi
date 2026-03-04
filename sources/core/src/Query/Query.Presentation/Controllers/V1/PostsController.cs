@@ -102,11 +102,11 @@ public class PostsController : ApiController
         return Results.Ok(result);
     }
 
-    [HttpGet("{authorId}/unpublish")]
+    [HttpGet("{authorId}/dashboard/draft")]
     [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
     public async Task<IResult> GetUnpublishPostsByUserId(string authorId)
     {
-        var query = new QueryV1.GetAuthorUnPublishPostsQuery(authorId);
+        var query = new QueryV1.GetAuthorDraftPostsQuery(authorId);
         var result = await Sender.Send(query);
         if (result.IsFailure)
         {

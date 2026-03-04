@@ -22,7 +22,7 @@ export const Route = createFileRoute('/$userId/$postSlug')({
 function RouteComponent() {
 
   const [post, setPost] = useState<PostView>();
-  const { currentUser } = useAuthStore.getState();
+  const { currentUser } = useAuthStore();
 
   const params = useParams({
     from: '/$userId/$postSlug',
@@ -70,6 +70,16 @@ function RouteComponent() {
 
     fetchPostBySlug();
   }, [params.postSlug]);
+
+  useEffect(() => {
+    if (post && post.isPublished === false) {
+      if (!currentUser || currentUser.id !== post.postAuthor.id) {
+        toast.error("Bạn không có quyền truy cập vào bản nháp này.");
+        navigate({ to: "/" });
+      }
+    }
+  }, [post, currentUser, navigate]);
+
 
   const handleReact = async (
     postId: string,
@@ -162,7 +172,7 @@ function RouteComponent() {
                 <div className="flex-1 max-w-3xl">
                   {
                     post.isPublished === false && <div className="bg-yellow-100 border-l-4 border-yellow-500 p-4 mb-6">
-                      <p className="text-sm text-yellow-700 ">Unpublished Post. This URL is public but secret, so share at your own discretion. 
+                      <p className="text-sm text-yellow-700 ">Unpublished Post. This URL is public but secret, so share at your own discretion.
                         <Link to={`/new`} className="text-primary font-semibold ml-2">Click to edit</Link>
                       </p>
                     </div>
