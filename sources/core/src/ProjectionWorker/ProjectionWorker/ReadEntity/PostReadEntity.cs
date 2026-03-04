@@ -10,7 +10,10 @@ public class PostReadEntity : DomainEntity<Guid>
     public string? CoverImageUrl { get; set; }
     public PostStatus PostStatus { get; set; }
     public bool IsPostEditing { get; set; }
-    public int? ViewCount { get; set; }
+    public int ViewCount { get; set; }
+    public int CommentCount { get; set; }
+    public int LikeCount { get; set; }
+    public double TrendingScore { get; set; }
     public int? ReadingTimeMinutes { get; set; }
     public Guid AuthorId { get; set; }
     public DateTimeOffset CreatedOnUtc { get; set; }

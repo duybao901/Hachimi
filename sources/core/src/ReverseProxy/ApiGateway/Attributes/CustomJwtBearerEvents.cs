@@ -25,13 +25,13 @@ public class CustomJwtBearerEvents : JwtBearerEvents
             var requestToken = accessToken.EncodedToken;
 
             var emailKey = accessToken.Claims.FirstOrDefault(p => p.Type == "Email")?.Value;
-            var authenticated = await _cacheService.GetAsync<Response.Authenticated>("refresh:" + emailKey);
+            //var authenticated = await _cacheService.GetAsync<Response.Authenticated>("refresh:" + emailKey);
 
-            if (authenticated is null || authenticated.AccessToken != requestToken)
-            {
-                context.Response.Headers.Add("IS-TOKEN-REVOKED", "true");
-                context.Fail("Authentication fail. Token has been revoked!");
-            }
+            //if (authenticated is null || authenticated.AccessToken != requestToken)
+            //{
+            //    context.Response.Headers.Add("IS-TOKEN-REVOKED", "true");
+            //    context.Fail("Authentication fail. Token has been revoked!");
+            //}
         }
         else
         {

@@ -79,7 +79,7 @@ function Header() {
                     <DropdownMenuSeparator />
                     <Link
                       onClick={() => setOpen(false)}
-                      to="/"
+                      to="/dashboard"
                       className="text-[15px] font-light px-4 py-2 h-auto w-full flex flex-col items-start justify-start gap-0 hover:bg-primary/10 rounded-md hover:text-primary hover:underline"
                     >
                       Dashboard

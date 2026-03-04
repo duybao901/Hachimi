@@ -18,7 +18,8 @@ internal sealed class CurrentUser : ICurrentUser
 
         if (!Guid.TryParse(userIdHeader, out var userId))
         {
-            throw new UnauthorizedAccessException("Invalid user id");
+            //throw new UnauthorizedAccessException("Invalid user id");
+            return;
         }
 
         UserId = userId.ToString();

@@ -73,7 +73,7 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             ReadingTimeMinutes = 0,
             CommentCount = 0,
             LikeCount = 0,
-            FeedScore = 0,
+            TrendingScore = 0,
             Reactions = reactionProjections
         };
 
@@ -183,7 +183,7 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             ReadingTimeMinutes = 0,
             CommentCount = 0,
             LikeCount = 0,
-            FeedScore = 0,       
+            TrendingScore = 0,       
             Reactions = reactionProjections,
             PublishedAt = request.PublishedAt
         };

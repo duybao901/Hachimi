@@ -16,7 +16,7 @@ public sealed class GetPublishPostsQueryHandler : IQueryHandler<Contract.Service
     private readonly IMongoRepository<Post> _postRepository;
     private readonly IMapper _mapper;
 
-    public GetPublishPostsQueryHandler(IMongoRepository<Post> postRepository, IMapper mapper, ICurrentUser currentUser)
+    public GetPublishPostsQueryHandler(IMongoRepository<Post> postRepository, IMapper mapper)
     {
         _postRepository = postRepository;
         _mapper = mapper;
@@ -83,7 +83,8 @@ public sealed class GetPublishPostsQueryHandler : IQueryHandler<Contract.Service
                         Count = r.Count,
                 }).ToList(),
                 CoverImageUrl: p.CoverImageUrl,
-                PublishedAt: p.PublishedAt
+                PublishedAt: p.PublishedAt,
+                IsPublished: p.PostStatus == Contract.Enumerations.PostStatus.Published
             ));
 
         return Result.Success(result);

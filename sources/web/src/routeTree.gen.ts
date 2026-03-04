@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ConfirmSignoutRouteImport } from './routes/confirmSignout'
 import { Route as R404RouteImport } from './routes/404'
+import { Route as header_layoutRouteRouteImport } from './routes/(header_layout)/route'
 import { Route as feedRouteRouteImport } from './routes/(feed)/route'
 import { Route as UserIdRouteRouteImport } from './routes/$userId/route'
 import { Route as NewIndexRouteImport } from './routes/new/index'
@@ -18,6 +19,7 @@ import { Route as feedIndexRouteImport } from './routes/(feed)/index'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as UserIdPostSlugRouteImport } from './routes/$userId/$postSlug'
+import { Route as header_layoutDashboardIndexRouteImport } from './routes/(header_layout)/dashboard/index'
 import { Route as feedYearIndexRouteImport } from './routes/(feed)/year/index'
 import { Route as feedTopIndexRouteImport } from './routes/(feed)/top/index'
 import { Route as feedLatestIndexRouteImport } from './routes/(feed)/latest/index'
@@ -36,6 +38,10 @@ const ConfirmSignoutRoute = ConfirmSignoutRouteImport.update({
 const R404Route = R404RouteImport.update({
   id: '/404',
   path: '/404',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const header_layoutRouteRoute = header_layoutRouteRouteImport.update({
+  id: '/(header_layout)',
   getParentRoute: () => rootRouteImport,
 } as any)
 const feedRouteRoute = feedRouteRouteImport.update({
@@ -72,6 +78,12 @@ const UserIdPostSlugRoute = UserIdPostSlugRouteImport.update({
   path: '/$postSlug',
   getParentRoute: () => UserIdRouteRoute,
 } as any)
+const header_layoutDashboardIndexRoute =
+  header_layoutDashboardIndexRouteImport.update({
+    id: '/dashboard/',
+    path: '/dashboard/',
+    getParentRoute: () => header_layoutRouteRoute,
+  } as any)
 const feedYearIndexRoute = feedYearIndexRouteImport.update({
   id: '/year/',
   path: '/year/',
@@ -133,6 +145,7 @@ export interface FileRoutesByFullPath {
   '/latest': typeof feedLatestIndexRoute
   '/top': typeof feedTopIndexRoute
   '/year': typeof feedYearIndexRoute
+  '/dashboard': typeof header_layoutDashboardIndexRoute
   '/top/infinity': typeof feedTopInfinityIndexRoute
   '/top/month': typeof feedTopMonthIndexRoute
   '/top/week': typeof feedTopWeekIndexRoute
@@ -152,6 +165,7 @@ export interface FileRoutesByTo {
   '/latest': typeof feedLatestIndexRoute
   '/top': typeof feedTopIndexRoute
   '/year': typeof feedYearIndexRoute
+  '/dashboard': typeof header_layoutDashboardIndexRoute
   '/top/infinity': typeof feedTopInfinityIndexRoute
   '/top/month': typeof feedTopMonthIndexRoute
   '/top/week': typeof feedTopWeekIndexRoute
@@ -160,6 +174,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/$userId': typeof UserIdRouteRouteWithChildren
   '/(feed)': typeof feedRouteRouteWithChildren
+  '/(header_layout)': typeof header_layoutRouteRouteWithChildren
   '/404': typeof R404Route
   '/confirmSignout': typeof ConfirmSignoutRoute
   '/$userId/$postSlug': typeof UserIdPostSlugRoute
@@ -173,6 +188,7 @@ export interface FileRoutesById {
   '/(feed)/latest/': typeof feedLatestIndexRoute
   '/(feed)/top/': typeof feedTopIndexRoute
   '/(feed)/year/': typeof feedYearIndexRoute
+  '/(header_layout)/dashboard/': typeof header_layoutDashboardIndexRoute
   '/(feed)/top/infinity/': typeof feedTopInfinityIndexRoute
   '/(feed)/top/month/': typeof feedTopMonthIndexRoute
   '/(feed)/top/week/': typeof feedTopWeekIndexRoute
@@ -194,6 +210,7 @@ export interface FileRouteTypes {
     | '/latest'
     | '/top'
     | '/year'
+    | '/dashboard'
     | '/top/infinity'
     | '/top/month'
     | '/top/week'
@@ -213,6 +230,7 @@ export interface FileRouteTypes {
     | '/latest'
     | '/top'
     | '/year'
+    | '/dashboard'
     | '/top/infinity'
     | '/top/month'
     | '/top/week'
@@ -220,6 +238,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/$userId'
     | '/(feed)'
+    | '/(header_layout)'
     | '/404'
     | '/confirmSignout'
     | '/$userId/$postSlug'
@@ -233,6 +252,7 @@ export interface FileRouteTypes {
     | '/(feed)/latest/'
     | '/(feed)/top/'
     | '/(feed)/year/'
+    | '/(header_layout)/dashboard/'
     | '/(feed)/top/infinity/'
     | '/(feed)/top/month/'
     | '/(feed)/top/week/'
@@ -241,6 +261,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   UserIdRouteRoute: typeof UserIdRouteRouteWithChildren
   feedRouteRoute: typeof feedRouteRouteWithChildren
+  header_layoutRouteRoute: typeof header_layoutRouteRouteWithChildren
   R404Route: typeof R404Route
   ConfirmSignoutRoute: typeof ConfirmSignoutRoute
   AuthLoginRoute: typeof AuthLoginRoute
@@ -262,6 +283,13 @@ declare module '@tanstack/react-router' {
       path: '/404'
       fullPath: '/404'
       preLoaderRoute: typeof R404RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(header_layout)': {
+      id: '/(header_layout)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof header_layoutRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(feed)': {
@@ -312,6 +340,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/$userId/$postSlug'
       preLoaderRoute: typeof UserIdPostSlugRouteImport
       parentRoute: typeof UserIdRouteRoute
+    }
+    '/(header_layout)/dashboard/': {
+      id: '/(header_layout)/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof header_layoutDashboardIndexRouteImport
+      parentRoute: typeof header_layoutRouteRoute
     }
     '/(feed)/year/': {
       id: '/(feed)/year/'
@@ -421,9 +456,21 @@ const feedRouteRouteWithChildren = feedRouteRoute._addFileChildren(
   feedRouteRouteChildren,
 )
 
+interface header_layoutRouteRouteChildren {
+  header_layoutDashboardIndexRoute: typeof header_layoutDashboardIndexRoute
+}
+
+const header_layoutRouteRouteChildren: header_layoutRouteRouteChildren = {
+  header_layoutDashboardIndexRoute: header_layoutDashboardIndexRoute,
+}
+
+const header_layoutRouteRouteWithChildren =
+  header_layoutRouteRoute._addFileChildren(header_layoutRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   UserIdRouteRoute: UserIdRouteRouteWithChildren,
   feedRouteRoute: feedRouteRouteWithChildren,
+  header_layoutRouteRoute: header_layoutRouteRouteWithChildren,
   R404Route: R404Route,
   ConfirmSignoutRoute: ConfirmSignoutRoute,
   AuthLoginRoute: AuthLoginRoute,

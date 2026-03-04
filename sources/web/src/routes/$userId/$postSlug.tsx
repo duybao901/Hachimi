@@ -4,15 +4,16 @@ import { MarkdownRenderer } from '@/components/Common/MarkdownRenderer';
 import type { ValidationErrorResponse } from '@/types/api';
 import type { PostView } from '@/types/queries/Posts/post';
 import { extractValidationMessages } from '@/utils/extractValidationMessages';
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useParams } from '@tanstack/react-router'
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { BookmarkIcon, HeartPlus as HeartPlusIcon, MessageCircleIcon, ShareIcon } from 'lucide-react'
+import { BookmarkIcon, MessageCircleIcon, ShareIcon } from 'lucide-react'
 import { ReactionSelector } from '@/components/Posts/ReactionSelector';
 import { useAuthStore } from '@/store/auth.store';
 import { Button } from '@/components/ui/button';
 import { formatPostDate } from '@/utils/dateUtils';
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogHeader } from '@/components/ui/dialog';
 
 export const Route = createFileRoute('/$userId/$postSlug')({
   component: RouteComponent,
@@ -26,6 +27,10 @@ function RouteComponent() {
   const params = useParams({
     from: '/$userId/$postSlug',
   });
+
+  const navigate = useNavigate();
+
+  const [loginDialogOpen, setLoginDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchPostBySlug = async () => {
@@ -71,6 +76,12 @@ function RouteComponent() {
     userId: string,
     reactionTypeId: string
   ) => {
+
+    if (currentUser == null) {
+      setLoginDialogOpen(true);
+      return;
+    }
+
     if (!post) return;
 
     try {
@@ -149,6 +160,13 @@ function RouteComponent() {
 
                 {/* MAIN CONTENT */}
                 <div className="flex-1 max-w-3xl">
+                  {
+                    post.isPublished === false && <div className="bg-yellow-100 border-l-4 border-yellow-500 p-4 mb-6">
+                      <p className="text-sm text-yellow-700 ">Unpublished Post. This URL is public but secret, so share at your own discretion. 
+                        <Link to={`/new`} className="text-primary font-semibold ml-2">Click to edit</Link>
+                      </p>
+                    </div>
+                  }
                   <article className="bg-white rounded-lg shadow-sm">
                     {/* Cover Image */}
                     {post.coverImageUrl && (
@@ -367,5 +385,24 @@ function RouteComponent() {
 
       </div>
     </div>
+    <Dialog open={loginDialogOpen} onOpenChange={setLoginDialogOpen}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>You are not logged in</DialogTitle>
+          <DialogDescription>
+            You need to login to react to posts.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="flex justify-end gap-2 mt-4">
+          <Button variant="outline" onClick={() => setLoginDialogOpen(false)}>
+            Cancel
+          </Button>
+          <Button onClick={() => navigate({ to: '/auth/login' })}>
+            Go to Login
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   </div >
 }

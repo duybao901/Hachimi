@@ -35,3 +35,7 @@ export async function GetPostBySlug(postSlug: string) {
 export async function ReactToPost(postId: string, userId: string, reactionTypeId: string) {
     return await commandApiV1.post<ApiResponse<string>>(`/posts/${postId}/react`, { userId, reactionTypeId });
 }
+
+export async function GetAuthorUnpublishedPosts(authorId: string) {
+    return await queryApi.get<ApiResponse<PostView[]>>(`/posts/${authorId}/unpublish`);
+}

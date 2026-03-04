@@ -59,7 +59,8 @@ public sealed class GetPostDetailBySlug : IQueryHandler<Contract.Services.V1.Pos
                     })
                     .ToList(),
             CoverImageUrl: post.CoverImageUrl,
-            PublishedAt: post.PublishedAt
+            PublishedAt: post.PublishedAt,
+            IsPublished: post.PostStatus == Contract.Enumerations.PostStatus.Published
         ));
     }
 }

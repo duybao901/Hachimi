@@ -46,6 +46,7 @@ export interface PostView {
     isFirstPost: boolean;
     comments: PostComment[] | []
     reactions: Reaction[];
+    isPublished?: boolean;
 }
 
 
