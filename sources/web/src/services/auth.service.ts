@@ -32,7 +32,7 @@ export async function loadSessionOnInit() {
   try {
     if (storedUser) {
       const res = await authApiV1.post("/refresh-token", {
-        email: "asd@gmail.com",
+        email: JSON.parse(storedUser).email,
       });
       setAccessToken(res.data.value.accessToken);
       setCurrentUser(res.data.value.currentUser);

@@ -73,8 +73,7 @@ function RouteComponent() {
 
   useEffect(() => {
     if (post && post.isPublished === false) {
-      if (!currentUser || currentUser.id !== post.postAuthor.userId) {
-        console.log("Current user:", currentUser, "Post author:", post.postAuthor);
+      if (!currentUser || currentUser.id !== post.postAuthor.id) {
         toast.error("Bạn không có quyền truy cập vào bản nháp này.");
         navigate({ to: "/" });
       }

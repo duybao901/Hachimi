@@ -12,7 +12,6 @@ SELECT TOP (1000) [Id]
       ,[CommentCount]
       ,[TrendingScore]
       ,[IsDeleted]
-      ,[LikeCount]
       ,[PublishedAt]
   FROM [HachimiDatabase].[dbo].[Post]
 

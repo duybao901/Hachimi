@@ -36,9 +36,6 @@ internal class PostConfiguration : IEntityTypeConfiguration<Posts>
         builder.Property(x => x.CommentCount)
             .HasDefaultValue(0);
 
-        builder.Property(x => x.LikeCount)
-            .HasDefaultValue(0);
-
         builder.Property(x => x.TrendingScore)
             .HasDefaultValue(0);
 

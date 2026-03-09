@@ -38,7 +38,7 @@ public sealed class AddReactionCommandHandler : ICommandHandler<Contract.Service
         if (existingReaction != null)
         {
             _postReactionRepositoryBase.Remove(existingReaction);
-            post.RemoveReaction(request.UserId, reactionType.Id);
+            post.RemoveReaction(request.UserId, reactionType.Id, reactionType.Name);
 
             return Result.Success("Reaction removed");
         }
@@ -51,7 +51,7 @@ public sealed class AddReactionCommandHandler : ICommandHandler<Contract.Service
         );
 
         _postReactionRepositoryBase.Add(postReaction);
-        post.AddReaction(request.UserId, reactionType.Id);
+        post.AddReaction(request.UserId, reactionType.Id, reactionType.Name);
 
         return Result.Success("Reaction added");
     }

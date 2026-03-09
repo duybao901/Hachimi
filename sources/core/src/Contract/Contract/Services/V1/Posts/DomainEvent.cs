@@ -12,6 +12,6 @@ public static class DomainEvent
     public record PostDeletedEvent(Guid IdEvent, Guid Id) : IDomainEvent, ICommand;
     public record PostDraftPublishedEvent(Guid IdEvent, Guid Id, DateTimeOffset? PublishedAt) : IDomainEvent, ICommand;
     public record PostPublishedEvent(Guid IdEvent, Guid Id, string Title, string Slug, string Content, string CoverImgUrl, Guid UserId, ICollection<Guid> TagIds, ICollection<ReactionViewModel> Reactions, DateTimeOffset? PublishedAt) : IDomainEvent, ICommand;
-    public record PostReactionToggledEvent(Guid IdEvent, Guid Id, Guid UserId, Guid ReactionTypeId, bool IsAdded) : IDomainEvent, ICommand;
+    public record PostReactionToggledEvent(Guid IdEvent, Guid Id, Guid UserId, Guid ReactionTypeId, string ReactionName, bool IsAdded) : IDomainEvent, ICommand;
     public record PostCommentedEvent(Guid IdEvent, Guid Id, Guid CommentId, Guid UserId, string Content, int CommentCount) : IDomainEvent, ICommand;
 }

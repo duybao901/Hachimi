@@ -30,10 +30,10 @@ public sealed class SaveDraftCommandHandler : ICommandHandler<Contract.Services.
     public async Task<Result> Handle(Contract.Services.V1.Posts.Command.SaveDraftPostCommand request, CancellationToken cancellationToken)
     {
         var userId = _currentUser.UserId;
-        if (request.TagIds != null && request.TagIds.Count() < 4)
-        {
-            throw new PostException.MinimumTagsRequiredException(4);
-        }
+        //if (request.TagIds != null && request.TagIds.Count() < 4)
+        //{
+        //    throw new PostException.MinimumTagsRequiredException(4);
+        //}
 
         var slug = SlugGenerator.Generate(request.Title);
         var reactionTypes = await _reactionTypeRepository.FindAll().ToListAsync(cancellationToken);

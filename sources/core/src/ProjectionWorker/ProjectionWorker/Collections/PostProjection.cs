@@ -16,7 +16,6 @@ public class PostProjection : Document
     public bool IsPublished => PostStatus == PostStatus.Published;
     public int ViewCount { get; set; }
     public int CommentCount { get; set; }
-    public int LikeCount { get; set; }
     public double TrendingScore { get; set; }
     public DateTimeOffset? PublishedAt { get; set; }
     public int ReadingTimeMinutes { get; set; }
@@ -25,4 +24,15 @@ public class PostProjection : Document
     public required AuthorProjection Author { get; set; }
     public required List<TagProjection> Tags { get; set; } = new();
     public required List<ReactionProjection> Reactions { get; set; } = new();
+    public required ReactionSummary ReactionSummary { get; set; }
+}
+
+public class ReactionSummary
+{
+    public int TotalReactions { get; set; }
+    public int LikeCount { get; set; }
+    public int UnicornCount { get; set; }
+    public int ExplodingHeadCount { get; set; }
+    public int RaisedHandCount { get; set; }
+    public int FireCount { get; set; }
 }
