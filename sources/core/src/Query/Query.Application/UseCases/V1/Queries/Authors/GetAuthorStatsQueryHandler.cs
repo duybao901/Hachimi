@@ -20,7 +20,10 @@ public sealed class GetAuthorStatsQueryHandler : IQueryHandler<Contract.Services
     {
         var queryable = _postRepository.AsQueryable(p => p.Author.DocumentId == request.AuthorId);
         
-        var totalReactions = await queryable.SumAsync(p => p.LikeCount, cancellationToken);
+        var totalReactions = await queryable
+            .SelectMany(p => p.Reactions)
+            .SumAsync(r => r.Count, cancellationToken);
+            
         var totalComments = await queryable.SumAsync(p => p.CommentCount, cancellationToken);
         var totalViews = await queryable.SumAsync(p => p.ViewCount, cancellationToken);
         var totalPosts = await queryable.CountAsync(cancellationToken);

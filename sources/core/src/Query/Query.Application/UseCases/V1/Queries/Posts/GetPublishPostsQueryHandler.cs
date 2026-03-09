@@ -60,6 +60,7 @@ public sealed class GetPublishPostsQueryHandler : IQueryHandler<Contract.Service
                 PostAuthor: new PostAuthorViewModel
                 {
                     Id = p.Author.DocumentId,
+                    UserId = p.Author.UserId,
                     Name = p.Author.Name,
                     UserName = p.Author.UserName,
                     Email = p.Author.Email,

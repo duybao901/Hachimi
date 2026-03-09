@@ -33,6 +33,7 @@ public sealed class GetPostDetailBySlug : IQueryHandler<Contract.Services.V1.Pos
             PostAuthor: new PostAuthorViewModel()
             {
                 Id = post.Author.DocumentId,
+                UserId = post.Author.UserId,
                 Name = post.Author.Name,
                 UserName = post.Author.UserName,
                 Email = post.Author.Email,

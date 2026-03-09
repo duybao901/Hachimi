@@ -17,7 +17,11 @@ export async function SaveDraftPost(data: SaveDraftPostCommand) {
 }
 
 export async function UpdatePost(postId: string, data: UpdatePostCommand) {
-    return await commandApiV1.post<ApiResponse<string>>(`/posts/${postId}`, data)
+    return await commandApiV1.put<ApiResponse<string>>(`/posts/${postId}`, data)
+}
+
+export async function PublishDraftPost(postId: string) {
+    return await commandApiV1.put<ApiResponse<string>>(`/posts/${postId}/publish`, {});
 }
 
 export async function PublishPost(data: PublishPostCommand){
@@ -30,6 +34,10 @@ export async function GetPosts(pageIndex: number, pageSize: number, feed: string
 
 export async function GetPostBySlug(postSlug: string) {
     return await queryPublicApi.get<ApiResponse<PostView>>(`/posts/public/${postSlug}`);
+}
+
+export async function GetPostById(postId: string) {
+    return await queryApi.get<ApiResponse<PostView>>(`/posts/${postId}`);
 }
 
 export async function ReactToPost(postId: string, userId: string, reactionTypeId: string) {

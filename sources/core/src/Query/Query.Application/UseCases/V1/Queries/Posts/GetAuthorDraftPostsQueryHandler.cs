@@ -24,6 +24,7 @@ public sealed class GetAuthorDraftPostsQueryHandler : IQueryHandler<Contract.Ser
                 PostAuthor: new PostAuthorViewModel
                 {
                     Id = p.Author.DocumentId,
+                    UserId = p.Author.UserId,
                     Name = p.Author.Name,
                     UserName = p.Author.UserName,
                     Email = p.Author.Email,

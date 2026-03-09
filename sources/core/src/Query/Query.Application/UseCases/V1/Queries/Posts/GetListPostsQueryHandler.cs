@@ -60,7 +60,8 @@ public class GetListPostsQueryHandler : IQueryHandler<Contract.Services.V1.Posts
                 Content: p.Content,
                 PostAuthor: new PostAuthorViewModel
                 {
-                    //id = p.Author.Id,
+                    Id = p.Author.DocumentId,
+                    UserId = p.Author.UserId,
                     Name = p.Author.Name,
                     UserName = p.Author.UserName,
                     Email = p.Author.Email,

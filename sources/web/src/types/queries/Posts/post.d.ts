@@ -31,6 +31,7 @@ export interface PostView {
     content: string;
     postAuthor: {
         id: string;
+        userId: string;
         name: string;
         userName: string;
         avatarUrl: string;

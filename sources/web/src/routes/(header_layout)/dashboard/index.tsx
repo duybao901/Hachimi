@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router"
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -134,7 +134,7 @@ function RouteComponent() {
                         unpublishedPosts.length !== 0 ? <>
                             {
                                 unpublishedPosts.map((post) => (
-                                    <PostRow key={post.id} title={post.title} slug={post.slug} userName={post.postAuthor.userName} />
+                                    <PostRow key={post.id} id={post.id} title={post.title} slug={post.slug} userName={post.postAuthor.userName} />
                                 ))
                             }
                         </> :
@@ -174,7 +174,9 @@ function SidebarItem({
     )
 }
 
-function PostRow({ title, slug, userName }: { title: string; slug: string; userName: string }) {
+function PostRow({ id, title, slug, userName }: { id: string; title: string; slug: string; userName: string }) {
+    const navigate = useNavigate();
+
     return (
         <Card className="rounded-2xl shadow-sm p-4">
             <CardContent className="flex items-center justify-between">
@@ -191,7 +193,7 @@ function PostRow({ title, slug, userName }: { title: string; slug: string; userN
                     <Button variant="ghost" size="sm" className="text-destructive">
                         Delete
                     </Button>
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" onClick={() => navigate({ to: `/edit/${id}` })}>
                         Edit
                     </Button>
                     <MoreHorizontal className="size-4 text-muted-foreground cursor-pointer" />

@@ -16,6 +16,7 @@ import { Route as feedRouteRouteImport } from './routes/(feed)/route'
 import { Route as UserIdRouteRouteImport } from './routes/$userId/route'
 import { Route as NewIndexRouteImport } from './routes/new/index'
 import { Route as feedIndexRouteImport } from './routes/(feed)/index'
+import { Route as EditPostIdRouteImport } from './routes/edit/$postId'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as UserIdPostSlugRouteImport } from './routes/$userId/$postSlug'
@@ -62,6 +63,11 @@ const feedIndexRoute = feedIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => feedRouteRoute,
+} as any)
+const EditPostIdRoute = EditPostIdRouteImport.update({
+  id: '/edit/$postId',
+  path: '/edit/$postId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
   id: '/auth/register',
@@ -137,6 +143,7 @@ export interface FileRoutesByFullPath {
   '/$userId/$postSlug': typeof UserIdPostSlugRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/edit/$postId': typeof EditPostIdRoute
   '/': typeof feedIndexRoute
   '/new': typeof NewIndexRoute
   '/following/latest': typeof feedFollowingLatestRoute
@@ -157,6 +164,7 @@ export interface FileRoutesByTo {
   '/$userId/$postSlug': typeof UserIdPostSlugRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/edit/$postId': typeof EditPostIdRoute
   '/': typeof feedIndexRoute
   '/new': typeof NewIndexRoute
   '/following/latest': typeof feedFollowingLatestRoute
@@ -180,6 +188,7 @@ export interface FileRoutesById {
   '/$userId/$postSlug': typeof UserIdPostSlugRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/edit/$postId': typeof EditPostIdRoute
   '/(feed)/': typeof feedIndexRoute
   '/new/': typeof NewIndexRoute
   '/(feed)/following/latest': typeof feedFollowingLatestRoute
@@ -202,6 +211,7 @@ export interface FileRouteTypes {
     | '/$userId/$postSlug'
     | '/auth/login'
     | '/auth/register'
+    | '/edit/$postId'
     | '/'
     | '/new'
     | '/following/latest'
@@ -222,6 +232,7 @@ export interface FileRouteTypes {
     | '/$userId/$postSlug'
     | '/auth/login'
     | '/auth/register'
+    | '/edit/$postId'
     | '/'
     | '/new'
     | '/following/latest'
@@ -244,6 +255,7 @@ export interface FileRouteTypes {
     | '/$userId/$postSlug'
     | '/auth/login'
     | '/auth/register'
+    | '/edit/$postId'
     | '/(feed)/'
     | '/new/'
     | '/(feed)/following/latest'
@@ -266,6 +278,7 @@ export interface RootRouteChildren {
   ConfirmSignoutRoute: typeof ConfirmSignoutRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
+  EditPostIdRoute: typeof EditPostIdRoute
   NewIndexRoute: typeof NewIndexRoute
 }
 
@@ -319,6 +332,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof feedIndexRouteImport
       parentRoute: typeof feedRouteRoute
+    }
+    '/edit/$postId': {
+      id: '/edit/$postId'
+      path: '/edit/$postId'
+      fullPath: '/edit/$postId'
+      preLoaderRoute: typeof EditPostIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/auth/register': {
       id: '/auth/register'
@@ -475,6 +495,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConfirmSignoutRoute: ConfirmSignoutRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
+  EditPostIdRoute: EditPostIdRoute,
   NewIndexRoute: NewIndexRoute,
 }
 export const routeTree = rootRouteImport
