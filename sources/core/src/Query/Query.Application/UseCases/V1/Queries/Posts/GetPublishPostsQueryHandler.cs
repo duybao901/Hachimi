@@ -104,7 +104,7 @@ public sealed class GetPublishPostsQueryHandler : IQueryHandler<Contract.Service
         }
 
         return q.OrderByDescending(p =>
-            p.LikeCount * 1.0 +
+            p.ReactionSummary.TotalReactions * 1.0 +
             p.CommentCount * 2.0 +
             p.ViewCount * 0.1
         );

@@ -72,9 +72,9 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             ViewCount = 0,
             ReadingTimeMinutes = 0,
             CommentCount = 0,
-            LikeCount = 0,
             TrendingScore = 0,
-            Reactions = reactionProjections
+            Reactions = reactionProjections,
+            ReactionSummary = new ReactionSummary()
         };
 
         await _postMongoRepository.InsertOneAsync(post);
@@ -182,10 +182,10 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
             ViewCount = 0,
             ReadingTimeMinutes = 0,
             CommentCount = 0,
-            LikeCount = 0,
             TrendingScore = 0,       
             Reactions = reactionProjections,
-            PublishedAt = request.PublishedAt
+            PublishedAt = request.PublishedAt,
+            ReactionSummary = new ReactionSummary()
         };
 
         await _postMongoRepository.InsertOneAsync(post);
@@ -197,32 +197,48 @@ internal class ProjectPostDetailsWhenProductChangeEventHandler :
     {
         var post = await _postMongoRepository.FindOneAsync(p => p.DocumentId == request.Id);
         if (post is null)
-        {
-            // In case the post projection does not exist, we just skip updating tags
             return Result.Success();
-        }
+
+        var summaryField = GetSummaryField(request.ReactionName);
+        if (summaryField is null)
+            return Result.Success();
+
+        var incValue = request.IsAdded ? 1 : -1;
+
+        var update = Builders<PostProjection>.Update
+            .Inc("Reactions.$.Count", incValue)
+            .Inc(summaryField, incValue)
+            .Inc("ReactionSummary.TotalReactions", incValue);
 
         if (request.IsAdded)
         {
-            await _postMongoRepository.UpdateOneAsync(
-                p => p.DocumentId == request.Id
-                  && p.Reactions.Any(r => r.DocumentId == request.ReactionTypeId),
-                Builders<PostProjection>.Update
-                    .Inc("Reactions.$.Count", 1)
-                    .AddToSet("Reactions.$.UserIds", request.UserId.ToString())
-            );
+            update = update.AddToSet("Reactions.$.UserIds", request.UserId.ToString());
         }
         else
         {
-            await _postMongoRepository.UpdateOneAsync(
-                p => p.DocumentId == request.Id
-                  && p.Reactions.Any(r => r.DocumentId == request.ReactionTypeId),
-                Builders<PostProjection>.Update
-                    .Inc("Reactions.$.Count", -1)
-                    .Pull("Reactions.$.UserIds", request.UserId.ToString())
-            );
+            update = update.Pull("Reactions.$.UserIds", request.UserId.ToString());
         }
+
+        await _postMongoRepository.UpdateOneAsync(
+            p => p.DocumentId == request.Id
+            && p.Reactions.Any(r => r.DocumentId == request.ReactionTypeId),
+            update
+        );
 
         return Result.Success();
     }
+
+    private static string? GetSummaryField(string reactName)
+    {
+        return reactName switch
+        {
+            "Like" => "ReactionSummary.LikeCount",
+            "Unicorn" => "ReactionSummary.UnicornCount",
+            "ExplodingHead" => "ReactionSummary.ExplodingHeadCount",
+            "RaisedHands" => "ReactionSummary.RaisedHandCount",
+            "Fire" => "ReactionSummary.FireCount",
+            _ => null
+        };
+    }
 }
+

@@ -16,13 +16,23 @@ public class Post : Document
     public DateTimeOffset? PublishedAt { get; set; }
     public int ViewCount { get; set; }
     public int CommentCount { get; set; }
-    public int LikeCount { get; set; }
     public int ShareCount { get; set; }
     public double TrendingScore { get; set; }
     public int ReadingTimeMinutes { get; set; }
     public bool IsDeleted { get; set; }
     public required Author Author { get; set; }
-    public List<Guid> AuthorFollowers { get; set; } = new();
-    public List<Tag> Tags { get; set; } = new();
-    public List<Reaction> Reactions { get; set; } = new();
+    public List<Guid> AuthorFollowers { get; set; } = [];
+    public List<Tag> Tags { get; set; } = [];
+    public List<Reaction> Reactions { get; set; } = [];
+    public ReactionSummary ReactionSummary { get; set; }
+}
+
+public class ReactionSummary
+{
+    public int TotalReactions { get; set; }
+    public int LikeCount { get; set; }
+    public int UnicornCount { get; set; }
+    public int ExplodingHeadCount { get; set; }
+    public int RaisedHandCount { get; set; }
+    public int FireCount { get; set; }
 }

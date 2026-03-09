@@ -13,8 +13,6 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
     public PostStatus PostStatus { get; set; }
     public int ViewCount { get; set; }
     public int CommentCount { get; set; }
-    public int LikeCount { get; set; }
-
     public double TrendingScore { get; set; }
 
     public DateTimeOffset? PublishedAt { get; set; }
@@ -40,7 +38,6 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
         AuthorId = authorId;
         ViewCount = 0;
         CommentCount = 0;
-        LikeCount = 0;
         TrendingScore = 0;
     }
 
@@ -139,16 +136,14 @@ public class Posts : AggregateRoot<Guid>, IAuditTableEntity
         RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostDraftPublishedEvent(Guid.NewGuid(), Id, PublishedAt));
     }
 
-    public void AddReaction(Guid UserId, Guid ReactionTypeId)
+    public void AddReaction(Guid UserId, Guid ReactionTypeId, string ReactionName)
     {
-        LikeCount++;
-        RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostReactionToggledEvent(Guid.NewGuid(), Id, UserId, ReactionTypeId, true));
+        RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostReactionToggledEvent(Guid.NewGuid(), Id, UserId, ReactionTypeId, ReactionName, true));
     }
 
-    public void RemoveReaction(Guid UserId, Guid ReactionTypeId)
+    public void RemoveReaction(Guid UserId, Guid ReactionTypeId, string ReactionName)
     {
-        LikeCount--;
-        RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostReactionToggledEvent(Guid.NewGuid(), Id, UserId, ReactionTypeId, false));
+        RaiseDomainEvent(new Contract.Services.V1.Posts.DomainEvent.PostReactionToggledEvent(Guid.NewGuid(), Id, UserId, ReactionTypeId, ReactionName, false));
     }
 
     public void AddComment(Guid commentId, Guid userId, string content)

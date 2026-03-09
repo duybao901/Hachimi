@@ -73,8 +73,9 @@ function RouteComponent() {
 
   useEffect(() => {
     if (post && post.isPublished === false) {
-      if (!currentUser || currentUser.id !== post.postAuthor.id) {
-        toast.error("Bạn không có quyền truy cập vào bản nháp này.");
+      if (!currentUser || currentUser.id !== post.postAuthor.userId) {
+        console.log(currentUser, post.postAuthor);
+        toast.error("You are not the author of this post.");
         navigate({ to: "/" });
       }
     }
