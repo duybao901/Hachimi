@@ -73,7 +73,7 @@ function RouteComponent() {
 
   useEffect(() => {
     if (post && post.isPublished === false) {
-      if (!currentUser || currentUser.id !== post.postAuthor.id) {
+      if (!currentUser || currentUser.id !== post.postAuthor.userId) {
         toast.error("Bạn không có quyền truy cập vào bản nháp này.");
         navigate({ to: "/" });
       }
@@ -175,7 +175,7 @@ function RouteComponent() {
                   {
                     post.isPublished === false && <div className="bg-yellow-100 border-l-4 border-yellow-500 p-4 mb-6">
                       <p className="text-sm text-yellow-700 ">Unpublished Post. This URL is public but secret, so share at your own discretion.
-                        <Link to={`/new`} className="text-primary font-semibold ml-2">Click to edit</Link>
+                        <Link to={`/edit/${post.id}`} className="text-primary font-semibold ml-2">Click to edit</Link>
                       </p>
                     </div>
                   }

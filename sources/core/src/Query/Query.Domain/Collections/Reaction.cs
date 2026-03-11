@@ -13,5 +13,5 @@ public class Reaction : Document
     public string Url { get; set; } = default!;
 
     public int Count { get; set; }
-    public List<string> UserIds { get; set; } = new();
+    public List<Guid> UserIds { get; set; } = new();
 }

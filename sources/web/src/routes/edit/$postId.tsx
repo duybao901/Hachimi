@@ -370,22 +370,15 @@ function RouteComponent() {
                                                 className="hidden"
                                             />
                                             <Button
-                                                variant="outline"
+                                                variant="border"
                                                 onClick={() => fileInputRef.current?.click()}
                                                 disabled={isUploading}
-                                                className="h-10 text-xs font-semibold gap-2 transition-all hover:bg-neutral-50 rounded-xl"
                                             >
                                                 <ImageIcon className="h-4 w-4" />
                                                 {isUploading ? "Uploading..." : "Upload Cover Image"}
                                             </Button>
-                                            <Button variant="outline" className="h-10 text-xs font-semibold gap-2 rounded-xl border-dashed">
-                                                <Sparkles className="h-4 w-4 text-purple-500" />
-                                                Magic AI Image
-                                            </Button>
-                                            <Button variant="outline" className="h-10 text-xs font-semibold gap-2 rounded-xl">
-                                                <Video className="h-4 w-4" />
-                                                Link Video
-                                            </Button>
+                                            <Button variant="border">🍌 Generate Image</Button>
+                                            <Button variant="border">Cover Video Link</Button>
                                         </div>
 
                                         {draftPost.coverImageUrl && (

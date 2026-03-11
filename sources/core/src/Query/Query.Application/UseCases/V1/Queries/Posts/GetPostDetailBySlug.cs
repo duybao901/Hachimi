@@ -56,7 +56,7 @@ public sealed class GetPostDetailBySlug : IQueryHandler<Contract.Services.V1.Pos
                         Icon = r.Icon,
                         Url = r.Url,
                         Count = r.Count,
-                        IsReactionByCurrentUser = !string.IsNullOrEmpty(_currentUser?.UserId) && r.UserIds != null && r.UserIds.Contains(_currentUser.UserId)
+                        IsReactionByCurrentUser = r.UserIds != null && r.UserIds.Contains(_currentUser.UserId)
                     })
                     .ToList(),
             CoverImageUrl: post.CoverImageUrl,

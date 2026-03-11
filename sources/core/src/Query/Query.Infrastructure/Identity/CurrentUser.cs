@@ -4,7 +4,7 @@ using Query.Application.Abstraction;
 namespace Query.Infrastructure.Identity;
 internal sealed class CurrentUser : ICurrentUser
 {
-    public string UserId { get; }
+    public Guid UserId { get; }
     public string Email { get; }
 
     public CurrentUser(IHttpContextAccessor accessor)
@@ -14,7 +14,7 @@ internal sealed class CurrentUser : ICurrentUser
         if (headers is null)
             return;
 
-        var userIdHeader = headers["X-User-Id"].ToString();
+        var userIdHeader = headers["X-User-Id"];
 
         if (!Guid.TryParse(userIdHeader, out var userId))
         {
@@ -22,7 +22,7 @@ internal sealed class CurrentUser : ICurrentUser
             return;
         }
 
-        UserId = userId.ToString();
+        UserId = userId;
 
         Email = headers["X-User-Email"].ToString();
     }

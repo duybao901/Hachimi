@@ -7,5 +7,5 @@ public static class Response
 {
     public record PostResponse(Guid Id, string Title, string Slug, string Content, PostAuthorViewModel PostAuthor, ICollection<PostTagViewModel> PostTags, ICollection<ReactionViewModel> Reactions, string? CoverImageUrl = null, DateTimeOffset? PublishedAt = null, bool? IsPublished = null);
     public record PostListResponse(Guid Id, string Title, string Slug, string Content, PostAuthorViewModel PostAuthor, DateTimeOffset? PublishedAt = null);
-    public record PostDraftReponse(Guid? Id, string Title, string Content, string UserId, ICollection<Guid> TagIds, PostStatus PostStatus);
+    public record PostDraftReponse(Guid? Id, string Title, string Content, Guid UserId, ICollection<Guid> TagIds, PostStatus PostStatus);
 }
