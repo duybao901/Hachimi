@@ -538,7 +538,82 @@ function RouteComponent() {
             </div>
 
             {/* Markdown instruction */}
-            <div className="col-span-4">Writing a Great Post Title</div>
+            <div className="col-span-4 pl-6">
+              <div className="sticky top-6">
+                <div className="bg-white rounded-xl border border-gray-100 p-5 shadow-xs">
+                  <h3 className="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                    Markdown Formatting
+                  </h3>
+                  
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600 font-semibold">Bold</span>
+                      <code className="bg-gray-50 border border-gray-100 px-2 py-1 rounded text-gray-600 font-mono text-xs">**text**</code>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600 italic">Italic</span>
+                      <code className="bg-gray-50 border border-gray-100 px-2 py-1 rounded text-gray-600 font-mono text-xs">*text*</code>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Link</span>
+                      <code className="bg-gray-50 border border-gray-100 px-2 py-1 rounded text-gray-600 font-mono text-xs">[title](url)</code>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Inline Code</span>
+                      <code className="bg-gray-50 border border-gray-100 px-2 py-1 rounded text-gray-600 font-mono text-xs">`code`</code>
+                    </div>
+                    
+                    <div className="pt-2 border-t border-gray-50">
+                      <span className="text-sm text-gray-600 block mb-1">Code Block</span>
+                      <code className="block bg-gray-50 border border-gray-100 px-3 py-2 rounded-lg text-gray-600 font-mono text-xs whitespace-pre">
+{`\`\`\`javascript
+const hello = "world";
+\`\`\``}
+                      </code>
+                    </div>
+                    
+                    <div className="pt-2 border-t border-gray-50">
+                      <span className="text-sm text-gray-600 block mb-1">Blockquote</span>
+                      <code className="block bg-gray-50 border border-gray-100 px-3 py-2 rounded-lg text-gray-600 font-mono text-xs">
+{`> Quote text`}
+                      </code>
+                    </div>
+
+                    <div className="pt-2 border-t border-gray-50">
+                      <span className="text-sm text-gray-600 block mb-1">Lists</span>
+                      <code className="block bg-gray-50 border border-gray-100 px-3 py-2 rounded-lg text-gray-600 font-mono text-xs whitespace-pre">
+{`- Item 1
+- Item 2
+
+1. First
+2. Second`}
+                      </code>
+                    </div>
+
+                    <div className="pt-2 border-t border-gray-50">
+                      <span className="text-sm text-gray-600 block mb-1">Headings</span>
+                      <code className="block bg-gray-50 border border-gray-100 px-3 py-2 rounded-lg text-gray-600 font-mono text-xs whitespace-pre">
+{`# Heading 1
+## Heading 2
+### Heading 3`}
+                      </code>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-4 bg-primary/5 rounded-xl border border-primary/10 p-4">
+                  <h4 className="text-sm font-semibold text-primary mb-1">
+                    💡 Publishing Tips
+                  </h4>
+                  <p className="text-xs text-gray-600 leading-relaxed">
+                    Make sure your title is catchy. You can format your content using Markdown or the provided rich text toolbar.
+                  </p>
+                </div>
+              </div>
+            </div>
 
             <div className="mt-2 col-span-4 h-(--article-form-actions-height)">
               <div className="flex items-center gap-4">

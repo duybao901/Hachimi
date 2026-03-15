@@ -355,7 +355,7 @@ function RouteComponent() {
             <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                     {/* Main Editor Section */}
-                    <div className="lg:col-span-12">
+                    <div className="lg:col-span-8">
                         <div className="bg-white rounded-2xl border border-neutral-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
                             {editMode ? (
                                 <div className="flex flex-col">
@@ -524,6 +524,85 @@ function RouteComponent() {
                                     <Send className="h-4 w-4 mr-2" />
                                     Publish
                                 </Button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Markdown instruction */}
+                    <div className="hidden lg:block lg:col-span-4">
+                        <div className="sticky top-24">
+                            <div className="bg-white rounded-2xl border border-neutral-200 p-6 shadow-sm">
+                                <h3 className="text-base font-bold text-neutral-800 mb-5 flex items-center gap-2">
+                                    <Sparkles className="h-4 w-4 text-primary" />
+                                    Markdown Formatting
+                                </h3>
+                                
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-sm text-neutral-600 font-semibold">Bold</span>
+                                        <code className="bg-neutral-50 border border-neutral-100 px-2 py-1 rounded-md text-neutral-600 font-mono text-xs">**text**</code>
+                                    </div>
+                                    
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-sm text-neutral-600 italic">Italic</span>
+                                        <code className="bg-neutral-50 border border-neutral-100 px-2 py-1 rounded-md text-neutral-600 font-mono text-xs">*text*</code>
+                                    </div>
+                                    
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-sm text-neutral-600">Link</span>
+                                        <code className="bg-neutral-50 border border-neutral-100 px-2 py-1 rounded-md text-neutral-600 font-mono text-xs">[title](url)</code>
+                                    </div>
+                                    
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-sm text-neutral-600">Inline Code</span>
+                                        <code className="bg-neutral-50 border border-neutral-100 px-2 py-1 rounded-md text-neutral-600 font-mono text-xs">`code`</code>
+                                    </div>
+                                    
+                                    <div className="pt-3 border-t border-neutral-100">
+                                        <span className="text-sm text-neutral-600 block mb-2 font-medium">Code Block</span>
+                                        <code className="block bg-neutral-50 border border-neutral-100 px-3 py-2.5 rounded-lg text-neutral-600 font-mono text-xs whitespace-pre">
+{`\`\`\`javascript
+const hello = "world";
+\`\`\``}
+                                        </code>
+                                    </div>
+                                    
+                                    <div className="pt-3 border-t border-neutral-100">
+                                        <span className="text-sm text-neutral-600 block mb-2 font-medium">Blockquote</span>
+                                        <code className="block bg-neutral-50 border border-neutral-100 px-3 py-2.5 rounded-lg text-neutral-600 font-mono text-xs">
+{`> Quote text`}
+                                        </code>
+                                    </div>
+
+                                    <div className="pt-3 border-t border-neutral-100">
+                                        <span className="text-sm text-neutral-600 block mb-2 font-medium">Lists</span>
+                                        <code className="block bg-neutral-50 border border-neutral-100 px-3 py-2.5 rounded-lg text-neutral-600 font-mono text-xs whitespace-pre">
+{`- Item 1
+- Item 2
+
+1. First
+2. Second`}
+                                        </code>
+                                    </div>
+
+                                    <div className="pt-3 border-t border-neutral-100">
+                                        <span className="text-sm text-neutral-600 block mb-2 font-medium">Headings</span>
+                                        <code className="block bg-neutral-50 border border-neutral-100 px-3 py-2.5 rounded-lg text-neutral-600 font-mono text-xs whitespace-pre">
+{`# Heading 1
+## Heading 2
+### Heading 3`}
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="mt-4 bg-primary/5 rounded-2xl border border-primary/10 p-5">
+                                <h4 className="text-sm font-bold text-primary mb-1.5">
+                                    💡 Publishing Tips
+                                </h4>
+                                <p className="text-sm text-neutral-600 leading-relaxed">
+                                    Make sure your title is catchy. You can format your content using Markdown or the provided rich text toolbar.
+                                </p>
                             </div>
                         </div>
                     </div>
