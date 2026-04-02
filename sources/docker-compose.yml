@@ -1,0 +1,134 @@
+version: "3.9"
+
+services:
+  # ==========================================
+  # Infrastructure
+  # ==========================================
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.9-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin123
+      RABBITMQ_DEFAULT_VHOST: Vhost_Hachimi
+    restart: unless-stopped
+
+  redis:
+    container_name: redis
+    image: redis/redis-stack-server:latest
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  mssql:
+    container_name: mssql
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Password123!"
+    ports:
+      - "1433:1433"
+    restart: unless-stopped
+
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+
+  # ==========================================
+  # Backend Services
+  # ==========================================
+  commandapi:
+    container_name: commandapi
+    build:
+      context: ./core
+      dockerfile: src/Command/Command.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__ConnectionStrings=Data Source=mssql;Initial Catalog=HachimiDatabase;User id=sa;Password=Password123!; TrustServerCertificate=True
+      - MasstransitConfigurationOption__Host=rabbitmq
+    depends_on:
+      - mssql
+      - rabbitmq
+    restart: unless-stopped
+
+  queryapi:
+    container_name: queryapi
+    build:
+      context: ./core
+      dockerfile: src/Query/Query.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - MongoDBSettings__ConnectionString=mongodb://mongodb:27017
+      - MasstransitConfiguration__Host=rabbitmq
+    depends_on:
+      - mongodb
+      - rabbitmq
+    restart: unless-stopped
+
+  authorizationapi:
+    container_name: authorizationapi
+    build:
+      context: ./core
+      dockerfile: src/Authorization/AuthorizationAPI/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__ConnectionStrings=Data Source=mssql;Initial Catalog=HachimiDatabase;User id=sa;Password=Password123!; TrustServerCertificate=True
+    depends_on:
+      - mssql
+    restart: unless-stopped
+
+  projectionworker:
+    container_name: projectionworker
+    build:
+      context: ./core
+      dockerfile: src/ProjectionWorker/ProjectionWorker/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__ConnectionStrings=Data Source=mssql;Initial Catalog=HachimiDatabase;User id=sa;Password=Password123!; TrustServerCertificate=True
+      - MasstransitConfigurationOptions__Host=rabbitmq
+      - MongoDBSettings__ConnectionString=mongodb://mongodb:27017
+    depends_on:
+      - mssql
+      - mongodb
+      - rabbitmq
+    restart: unless-stopped
+
+  apigateway:
+    container_name: apigateway
+    build:
+      context: ./core
+      dockerfile: src/ReverseProxy/ApiGateway/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Redis=redis:6379
+      - ReverseProxy__Clusters__authApiCluster__Destinations__Destination1__Address=http://authorizationapi:8080
+      - ReverseProxy__Clusters__commandApiCluster__Destinations__Destination1__Address=http://commandapi:8080
+      - ReverseProxy__Clusters__queryApiCluster__Destinations__Destination1__Address=http://queryapi:8080
+    ports:
+      - "5000:8080" # Mapping ApiGateway 8080 to host 5000
+    depends_on:
+      - commandapi
+      - queryapi
+      - authorizationapi
+      - redis
+    restart: unless-stopped
+
+  # ==========================================
+  # Frontend Application
+  # ==========================================
+  web:
+    container_name: hachimi-web
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - apigateway
+    restart: unless-stopped

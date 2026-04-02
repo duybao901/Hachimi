@@ -19,6 +19,8 @@ import { Spinner } from "@/components/ui/spinner"
 import { login } from "@/services/auth.service"
 import { guestGuard } from "@/guards/guestGuard"
 import Logo from "@/assets/horse_logo.png"
+import type { ValidationErrorResponse } from "@/types/api"
+import { extractValidationMessages } from "@/utils/extractValidationMessages"
 
 const formSchema = z.object({
   email: z.string(),
@@ -48,14 +50,30 @@ function Login() {
       setIsLoading(false)
       navigate({ to: "/" })
     } catch (error: any) {
-      setIsLoading(false)
-      if (error.response) {
-        toast.error(
-          error.response?.data?.Detail || error.message || "Server error"
-        )
+      const data = error?.response?.data as ValidationErrorResponse | undefined
+
+      if (data?.errors) {
+        const messages = extractValidationMessages(data.errors)
+
+        toast.error("Validation error", {
+          description: (
+            <ul className="list-disc pl-4">
+              {messages.map((msg) => (
+                <li key={msg}>{msg}</li>
+              ))}
+            </ul>
+          ),
+        })
+      } else {
+        if (error.response) {
+          toast.error(
+            error.response?.data?.Detail || error.message || "Server error"
+          )
+        }
       }
     }
   }
+
 
   return (
     <div className="w-full flex items-center justify-center gap-10 p-10">
