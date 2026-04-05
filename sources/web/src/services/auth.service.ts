@@ -1,4 +1,3 @@
-import { email } from "zod";
 import { authApiV1 } from "../api/auth.api";
 import { useAuthStore } from "../store/auth.store";
 

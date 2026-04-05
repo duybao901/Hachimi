@@ -64,7 +64,7 @@ services:
       dockerfile: src/Query/Query.API/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - MongoDBSettings__ConnectionString=mongodb://mongodb:27017
+      - MongoDBSettings__ConnectionString=mongodb://admin:admin123@mongodb:27017
       - MasstransitConfiguration__Host=rabbitmq
     depends_on:
       - mongodb
@@ -92,7 +92,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__ConnectionStrings=Data Source=mssql;Initial Catalog=HachimiDatabase;User id=sa;Password=Password123!; TrustServerCertificate=True
       - MasstransitConfigurationOptions__Host=rabbitmq
-      - MongoDBSettings__ConnectionString=mongodb://mongodb:27017
+      - MongoDBSettings__ConnectionString=mongodb://admin:admin123@mongodb:27017
     depends_on:
       - mssql
       - mongodb

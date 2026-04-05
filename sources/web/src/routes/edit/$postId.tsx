@@ -9,8 +9,7 @@ import {
     Send,
     Eye,
     Edit3,
-    Sparkles,
-    Video
+    Sparkles
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useEffect, useRef, useState } from "react"
